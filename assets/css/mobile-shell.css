@@ -1,0 +1,29 @@
+/* ConnectSukuu mobile navigation drawer (phones / small tablets). Linked with media="(max-width:820px)" so desktop never downloads it before first paint.
+   Pair with /assets/js/mobile-shell.js, which adds the menu button. */
+.csm-toggle,.csm-backdrop{display:none}
+
+@media (max-width:820px){
+html:not(.csm-off):not(.csm-b1):not(.csm-b2) body :is(.sidebar,.app-sidebar,.cs-sidebar,.cs-hoa-final-sidebar,.csk-teacher-sidebar,.cs-assessment-sidebar,.ns-sidebar,.csk-ht-sidebar-final,.csk-teacher-sidebar-final){position:fixed!important;top:0!important;left:0!important;bottom:0!important;right:auto!important;width:min(280px,86vw)!important;min-width:0!important;max-width:none!important;height:100vh!important;height:100dvh!important;max-height:none!important;transform:translateX(-105%)!important;transition:transform .22s ease!important;z-index:5300!important;overflow-y:auto!important;box-shadow:none!important;visibility:hidden}
+html.csm-open:not(.csm-off):not(.csm-b1):not(.csm-b2) body :is(.sidebar,.app-sidebar,.cs-sidebar,.cs-hoa-final-sidebar,.csk-teacher-sidebar,.cs-assessment-sidebar,.ns-sidebar,.csk-ht-sidebar-final,.csk-teacher-sidebar-final).csm-drawer{transform:translateX(0)!important;visibility:visible;display:flex!important;flex-direction:column!important;box-shadow:18px 0 44px rgba(9,18,38,.34)!important}
+html:not(.csm-off):not(.csm-b1):not(.csm-b2) body :is(.sidebar,.app-sidebar,.cs-sidebar,.cs-hoa-final-sidebar,.csk-teacher-sidebar,.cs-assessment-sidebar,.ns-sidebar,.csk-ht-sidebar-final,.csk-teacher-sidebar-final) :is(.nav,.cs-nav,.app-nav,nav){display:grid!important}
+html:not(.csm-off):not(.csm-b1):not(.csm-b2) body :is(.sidebar,.app-sidebar,.cs-sidebar,.cs-hoa-final-sidebar,.csk-teacher-sidebar,.cs-assessment-sidebar,.ns-sidebar,.csk-ht-sidebar-final,.csk-teacher-sidebar-final) :is(.nav-label,.cs-nav-label,.nav-title,.cs-brand span,.cs-nav span,.nav a span,.cs-logout span){display:revert!important}
+html:not(.csm-off):not(.csm-b1):not(.csm-b2) body :is(.sidebar,.app-sidebar,.cs-sidebar,.cs-hoa-final-sidebar,.csk-teacher-sidebar,.cs-assessment-sidebar,.ns-sidebar,.csk-ht-sidebar-final,.csk-teacher-sidebar-final) :is(.cs-brand,.brand){justify-content:flex-start!important}
+html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .cs-shell,html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .app-shell,html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .shell,html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .layout{display:block!important;grid-template-columns:none!important}
+html:not(.csm-off):not(.csm-b1):not(.csm-b2) body :is(.layout,.app-shell,.shell){padding-left:0!important}
+html:not(.csm-off):not(.csm-b1):not(.csm-b2) body :is(.main,.app-main,.cs-main,.csk-teacher-main,.ns-main){margin-left:0!important;width:100%!important;max-width:100%!important;min-width:0!important}
+html:not(.csm-off):not(.csm-b1):not(.csm-b2) body :is(.topbar,.app-topbar,.cs-topbar,.cs-hoa-final-topbar,.csk-teacher-topbar,.ns-topbar,.csk-ht-topbar){padding-left:60px!important}
+.csm-toggle{display:grid;place-items:center;position:fixed;left:12px;top:14px;z-index:5200;width:40px;height:40px;padding:0;border:1px solid #dce5f2;border-radius:11px;background:#fff;color:#1d2a42;font:700 18px/1 system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 10px rgba(15,23,42,.10)}
+.csm-toggle:active{transform:scale(.96)}
+.csm-backdrop{display:block;position:fixed;inset:0;z-index:5100;background:rgba(10,20,39,.5);opacity:0;pointer-events:none;transition:opacity .2s ease}
+html.csm-open .csm-backdrop{opacity:1;pointer-events:auto}
+html.csm-open,html.csm-open body{overflow:hidden}
+html.csm-open .csm-toggle{display:none}
+html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-drawer{padding:18px 13px 14px!important}
+html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-drawer :is(.cs-nav,.nav) a{justify-content:flex-start!important;padding:9px 11px!important;gap:11px!important;width:auto!important}
+html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-drawer .cs-logout{display:flex!important;align-items:center!important;visibility:visible!important;font-size:12px!important;width:100%!important;height:39px!important;padding:0 12px!important;text-align:left!important;letter-spacing:normal!important}
+html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-drawer.csm-fixcolor a{color:#cbd6e8!important}
+html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-drawer.csm-fixcolor a.active,html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-drawer.csm-fixcolor a[aria-current]{color:#fff!important}
+html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-drawer>*{flex-shrink:0!important}
+html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-drawer .cs-sidebar-bottom{display:block!important;position:static!important;margin-top:auto!important;padding:14px 3px 0!important;width:auto!important}
+html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-drawer .cs-sidebar-bottom::before,html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-drawer .cs-sidebar-bottom::after{display:none!important;content:none!important}
+}

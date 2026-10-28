@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings</title>
+<link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/images/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/images/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+<link rel="shortcut icon" href="/assets/images/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap"></noscript><link rel="stylesheet" href="/assets/css/marketing.css">
+
+
+<style id="connectsukuu-standard-sidebar-v255">
+/* CONNECTSUKUU_STANDARD_SIDEBAR_V255
+   Canonical shared application shell.
+   255px is the single standard sidebar width.
+*/
+:root{--cs-standard-sidebar-width:255px}
+
+html,body{
+  width:100%!important;
+  min-width:0!important;
+  overflow-x:hidden!important;
+}
+
+body,
+body *{box-sizing:border-box!important}
+
+body .app-shell{
+  width:100%!important;
+  min-width:0!important;
+  min-height:100vh!important;
+  display:grid!important;
+  grid-template-columns:var(--cs-standard-sidebar-width) minmax(0,1fr)!important;
+  grid-template-rows:100vh!important;
+  overflow:hidden!important;
+}
+
+body .app-sidebar{
+  position:fixed!important;
+  top:0!important;
+  left:0!important;
+  bottom:0!important;
+  width:var(--cs-standard-sidebar-width)!important;
+  min-width:var(--cs-standard-sidebar-width)!important;
+  max-width:var(--cs-standard-sidebar-width)!important;
+  height:100vh!important;
+  min-height:100vh!important;
+  margin:0!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  z-index:200!important;
+}
+
+body .app-main{
+  grid-column:2!important;
+  grid-row:1!important;
+  position:relative!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:100vh!important;
+  min-height:100vh!important;
+  max-height:100vh!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+}
+
+body .app-topbar{
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+}
+
+body .app-content{
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+  overflow-x:hidden!important;
+}
+
+body .app-main,
+body .app-topbar,
+body .app-content{
+  left:auto!important;
+  right:auto!important;
+}
+
+body .app-sidebar .cs-standard-brand-shell{
+  width:100%!important;
+  min-width:0!important;
+  min-height:70px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:11px!important;
+  padding:17px 18px 15px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+}
+
+body .app-sidebar .cs-standard-brand-mark{
+  width:34px!important;
+  height:34px!important;
+  min-width:34px!important;
+  border-radius:9px!important;
+  display:grid!important;
+  place-items:center!important;
+  background:#2f7cf6!important;
+  color:#fff!important;
+  font-size:13px!important;
+  line-height:1!important;
+  font-weight:900!important;
+  letter-spacing:-.04em!important;
+  box-shadow:0 7px 16px rgba(37,99,235,.28)!important;
+}
+
+body .app-sidebar .cs-standard-brand-name{
+  color:#fff!important;
+  font-size:20px!important;
+  line-height:1!important;
+  font-weight:850!important;
+  letter-spacing:-.02em!important;
+}
+
+body .app-sidebar .cs-standard-brand-name .cs-brand-accent{
+  color:#2f8cff!important;
+}
+
+body .app-sidebar nav,
+body .app-sidebar .app-nav,
+body .app-sidebar .sidebar-nav{
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+}
+
+body .app-sidebar nav a,
+body .app-sidebar .app-nav a,
+body .app-sidebar .sidebar-nav a{
+  max-width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+
+body .app-sidebar nav a span,
+body .app-sidebar .app-nav a span,
+body .app-sidebar .sidebar-nav a span{
+  min-width:0!important;
+  max-width:100%!important;
+  overflow-wrap:anywhere!important;
+}
+
+@media(max-width:760px){
+  body .app-shell{
+    display:block!important;
+    grid-template-columns:1fr!important;
+    grid-template-rows:auto!important;
+    overflow:visible!important;
+  }
+  body .app-sidebar{
+    position:relative!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    height:auto!important;
+    min-height:0!important;
+  }
+  body .app-main{
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+}
+</style>
+
+
+
+<style id="connectsukuu-hoa-final-shell-standard">
+:root{--connectsukuu-sidebar-width:255px}
+.sidebar,.app-sidebar,.cs-assessment-sidebar{
+  width:255px!important;min-width:255px!important;max-width:255px!important;
+  flex:0 0 255px!important;position:fixed!important;left:0!important;top:0!important;
+  bottom:0!important;z-index:200!important;overflow-y:auto!important;overflow-x:hidden!important;
+}
+.layout{padding-left:255px!important}
+.app-layout{padding-left:255px!important}
+.cs-assessment-layout{padding-left:255px!important}
+.sidebar .brand,.app-sidebar .brand,.cs-assessment-sidebar .brand{
+  display:flex!important;align-items:center!important;gap:9px!important;
+  min-height:40px!important;height:40px!important;margin:0 0 22px!important;padding:0 10px!important;
+  white-space:nowrap!important;overflow:hidden!important;
+}
+.sidebar .brand img,.app-sidebar .brand img,.cs-assessment-sidebar .brand img{
+  width:34px!important;height:34px!important;min-width:34px!important;max-width:34px!important;
+  object-fit:contain!important;display:block!important;
+}
+.sidebar .brand .cs-brand-connect,.app-sidebar .brand .cs-brand-connect,.cs-assessment-sidebar .brand .cs-brand-connect,
+.sidebar .brand .cs-brand-sukuu,.app-sidebar .brand .cs-brand-sukuu,.cs-assessment-sidebar .brand .cs-brand-sukuu{
+  font-size:20px!important;line-height:1!important;font-weight:800!important;letter-spacing:-.45px!important;
+}
+.sidebar .brand .cs-brand-connect,.app-sidebar .brand .cs-brand-connect,.cs-assessment-sidebar .brand .cs-brand-connect{color:#fff!important}
+.sidebar .brand .cs-brand-sukuu,.app-sidebar .brand .cs-brand-sukuu,.cs-assessment-sidebar .brand .cs-brand-sukuu{color:#60a5fa!important}
+.topbar{
+  position:sticky!important;top:0!important;z-index:180!important;
+  min-height:56px!important;height:56px!important;display:flex!important;align-items:center!important;
+  padding-left:18px!important;padding-right:18px!important;
+}
+.topbar-user{
+  margin-left:auto!important;position:relative!important;right:auto!important;top:auto!important;
+  transform:none!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;
+  flex:0 0 auto!important;z-index:5!important;
+}
+.topbar > .topbar-user ~ .topbar-user{display:none!important}
+.topbar .cs-legacy-middle-profile{display:none!important}
+.cs-topbar-spacer-profile{display:none!important}
+</style>
+<script id="connectsukuu-role-isolation-guard">
+(function(){
+  'use strict';
+  var EXPECTED_ROLE='HEAD_TEACHER';
+  try{
+    var raw=localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user');
+    if(raw){
+      var user=JSON.parse(raw);
+      if(user && String(user.role||'').toUpperCase()!==EXPECTED_ROLE){
+        location.replace('/auth/signin.html');
+      }
+    }
+  }catch(_){ }
+})();
+</script>
+\n
+
+
+<style id="connectsukuu-headteacher-final-shell-style">
+:root{
+  --csk-ht-sidebar:255px;
+  --csk-ht-header:58px;
+  --csk-ht-navy:#0b1730;
+  --csk-ht-navy-2:#101d38;
+  --csk-ht-blue:#2563eb;
+  --csk-ht-ink:#172033;
+  --csk-ht-muted:#667085;
+  --csk-ht-line:#e4e7ec;
+  --csk-ht-bg:#f7f9fc;
+}
+html,body{width:100%!important;min-width:0!important;min-height:100%!important;margin:0!important;background:var(--csk-ht-bg)!important;color:var(--csk-ht-ink)!important;overflow-x:hidden!important;}
+body *{box-sizing:border-box;}
+
+/* Hide every legacy Head Teacher shell. Business content remains intact. */
+body>.app-shell,body>.layout,body>.app{display:block!important;width:100%!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:100vh!important;margin:0!important;padding:0!important;background:var(--csk-ht-bg)!important;overflow:visible!important;}
+body>.app-shell>.app-sidebar,body>.layout>.sidebar,body>.app>.sidebar,body>.app-sidebar,body>.sidebar,body>.cs-assessment-sidebar{display:none!important;}
+body .app-topbar,body .topbar,body .cs-assessment-topbar{display:none!important;}
+body .app-sidebar-footer,body .sidebar-footer,body .sidebar-bottom,body .academic-sidebar-footer{display:none!important;}
+
+/* One canonical fixed sidebar. */
+.csk-ht-sidebar-final{
+  position:fixed!important;left:0!important;top:0!important;bottom:0!important;
+  width:var(--csk-ht-sidebar)!important;min-width:var(--csk-ht-sidebar)!important;max-width:var(--csk-ht-sidebar)!important;
+  height:100vh!important;min-height:100vh!important;z-index:5000!important;
+  display:flex!important;flex-direction:column!important;overflow:hidden!important;
+  margin:0!important;padding:0!important;background:linear-gradient(180deg,var(--csk-ht-navy),var(--csk-ht-navy-2))!important;
+  border-right:1px solid rgba(255,255,255,.08)!important;color:#fff!important;
+}
+.csk-ht-brand-final{
+  height:var(--csk-ht-header)!important;min-height:var(--csk-ht-header)!important;flex:0 0 var(--csk-ht-header)!important;
+  display:flex!important;align-items:center!important;gap:10px!important;padding:0 18px!important;
+  border-bottom:1px solid rgba(255,255,255,.08)!important;box-sizing:border-box!important;
+}
+.csk-ht-brand-final .brand-mark{
+  width:34px!important;height:34px!important;min-width:34px!important;border-radius:9px!important;
+  display:grid!important;place-items:center!important;background:#2563eb!important;overflow:hidden!important;
+}
+.csk-ht-brand-final .brand-mark img{width:34px!important;height:34px!important;display:block!important;object-fit:cover!important;}
+.csk-ht-brand-final .brand-connect{color:#fff!important;font-size:19px!important;font-weight:800!important;letter-spacing:-.035em!important;}
+.csk-ht-brand-final .brand-sukuu{color:#60a5fa!important;}
+.csk-ht-nav-final{padding:16px 12px!important;display:flex!important;flex-direction:column!important;gap:4px!important;overflow-y:auto!important;overflow-x:hidden!important;flex:1!important;}
+.csk-ht-nav-final .nav-label{font-size:10px!important;font-weight:800!important;letter-spacing:.12em!important;color:#8492aa!important;padding:10px 12px 6px!important;margin:0!important;}
+.csk-ht-nav-final a{
+  min-height:44px!important;height:44px!important;width:100%!important;display:flex!important;align-items:center!important;gap:11px!important;
+  padding:0 12px!important;border-radius:9px!important;text-decoration:none!important;color:#c2ccdc!important;font-size:13px!important;font-weight:650!important;
+  line-height:1.2!important;white-space:nowrap!important;overflow:hidden!important;transition:background .16s ease,color .16s ease!important;
+}
+.csk-ht-nav-final a:hover{background:rgba(255,255,255,.07)!important;color:#fff!important;transform:none!important;}
+.csk-ht-nav-final a.active{background:rgba(37,99,235,.22)!important;color:#fff!important;box-shadow:inset 3px 0 0 #3b82f6!important;}
+.csk-ht-nav-final .nav-icon{width:20px!important;min-width:20px!important;height:20px!important;display:grid!important;place-items:center!important;color:inherit!important;line-height:1!important;}
+.csk-ht-nav-final .nav-icon svg{width:17px!important;height:17px!important;display:block!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important;}
+.csk-ht-logout-final{margin:0 14px 14px!important;width:calc(100% - 28px)!important;height:42px!important;min-height:42px!important;border:1px solid rgba(255,255,255,.14)!important;background:rgba(255,255,255,.035)!important;color:#e5eaf3!important;border-radius:8px!important;font-size:12px!important;font-weight:750!important;cursor:pointer!important;}
+.csk-ht-logout-final:hover{background:rgba(255,255,255,.09)!important;color:#fff!important;}
+
+/* One canonical fixed header and one scrollable content region. */
+.csk-ht-main-final{
+  display:block!important;position:relative!important;margin-left:var(--csk-ht-sidebar)!important;
+  width:calc(100% - var(--csk-ht-sidebar))!important;min-width:0!important;min-height:100vh!important;
+  padding:var(--csk-ht-header) 0 0!important;background:var(--csk-ht-bg)!important;box-sizing:border-box!important;
+}
+.csk-ht-header-final{
+  position:fixed!important;left:var(--csk-ht-sidebar)!important;right:0!important;top:0!important;width:auto!important;
+  height:var(--csk-ht-header)!important;min-height:var(--csk-ht-header)!important;z-index:4900!important;
+  background:#fff!important;border-bottom:1px solid var(--csk-ht-line)!important;display:flex!important;align-items:center!important;
+  justify-content:space-between!important;padding:0 20px!important;box-sizing:border-box!important;
+}
+.csk-ht-header-title-final{margin:0!important;padding:0!important;color:var(--csk-ht-ink)!important;font-size:19px!important;font-weight:750!important;line-height:1!important;letter-spacing:-.025em!important;}
+.csk-ht-profile-final{display:flex!important;align-items:center!important;gap:10px!important;min-width:0!important;padding:6px 9px!important;border:1px solid #e5e7eb!important;border-radius:10px!important;background:#fff!important;box-shadow:0 2px 8px rgba(15,23,42,.04)!important;}
+.csk-ht-profile-copy-final{display:flex!important;flex-direction:column!important;align-items:flex-end!important;min-width:0!important;line-height:1.15!important;}
+.csk-ht-profile-email-final{max-width:210px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;color:#344054!important;font-size:11px!important;font-weight:750!important;}
+.csk-ht-profile-role-final{margin-top:3px!important;color:#98a2b3!important;font-size:10px!important;font-weight:500!important;}
+.csk-ht-avatar-final{width:34px!important;height:34px!important;min-width:34px!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:#eff6ff!important;color:#2563eb!important;font-size:12px!important;font-weight:850!important;}
+.csk-ht-main-final>.app-content,.csk-ht-main-final>.content,.csk-ht-main-final>.page,.csk-ht-main-final>section.content{width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:24px 28px 44px!important;box-sizing:border-box!important;}
+.csk-ht-main-final>.app-content{height:calc(100vh - var(--csk-ht-header))!important;min-height:calc(100vh - var(--csk-ht-header))!important;overflow-y:auto!important;overflow-x:hidden!important;}
+.csk-ht-main-final>.app-content table,.csk-ht-main-final>.content table,.csk-ht-main-final>.page table{max-width:100%!important;}
+
+/* HT must never display the HoA dashboard/intelligence layer. */
+body.cs-headteacher-final-shell #csHoaDashboard,body.cs-headteacher-final-shell #csHoaAcademicIntelligence,body.cs-headteacher-final-shell .cs-hoa-dashboard,body.cs-headteacher-final-shell .cs-hoa-intel{display:none!important;visibility:hidden!important;}
+
+/* Keep the Students Actions column inside the table. */
+body.cs-headteacher-final-shell #students-table{width:100%!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;}
+body.cs-headteacher-final-shell #students-table th,body.cs-headteacher-final-shell #students-table td{overflow:hidden!important;text-overflow:ellipsis!important;vertical-align:middle!important;}
+body.cs-headteacher-final-shell #students-table th:last-child,body.cs-headteacher-final-shell #students-table td:last-child{width:120px!important;min-width:120px!important;max-width:120px!important;text-align:center!important;}
+body.cs-headteacher-final-shell #students-table td:last-child .student-actions,body.cs-headteacher-final-shell #students-table td:last-child .cs-row-actions{width:100%!important;display:flex!important;justify-content:center!important;align-items:center!important;gap:6px!important;overflow:hidden!important;}
+
+@media(max-width:900px){
+  :root{--csk-ht-sidebar:0px;}
+  html,body{overflow-x:hidden!important;}
+  .csk-ht-sidebar-final{position:relative!important;width:100%!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:0!important;}
+  .csk-ht-nav-final{max-height:360px!important;overflow-y:auto!important;}
+  .csk-ht-main-final{margin-left:0!important;width:100%!important;padding-top:58px!important;}
+  .csk-ht-header-final{left:0!important;padding:0 14px!important;}
+  .csk-ht-main-final>.app-content,.csk-ht-main-final>.content,.csk-ht-main-final>.page,.csk-ht-main-final>section.content{padding:20px 16px 34px!important;}
+  .csk-ht-profile-email-final{max-width:150px!important;}
+}
+</style>
+<link rel="stylesheet" href="/roles/headteacher/headteacher-ui-refinement.css">
+<style id="ht-final-shell-guard">
+body.cs-headteacher-final-shell .cs-shell{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important;}
+body.cs-headteacher-final-shell aside[class*="sidebar"]:not(.csk-ht-sidebar-final),body.cs-headteacher-final-shell #cs-ht-final-sidebar,body.cs-headteacher-final-shell .cs-ht-sidebar{display:none!important;visibility:hidden!important;width:0!important;min-width:0!important;max-width:0!important;}
+body.cs-headteacher-final-shell .app-topbar,body.cs-headteacher-final-shell .topbar,body.cs-headteacher-final-shell .cs-topbar,body.cs-headteacher-final-shell .cs-ht-header{display:none!important;visibility:hidden!important;}
+body.cs-headteacher-final-shell .csk-ht-sidebar-final{display:flex!important;}
+body.cs-headteacher-final-shell .csk-ht-header-final{display:flex!important;}
+</style>
+<style id="cs-ht-canonical-header-guard">
+body.cs-headteacher-final-shell .csk-ht-header-final{display:flex!important;visibility:visible!important;opacity:1!important;position:fixed!important;left:255px!important;right:0!important;top:0!important;width:auto!important;height:58px!important;min-height:58px!important;z-index:99999!important;align-items:center!important}
+body.cs-headteacher-final-shell .csk-ht-main-final{padding-top:58px!important;min-height:0!important}
+body.cs-headteacher-final-shell .csk-ht-profile-final{display:flex!important;align-items:center!important;margin-left:auto!important;position:relative!important;right:auto!important;bottom:auto!important}
+body.cs-headteacher-final-shell .csk-ht-header-final .csk-ht-profile-final{margin-left:auto!important}
+@media(max-width:760px){body.cs-headteacher-final-shell .csk-ht-header-final{left:76px!important;padding-left:12px!important;padding-right:12px!important}}
+</style>
+<link rel="stylesheet" href="/assets/css/mobile-shell.css" media="(max-width:820px)"><script src="/assets/js/mobile-shell.js" defer></script></head>
+<body>
+
+
+
+<div class="app-shell">
+  <aside class="app-sidebar">
+    <div>
+      <div class="brand"><img src="/assets/images/favicon.svg" alt="ConnectSukuu"><span class="cs-brand-connect">Connect</span><span class="cs-brand-sukuu">Sukuu</span></div>
+<nav class="app-nav">
+<div class="section-label nav-section">Workspace</div>
+<a data-page="dashboard" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-dashboard.html"><span>Dashboard</span></a>
+<a data-page="team" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-team.html"><span>Team &amp; Roles</span></a>
+<a data-page="academic" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-academic.html"><span>Academic Setup</span></a>
+<a data-page="students" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-students.html"><span>Students</span></a>
+<a data-page="attendance" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-attendance.html"><span>Attendance</span></a>
+<div class="section-label nav-section">Teaching</div>
+<a data-page="teaching-assignments" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-teaching-assignments.html"><span>Teaching Assignments</span></a>
+<a data-page="timetable" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-timetable.html"><span>Timetable</span></a>
+<a data-page="assessments" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-assessments.html"><span>Assessments &amp; Reports</span></a>
+<div class="section-label nav-section">Finance</div>
+<a data-page="finance" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-finance.html"><span>Finance</span></a>
+<div class="section-label nav-section">System</div>
+<a data-page="settings" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-settings.html"><span>Settings</span></a>
+</nav>
+    </div>
+    <div class="app-sidebar-footer">
+      <button id="app-logout" class="logout-btn">↪ Log out</button>
+    </div>
+  </aside>
+
+  <div class="app-main">
+    <div class="app-topbar">
+      <h1>Settings</h1>
+      <div class="who">
+        <span id="app-who">—</span>
+        <div class="app-avatar" id="app-avatar">?</div>
+      </div>
+    </div>
+
+    <div class="app-content">
+      <div class="callout-banner">
+        These toggles control what shows up across every portal — turn a module off here and it disappears from the sidebar and menus for everyone at your school, no code changes needed.
+      </div>
+
+      <div class="card-panel">
+        <h3>Modules</h3>
+
+        <div class="switch-row">
+          <div>
+            <div class="label">Security &amp; Gate Log</div>
+            <div class="desc">Entry/exit logging, visitor management, pickup verification.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="toggle-security"><span class="track"></span></label>
+        </div>
+
+        <div class="switch-row">
+          <div>
+            <div class="label">Nurse / Health Records</div>
+            <div class="desc">Health records, appointments, vaccination schedules.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="toggle-nurse"><span class="track"></span></label>
+        </div>
+
+        <div class="switch-row">
+          <div>
+            <div class="label">Multi-campus management</div>
+            <div class="desc">Turn on if your school has more than one branch.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="toggle-multicampus"><span class="track"></span></label>
+        </div>
+      </div>
+
+      <div class="card-panel">
+        <h3>Report cards</h3>
+        <div class="switch-row">
+          <div>
+            <div class="label">Require clearance before parents can view reports</div>
+            <div class="desc">Academic head and head teacher must both sign off before a report reaches a parent.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="toggle-clearance"><span class="track"></span></label>
+        </div>
+      </div>
+
+      <div class="card-panel">
+        <h3>Attendance style</h3>
+        <p style="margin-bottom: 1rem; font-size: 0.88rem;">Class-based suits lower primary and kindergarten, where one teacher owns the whole class. Subject-based suits JHS and above, where teachers move between classes.</p>
+        <div class="field" style="max-width: 320px;">
+          <label for="attendance-mode">Default attendance mode</label>
+          <select id="attendance-mode">
+            <option value="SUBJECT">Subject-based</option>
+            <option value="CLASS">Class-based</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="save-settings">Save changes</button>
+      <span id="save-status" style="margin-left: 1rem; font-size: 0.88rem; color: var(--green);"></span>
+    </div>
+  </div>
+</div>
+
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+  requireAuthOrRedirect();
+
+  async function loadSettings() {
+    const res = await apiFetch('/api/settings');
+    if (!res || !res.ok) return;
+    const s = await res.json();
+    document.getElementById('toggle-security').checked = s.securityModuleEnabled;
+    document.getElementById('toggle-nurse').checked = s.nurseModuleEnabled;
+    document.getElementById('toggle-multicampus').checked = s.multiCampusEnabled;
+    document.getElementById('toggle-clearance').checked = s.reportClearanceEnabled;
+    document.getElementById('attendance-mode').value = s.defaultAttendanceMode;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderAppChrome('settings');
+    loadSettings();
+
+    document.getElementById('save-settings').addEventListener('click', async () => {
+      const status = document.getElementById('save-status');
+      status.textContent = 'Saving…';
+      status.style.color = 'var(--slate)';
+
+      const payload = {
+        securityModuleEnabled: document.getElementById('toggle-security').checked,
+        nurseModuleEnabled: document.getElementById('toggle-nurse').checked,
+        multiCampusEnabled: document.getElementById('toggle-multicampus').checked,
+        reportClearanceEnabled: document.getElementById('toggle-clearance').checked,
+        defaultAttendanceMode: document.getElementById('attendance-mode').value,
+      };
+
+      const res = await apiFetch('/api/settings', { method: 'PATCH', body: JSON.stringify(payload) });
+      if (res && res.ok) {
+        status.textContent = 'Saved.';
+        status.style.color = 'var(--green)';
+      } else {
+        status.textContent = 'Could not save — try again.';
+        status.style.color = '#dc2626';
+      }
+      setTimeout(() => { status.textContent = ''; }, 2500);
+    });
+  });
+</script>
+
+
+
+
+
+<script id="connectsukuu-standard-sidebar-brand-v255">
+(function(){
+  'use strict';
+
+  function installBrand(){
+    document.querySelectorAll('.app-sidebar').forEach(function(sidebar){
+      var brand = sidebar.querySelector('.cs-standard-brand-shell');
+
+      if(!brand){
+        brand = sidebar.querySelector('.app-brand,.sidebar-brand,.brand-link,.sidebar-logo,.logo');
+      }
+
+      if(!brand){
+        var candidates = Array.prototype.filter.call(sidebar.children || [], function(el){
+          return /connectsukuu/i.test((el.textContent||'').trim());
+        });
+        brand = candidates[0] || null;
+      }
+
+      if(brand){
+        brand.classList.add('cs-standard-brand-shell');
+        var mark = brand.querySelector('.cs-standard-brand-mark');
+        var name = brand.querySelector('.cs-standard-brand-name');
+
+        if(!mark || !name){
+          brand.innerHTML =
+            '<span class="cs-standard-brand-mark" aria-hidden="true">CS</span>'+
+            '<span class="cs-standard-brand-name">Connect<span class="cs-brand-accent">Sukuu</span></span>';
+        }
+      }else{
+        brand = document.createElement('div');
+        brand.className='cs-standard-brand-shell';
+        brand.innerHTML =
+          '<span class="cs-standard-brand-mark" aria-hidden="true">CS</span>'+
+          '<span class="cs-standard-brand-name">Connect<span class="cs-brand-accent">Sukuu</span></span>';
+        sidebar.insertBefore(brand, sidebar.firstElementChild || null);
+      }
+
+      sidebar.dataset.csStandardBrandInstalled='true';
+    });
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',installBrand,{once:true});
+  }else{
+    installBrand();
+  }
+})();
+</script>
+
+\n
+
+
+
+\n
+<style id="connectsukuu-ht-shell-refinement-style">
+/* FINAL HT SHELL REFINEMENT — keep business UI intact */
+:root{
+  --csk-ht-sidebar:255px!important;
+  --csk-ht-header:58px!important;
+}
+
+/* One consistent dark HT sidebar, including Finance. */
+body .csk-ht-sidebar-final{
+  display:flex!important;
+  position:fixed!important;
+  left:0!important;
+  top:0!important;
+  bottom:0!important;
+  width:255px!important;
+  min-width:255px!important;
+  max-width:255px!important;
+  height:100vh!important;
+  background:linear-gradient(180deg,#0b1730 0%,#101d38 100%)!important;
+  color:#fff!important;
+  border-right:1px solid rgba(255,255,255,.08)!important;
+  z-index:5000!important;
+}
+body .csk-ht-sidebar-final .csk-ht-brand-final{
+  flex:0 0 58px!important;
+  height:58px!important;
+  min-height:58px!important;
+}
+body .csk-ht-sidebar-final .csk-ht-nav-final{
+  flex:1 1 auto!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+}
+body .csk-ht-sidebar-final .csk-ht-logout-final{
+  flex:0 0 auto!important;
+}
+
+/* Header stays exactly fixed and aligned to the sidebar. */
+body .csk-ht-header-final{
+  position:fixed!important;
+  left:255px!important;
+  right:0!important;
+  top:0!important;
+  height:58px!important;
+  min-height:58px!important;
+  z-index:4900!important;
+}
+
+/* Remove the second centered 1180px frame that caused the large blank band. */
+body .csk-ht-main-final{
+  margin-left:255px!important;
+  width:calc(100% - 255px)!important;
+  min-width:0!important;
+  padding-top:58px!important;
+}
+body .csk-ht-main-final > .app-content,
+body .csk-ht-main-final > .content,
+body .csk-ht-main-final > .page,
+body .csk-ht-main-final > section.content,
+body .csk-ht-content{
+  width:100%!important;
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  box-sizing:border-box!important;
+}
+
+/* Neutralize common legacy page-width wrappers without changing their contents. */
+body .csk-ht-content > .page-container,
+body .csk-ht-content > .container,
+body .csk-ht-content > .content-container,
+body .csk-ht-content > .page-shell,
+body .csk-ht-content > .main-content,
+body .csk-ht-content > .dashboard-content,
+body .csk-ht-content > .finance-content{
+  width:100%!important;
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+}
+
+/* Keep readable inner cards while allowing the shell itself to use the screen. */
+body .csk-ht-content .page-title,
+body .csk-ht-content .page-header,
+body .csk-ht-content .hero,
+body .csk-ht-content .heading,
+body .csk-ht-content .team-hero{
+  max-width:100%!important;
+}
+
+/* Prevent any old sidebar from becoming visible on Finance after renderAppChrome(). */
+body .csk-ht-sidebar-final ~ .layout > .sidebar,
+body .csk-ht-sidebar-final ~ .app-shell > .app-sidebar,
+body .csk-ht-sidebar-final ~ .app > .sidebar,
+body .csk-ht-sidebar-final ~ .sidebar,
+body .csk-ht-sidebar-final ~ .cs-assessment-sidebar{
+  display:none!important;
+}
+
+/* Mobile keeps the existing responsive behavior. */
+@media(max-width:900px){
+  :root{--csk-ht-sidebar:0px!important;}
+  body .csk-ht-sidebar-final{
+    position:relative!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    height:auto!important;
+    min-height:0!important;
+  }
+  body .csk-ht-header-final{
+    left:0!important;
+    right:0!important;
+  }
+  body .csk-ht-main-final{
+    margin-left:0!important;
+    width:100%!important;
+    padding-top:58px!important;
+  }
+  body .csk-ht-content{
+    padding:20px 16px 34px!important;
+  }
+}
+</style>
+
+
+<script id="connectsukuu-headteacher-final-shell-runtime">
+(function(){
+'use strict';
+var ROLE='HEAD_TEACHER';
+var PAGES={
+ dashboard:{title:'Dashboard',file:'/roles/headteacher/headteacher-dashboard.html'},
+ team:{title:'Team & Roles',file:'/roles/headteacher/headteacher-team.html'},
+ academic:{title:'Academic Setup',file:'/roles/headteacher/headteacher-academic.html'},
+ students:{title:'Students',file:'/roles/headteacher/headteacher-students.html'},
+ attendance:{title:'Attendance',file:'/roles/headteacher/headteacher-attendance.html'},
+ 'security-logs':{title:'Security Logs',file:'/roles/headteacher/headteacher-security-logs.html'},
+ 'teaching-assignments':{title:'Teaching Assignments',file:'/roles/headteacher/headteacher-teaching-assignments.html'},
+ timetable:{title:'Timetable',file:'/roles/headteacher/headteacher-timetable.html'},
+ assessments:{title:'Assessments & Report Cards',file:'/roles/headteacher/headteacher-assessments.html'},
+ finance:{title:'Finance',file:'/roles/headteacher/headteacher-finance.html'},
+ announcements:{title:'Announcements',file:'/roles/headteacher/headteacher-announcements.html'},
+ messages:{title:'Messages',file:'/roles/headteacher/headteacher-messages.html'},
+ notifications:{title:'Notifications',file:'/roles/headteacher/headteacher-notifications.html'},
+ support:{title:'Support',file:'/roles/headteacher/headteacher-support.html'},
+ settings:{title:'Settings',file:'/roles/headteacher/headteacher-settings.html'}
+};
+function currentKey(){var p=(location.pathname.split('/').pop()||'headteacher-dashboard').toLowerCase().replace(/\.html$/,'');for(var k in PAGES){if(k===p||PAGES[k].file.toLowerCase().replace(/\.html$/,'')===p)return k;}return 'dashboard';}
+var pageKey=currentKey();
+function getUser(){try{if(window.AUTH&&typeof AUTH.getUser==='function'){var u=AUTH.getUser();if(u)return u;}}catch(e){}try{return JSON.parse(localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user')||'null')||{};}catch(e){return {};}}
+function isHT(){return String(getUser().role||document.body.dataset.role||'').toUpperCase()===ROLE;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function initials(u){var n=[u.firstName,u.lastName].filter(Boolean).join(' ').trim()||u.email||'Head Teacher';return n.split(/\s+/).map(function(x){return x.charAt(0);}).join('').slice(0,2).toUpperCase();}
+var ICONS={
+ dashboard:'<rect x="3" y="3" width="18" height="18" rx="3"></rect><path d="M8 8h3v3H8zM13 8h3v3h-3zM8 13h3v3H8zM13 13h3v3h-3z"></path>',
+ team:'<path d="M16 20v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V20"></path><circle cx="9.5" cy="7" r="3"></circle><path d="M16 8a3 3 0 0 1 0 6M19 20v-1.5a4 4 0 0 0-3-3.87"></path>',
+ academic:'<path d="M3 9l9-5 9 5-9 5-9-5z"></path><path d="M7 11.5V16c2.8 2 7.2 2 10 0v-4.5M21 10v6"></path>',
+ students:'<circle cx="9" cy="8" r="3"></circle><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 11a3 3 0 1 0 0-6M17 14a5 5 0 0 1 4 5v1"></path>',
+ attendance:'<path d="M4 5h16v15H4z"></path><path d="M8 3v4M16 3v4M7 11h3M14 11h3M7 15h3"></path>',
+ 'security-logs':'<circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path>',
+ announcements:'<path d="M4 4h16v16H4z"></path><path d="M8 8h8M8 12h8M8 16h5"></path>',
+ messages:'<path d="M4 5h16v12H8l-4 3z"></path><path d="M8 9h8M8 13h5"></path>',
+ notifications:'<path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path>',
+ support:'<circle cx="12" cy="12" r="9"></circle><path d="M9.6 9a2.5 2.5 0 1 1 4.4 1.6c-1.2 1.1-2 1.4-2 3"></path><path d="M12 17h.01"></path>',
+ 'teaching-assignments':'<path d="M4 5h16v14H4z"></path><path d="M8 3v4M16 3v4M7 12h10M7 16h6"></path>',
+ timetable:'<rect x="3" y="4" width="18" height="17" rx="2"></rect><path d="M16 2v4M8 2v4M3 9h18M8 13h.01M12 13h.01M16 13h.01M8 17h.01M12 17h.01"></path>',
+ assessments:'<path d="M5 3h14v18H5z"></path><path d="M8 7h8M8 11h8M8 15h5"></path>',
+ finance:'<circle cx="12" cy="12" r="9"></circle><path d="M15 8.5c-.7-.7-1.7-1.1-3-1.1-1.7 0-3 .8-3 2s1.1 2 3 2 3 .8 3 2-1.3 2-3 2c-1.3 0-2.3-.4-3-1.1M12 6v12"></path>',
+ settings:'<circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.7 1.7-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-2.4v-.2a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1-1.7-1.7.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0 1.6-1h.2v-2.4h-.2a1.7 1.7 0 0 0-1.6-1 1.7 1.7 0 0 0 .3-1.9l-.1-.1 1.7-1.7.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1.9 0 1.7 1.7 0 0 0 1-1.6V4h2.4v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.7 1.7-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0-.1 1.9 1.7 1.7 0 0 0-1.6 1h.2v2.4h-.2a1.7 1.7 0 0 0-1.6 1z"></path>'
+};
+function navHtml(){var h='<div class="nav-label">WORKSPACE</div>';function a(k,label){return '<a href="'+PAGES[k].file+'" data-csk-ht-nav="'+k+'"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true">'+ICONS[k]+'</svg></span><span>'+label+'</span></a>';}h+=a('dashboard','Dashboard')+a('team','Team &amp; Roles')+a('academic','Academic Setup')+a('students','Students')+a('attendance','Attendance')+a('security-logs','Security Logs');h+='<div class="nav-label">TEACHING</div>'+a('teaching-assignments','Teaching Assignments')+a('timetable','Timetable')+a('assessments','Assessments &amp; Reports');h+='<div class="nav-label">FINANCE</div>'+a('finance','Finance');h+='<div class="nav-label">COMMUNICATION</div>'+a('announcements','Announcements')+a('messages','Messages')+a('notifications','Notifications')+a('support','Support');h+='<div class="nav-label">ADMINISTRATION</div>'+a('settings','Settings');return h;}
+function hideLegacy(){document.querySelectorAll('body>.app-shell>.app-sidebar,body>.layout>.sidebar,body>.app>.sidebar,body>.app-sidebar,body>.sidebar,body>.cs-assessment-sidebar').forEach(function(el){el.style.display='none';});document.querySelectorAll('body .app-topbar,body .topbar,body .cs-assessment-topbar,body .app-sidebar-footer,body .sidebar-footer,body .sidebar-bottom,body .academic-sidebar-footer').forEach(function(el){el.style.display='none';});document.querySelectorAll('body>.app-shell,body>.layout,body>.app').forEach(function(el){el.style.display='block';el.style.width='100%';el.style.minWidth='0';el.style.maxWidth='none';});}
+function findMain(){return document.querySelector('main.app-main,main.main,.app-main,.main,.cs-main');}
+function hideHoa(){document.body.classList.add('cs-headteacher-final-shell');document.body.classList.remove('hoa-dashboard');document.querySelectorAll('#csHoaDashboard,#csHoaAcademicIntelligence,.cs-hoa-dashboard,.cs-hoa-intel,.ht-note-panel,.ht-dashboard-pulse,.ht-dashboard-pulse-rail').forEach(function(el){el.style.display='none';el.setAttribute('aria-hidden','true');});}
+function buildSidebar(){var side=document.querySelector('.csk-ht-sidebar-final');if(!side){side=document.createElement('aside');side.className='csk-ht-sidebar-final';side.innerHTML='<div class="csk-ht-brand-final"><span class="brand-mark"><img src="/assets/images/favicon.svg" alt="" aria-hidden="true"></span><span class="brand-connect">Connect<span class="brand-sukuu">Sukuu</span></span></div><nav class="csk-ht-nav-final">'+navHtml()+'</nav><button type="button" class="csk-ht-logout-final" id="cskHtLogoutFinal">↪ Log out</button>';document.body.insertBefore(side,document.body.firstChild);side.querySelector('#cskHtLogoutFinal').addEventListener('click',function(){try{if(window.AUTH&&typeof AUTH.logout==='function'){AUTH.logout();return;}}catch(e){}try{localStorage.removeItem('cs_token');localStorage.removeItem('cs_user');localStorage.removeItem('connectsukuu_user');}catch(e){}location.replace('/auth/signin.html');});}
+ side.querySelectorAll('[data-csk-ht-nav]').forEach(function(a){if(!a.dataset.bound){a.dataset.bound='1';a.addEventListener('click',function(ev){ev.preventDefault();location.assign(a.getAttribute('href'));},true);}});
+ side.querySelectorAll('[data-csk-ht-nav]').forEach(function(a){a.classList.toggle('active',String(a.getAttribute('data-csk-ht-nav'))===pageKey);});
+ return side;}
+function buildHeader(){var h=document.querySelector('.csk-ht-header-final');var u=getUser();if(!h){h=document.createElement('header');h.className='csk-ht-header-final';h.innerHTML='<h1 class="csk-ht-header-title-final"></h1><a class="cs-role-bell" id="cs-bell" href="/roles/headteacher/headteacher-notifications.html" aria-label="Notifications" title="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg><span id="cs-unread-count" class="cs-badge-count cs-hidden">0</span></a><div class="csk-ht-profile-final"><div class="csk-ht-avatar-final" aria-hidden="true"></div><div class="csk-ht-profile-copy-final"><span class="csk-ht-profile-email-final"></span><span class="csk-ht-profile-role-final">Head Teacher</span></div></div>';document.body.appendChild(h);}h.querySelector('.csk-ht-header-title-final').textContent=PAGES[pageKey].title;h.querySelector('.csk-ht-profile-email-final').textContent=[u.firstName,u.lastName].filter(Boolean).join(' ').trim()||u.name||u.email||'Head Teacher';h.querySelector('.csk-ht-avatar-final').textContent=initials(u);return h;}
+function normalizeMain(){var main=findMain();if(!main)return null;main.classList.add('csk-ht-main-final');main.style.removeProperty('grid-column');main.style.removeProperty('grid-row');main.querySelectorAll(':scope > .app-topbar,:scope > .topbar,:scope > .cs-topbar,:scope > .cs-assessment-topbar').forEach(function(el){el.style.setProperty('display','none','important');});return main;}
+function normalizeTitle(){document.title=PAGES[pageKey].title;}
+function normalizeStudentTable(){if(pageKey!=='students')return;var table=document.getElementById('students-table');if(!table)return;table.style.tableLayout='fixed';table.style.width='100%';table.querySelectorAll('th:last-child,td:last-child').forEach(function(c){c.style.width='120px';c.style.minWidth='120px';c.style.maxWidth='120px';c.style.textAlign='center';});}
+function run(){if(!isHT())return;document.body.classList.add('cs-headteacher-final-shell');hideLegacy();hideHoa();normalizeTitle();normalizeMain();buildSidebar();buildHeader();normalizeStudentTable();}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();[80,250,700,1400,2500].forEach(function(ms){setTimeout(run,ms);});try{new MutationObserver(function(){if(isHT())hideLegacy();}).observe(document.body,{childList:true,subtree:true});}catch(e){}
+})();
+</script>
+<script src="/assets/js/role-shell-extension.js"></script>
+<link rel="stylesheet" href="/roles/headteacher/headteacher-final-freeze.css">
+</body>
+</html>

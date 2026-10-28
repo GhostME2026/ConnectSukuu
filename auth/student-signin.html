@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Student Sign In | ConnectSukuu</title>
+
+  <link
+    rel="stylesheet"
+    href="/roles/student/student-signin.css"
+  >
+</head>
+
+<body>
+
+  <main class="signin-page">
+
+    <section class="signin-card">
+
+      <div class="brand">
+        <div class="brand-mark">CS</div>
+
+        <div>
+          <h1>ConnectSukuu</h1>
+          <p>Student Portal</p>
+        </div>
+      </div>
+
+      <div class="signin-heading">
+        <h2>Welcome back</h2>
+
+        <p>
+          Sign in to access your academic
+          and school information.
+        </p>
+      </div>
+
+      <form id="studentSigninForm">
+
+        <div class="form-group">
+
+          <label for="schoolCode">
+            School / Branch Code
+          </label>
+
+          <input
+            type="text"
+            id="schoolCode"
+            name="schoolCode"
+            placeholder="e.g. NIRA01"
+            maxlength="6"
+            minlength="3"
+            autocomplete="organization"
+            required
+          >
+          <small class="form-hint">Enter the code shown for your branch in Branch Management.</small>
+
+        </div>
+
+        <div class="form-group">
+
+          <label for="admissionNumber">
+            Student ID / Admission Number
+          </label>
+
+          <input
+            type="text"
+            id="admissionNumber"
+            name="admissionNumber"
+            placeholder="e.g. CSK-TEST-004"
+            autocomplete="username"
+            required
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label for="studentPin">
+            PIN / Password
+          </label>
+
+          <div class="password-wrapper">
+
+            <input
+              type="password"
+              id="studentPin"
+              name="pin"
+              placeholder="Enter your PIN or password"
+              autocomplete="current-password"
+              required
+            >
+
+            <button
+              type="button"
+              id="togglePin"
+              class="password-toggle"
+              aria-label="Show password"
+            >
+              Show
+            </button>
+
+          </div>
+
+        </div>
+
+        <div
+          id="signinMessage"
+          class="signin-message"
+          role="alert"
+        ></div>
+
+        <button
+          type="submit"
+          id="signinButton"
+          class="signin-button"
+        >
+          Sign in
+        </button>
+
+      </form>
+
+      <div class="signin-footer">
+        <p>
+          Need help accessing your account?
+        </p>
+
+        <span>
+          Contact your school administrator.
+        </span>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="/assets/js/config.js"></script>
+  <script src="/roles/student/student-signin.js"></script>
+</body>
+</html>

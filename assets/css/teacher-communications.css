@@ -1,0 +1,65 @@
+/* ConnectSukuu Teacher communications: additive styles only. */
+.tc-bell-link{position:absolute!important;top:12px!important;right:228px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;width:38px!important;height:38px!important;flex:0 0 38px!important;margin-right:10px!important;border:1px solid #e4eaf3!important;border-radius:12px!important;background:#fff!important;color:#344054!important;text-decoration:none!important;font-size:19px!important;line-height:1!important;transition:background .16s ease,border-color .16s ease!important}
+.tc-bell-link:hover{background:#f8fafc!important;border-color:#bfdbfe!important}
+.tc-bell-count{position:absolute!important;top:-5px!important;right:-5px!important;min-width:17px!important;height:17px!important;padding:0 4px!important;box-sizing:border-box!important;border-radius:999px!important;background:#ef4444!important;color:#fff!important;border:2px solid #fff!important;font:800 10px/13px system-ui,sans-serif!important;text-align:center!important}
+.tc-bell-count[hidden]{display:none!important}
+.csk-teacher-nav-final .tc-nav-unread[hidden]{display:none!important}
+.csk-teacher-nav-final .tc-nav-unread{margin-left:auto!important;min-width:19px!important;height:19px!important;padding:0 5px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;border-radius:999px!important;background:#ef4444!important;color:#fff!important;font-size:10px!important;font-weight:800!important}
+.tc-hero{position:relative;overflow:hidden;background:linear-gradient(115deg,#fff 0%,#f8faff 65%,#f2f0ff 100%);border:1px solid #dbe7ff;border-radius:17px;padding:24px 26px;margin:0 0 18px;}
+.tc-eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:850;color:#2563eb;margin:0 0 8px}
+.tc-hero h2{font-size:27px;line-height:1.2;letter-spacing:-.035em;margin:0 0 8px;color:#172033}
+.tc-hero p{margin:0;max-width:820px;color:#667a9a;line-height:1.6;font-size:13px}
+.tc-hero-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.tc-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid #dbe4f0;border-radius:10px;background:#fff;color:#344767;padding:9px 12px;font:750 12px system-ui,sans-serif;text-decoration:none;cursor:pointer;min-height:36px}
+.tc-button.primary{background:#2563eb;border-color:#2563eb;color:#fff}.tc-button:disabled{opacity:.55;cursor:not-allowed}
+.tc-panel{background:#fff;border:1px solid #e1e9f5;border-radius:16px;padding:19px;box-shadow:0 6px 22px rgba(20,40,80,.035)}
+.tc-panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.tc-panel-head h3{font-size:16px;letter-spacing:-.02em;margin:0 0 5px;color:#172033}.tc-panel-head p{font-size:12px;line-height:1.5;margin:0;color:#7183a1}
+.tc-pill{display:inline-flex;align-items:center;white-space:nowrap;background:#eff6ff;color:#2563eb;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:800}
+.tc-list{display:grid;gap:10px}.tc-item{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:12px;align-items:start;border:1px solid #e2eaf7;border-radius:13px;padding:14px;background:#fff;min-width:0}.tc-item.unread{background:#f8fbff;border-color:#c9dcff}.tc-item-icon{width:36px;height:36px;border-radius:11px;background:#edf4ff;color:#2563eb;display:grid;place-items:center;font-weight:850;font-size:15px}.tc-item-title{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;font-weight:800;color:#24324a;margin:0 0 6px}.tc-item-content{font-size:12px;line-height:1.65;color:#526783;white-space:pre-wrap;overflow-wrap:anywhere}.tc-item-meta{font-size:10.5px;color:#8a9ab4;margin-top:8px}.tc-item-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.tc-empty{padding:35px 18px;text-align:center;color:#8292ab}.tc-empty strong{display:block;color:#344767;font-size:13px;margin-bottom:6px}.tc-status{font-size:12px;line-height:1.6;color:#667085;padding:10px 0}.tc-status.error{color:#b42318}.tc-toolbar{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}.tc-toolbar input{flex:1;min-width:180px;max-width:360px;border:1px solid #d7e1ef;border-radius:10px;padding:10px 12px;font:inherit;font-size:12px;color:#344054}
+@media(max-width:900px){.tc-bell-link{right:224px!important;top:10px!important}.tc-hero{padding:20px}.tc-hero h2{font-size:23px}.tc-item{grid-template-columns:34px minmax(0,1fr)}.tc-item-actions{grid-column:2;justify-content:flex-start}.tc-panel{padding:15px}.tc-bell-link{margin-right:6px!important}}
+@media(max-width:520px){.tc-hero{padding:17px}.tc-hero h2{font-size:21px}.tc-item{padding:11px;gap:9px}.tc-panel-head{align-items:flex-start}.tc-toolbar input{max-width:none;width:100%}}
+
+/* FINAL TEACHER COMMUNICATIONS REPAIR — baseline-width and header alignment */
+.csk-teacher-header-final.tc-header-communications{justify-content:flex-start!important;gap:0!important}
+.csk-teacher-header-final.tc-header-communications .tc-bell-link{margin-left:auto!important;margin-right:8px!important;flex:0 0 36px!important}
+.csk-teacher-header-final.tc-header-communications .csk-teacher-profile-final{margin-left:0!important;flex:0 0 auto!important}
+.tc-bell-link{position:relative!important;width:36px!important;height:36px!important;min-width:36px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;border:1px solid #e5e7eb!important;border-radius:10px!important;background:#fff!important;color:#667085!important;text-decoration:none!important;box-sizing:border-box!important}
+.tc-bell-link:hover{background:#f8fafc!important;color:#2563eb!important}
+.tc-bell-link svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tc-bell-count{position:absolute;right:-4px;top:-5px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:#ef4444;color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+.tc-bell-count[hidden],.tc-nav-unread[hidden]{display:none!important}
+.tc-nav-unread{margin-left:auto;background:#ef4444;color:#fff;border-radius:999px;min-width:18px;height:18px;padding:0 5px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center}
+.tc-profile-photo{width:100%!important;height:100%!important;border-radius:50%!important;object-fit:cover!important;display:block!important}
+.csk-teacher-avatar-final{overflow:hidden!important;padding:0!important}
+body.tc-communications-page .csk-teacher-content-final{width:100%!important;max-width:none!important;padding:28px 30px 44px!important;box-sizing:border-box!important}
+body.tc-communications-page .csk-teacher-content-final>*{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important;box-sizing:border-box!important}
+body.tc-communications-page .tc-hero,body.tc-communications-page .tc-panel{width:100%!important;max-width:none!important;box-sizing:border-box!important}
+body.tc-communications-page .tc-list{width:100%!important;max-width:none!important}
+.tc-item-main{min-width:0!important;overflow-wrap:anywhere!important}
+.tc-status.error{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.tc-button:disabled{opacity:.6;cursor:wait}
+.tc-skeleton{padding:22px;display:grid;gap:10px}
+.tc-skeleton span{display:block;height:14px;border-radius:7px;background:linear-gradient(90deg,#eef2f7,#f8fafc,#eef2f7);background-size:200% 100%;animation:tc-skeleton 1.2s linear infinite}
+.tc-skeleton span:nth-child(1){width:92%}.tc-skeleton span:nth-child(2){width:76%}.tc-skeleton span:nth-child(3){width:58%}
+@keyframes tc-skeleton{to{background-position:-200% 0}}
+.tc-toast{position:fixed;right:22px;bottom:22px;z-index:99999;max-width:min(420px,calc(100vw - 32px));padding:12px 15px;background:#172033;color:#fff;border-radius:11px;box-shadow:0 12px 30px #17203330;font-size:13px;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .18s,transform .18s}
+.tc-toast.show{opacity:1;transform:none}.tc-toast.error{background:#991b1b}
+@media(max-width:900px){body.tc-communications-page .csk-teacher-content-final{padding:20px 16px 34px!important}.csk-teacher-header-final.tc-header-communications{padding:0 12px!important}.tc-bell-link{margin-right:6px!important}}
+
+
+/* FINAL CONSISTENCY PASS: Student-baseline bell, tight profile grouping, full-width content, active communication selector. */
+.csk-teacher-header-final.tc-header-communications{justify-content:space-between!important;gap:12px!important}
+.csk-teacher-header-final .tc-header-actions{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:8px!important;margin-left:auto!important;min-width:0!important;flex:0 0 auto!important}
+.csk-teacher-header-final .tc-header-actions .tc-bell-link{position:relative!important;inset:auto!important;right:auto!important;top:auto!important;margin:0!important;width:38px!important;height:38px!important;min-width:38px!important;flex:0 0 38px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;border:1px solid #e4e7ec!important;border-radius:10px!important;background:#fff!important;color:#667085!important;text-decoration:none!important;box-shadow:none!important}
+.csk-teacher-header-final .tc-header-actions .tc-bell-link:hover{background:#f8fafc!important;border-color:#cbd5e1!important;color:#2563eb!important}
+.csk-teacher-header-final .tc-header-actions .tc-bell-link svg{width:19px!important;height:19px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.6!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+.csk-teacher-header-final .tc-header-actions .csk-teacher-profile-final{margin:0!important;flex:0 0 auto!important}
+.csk-teacher-nav-final a[data-tc-nav="announcements"].active,.csk-teacher-nav-final a[href$="/roles/teacher/teacher-announcements.html"].active,.csk-teacher-nav-final a[data-tc-nav="notifications"].active,.csk-teacher-nav-final a[href$="/roles/teacher/teacher-notifications.html"].active{background:rgba(37,99,235,.22)!important;color:#fff!important;box-shadow:inset 3px 0 0 #3b82f6!important}
+body.tc-communications-page .csk-teacher-content-final .csk-teacher-content,
+body.tc-communications-page .csk-teacher-content-final .csk-teacher-content{width:100%!important;max-width:none!important;margin:0!important;padding:28px 30px 44px!important;box-sizing:border-box!important}
+body.tc-communications-page .csk-teacher-content .tc-hero,
+body.tc-communications-page .csk-teacher-content .tc-panel,
+body.tc-communications-page .csk-teacher-content-final .tc-hero,
+body.tc-communications-page .csk-teacher-content-final .tc-panel{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important;box-sizing:border-box!important}
+body.tc-communications-page .csk-teacher-content>*{max-width:none!important;margin-left:0!important;margin-right:0!important}
+@media(max-width:900px){.csk-teacher-header-final .tc-header-actions{gap:6px!important}.csk-teacher-header-final .tc-header-actions .tc-bell-link{width:36px!important;height:36px!important;min-width:36px!important;flex-basis:36px!important}body.tc-communications-page .csk-teacher-content-final .csk-teacher-content{padding:20px 16px 34px!important}}

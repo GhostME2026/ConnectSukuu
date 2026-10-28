@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attendance</title>
+<link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
+<style>
+:root{
+  --blue:#2563eb;--blue2:#1d4ed8;--ink:#172033;--muted:#667085;--soft:#f5f7fb;
+  --card:#fff;--line:#e5e9f2;--green:#15803d;--green-bg:#ecfdf3;
+  --red:#b91c1c;--red-bg:#fef2f2;--amber:#b45309;--amber-bg:#fffbeb;
+  --purple:#6d28d9;--purple-bg:#f5f3ff;--shadow:0 10px 30px rgba(15,23,42,.055);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--soft);color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.layout{min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:255px;background:#fff;border-right:1px solid var(--line);padding:20px 13px;display:flex;flex-direction:column;z-index:30}
+.brand{display:flex;align-items:center;gap:10px;padding:8px 10px 26px;text-decoration:none;color:var(--ink);font-size:20px;font-weight:850;letter-spacing:-.02em}
+.brand-mark{width:32px;height:32px;border-radius:10px;background:#eff6ff;color:var(--blue);display:grid;place-items:center;box-shadow:0 5px 14px rgba(37,99,235,.13)}
+.nav{display:flex;flex-direction:column;gap:4px}
+.nav-section{padding:14px 11px 7px;color:#98a2b3;font-size:9px;text-transform:uppercase;letter-spacing:.12em;font-weight:900}
+.nav a{display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:10px;text-decoration:none;color:#667085;font-size:12px;font-weight:750;transition:.18s ease}
+.nav a:hover{background:#f5f8ff;color:#2563eb;transform:translateX(2px)}
+.nav a.active{background:#eef5ff;color:#2563eb;box-shadow:inset 3px 0 0 #2563eb}
+.sidebar-bottom{margin-top:auto;padding-top:14px}
+.logout{width:100%;border:0;background:#172033;color:#fff;padding:12px;border-radius:10px;font-size:12px;font-weight:800;transition:.18s ease}
+.logout:hover{background:#0f172a;transform:translateY(-1px);box-shadow:0 8px 18px rgba(15,23,42,.16)}
+
+.main{margin-left:255px;width:calc(100% - 250px);min-width:0}
+.topbar{height:54px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:10}
+.topbar-title{font-size:15px;font-weight:750}
+.user{display:flex;align-items:center;gap:9px;color:#667085;font-size:13px;}
+.avatar{width:32px;height:32px;border-radius:50%;background:#dbeafe;color:#1d4ed8;display:grid;place-items:center;font-weight:800}
+.content{padding:32px;max-width:1450px;margin:0 auto}
+
+.eyebrow{font-size:10px;color:var(--blue);text-transform:uppercase;letter-spacing:.13em;font-weight:900;margin-bottom:6px}
+h1{margin:0;font-size:30px;letter-spacing:-.035em}
+.subtitle{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.55}
+.user-card{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:9px 12px;box-shadow:0 3px 12px rgba(15,23,42,.025)}
+.avatar{width:34px;height:34px;border-radius:10px;background:#172033;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:850}
+.uname{font-size:12px;font-weight:800}.urole{font-size:10px;color:#98a2b3;margin-top:2px}
+
+.hero{background:linear-gradient(135deg,#fff 0%,#f8fbff 100%);border:1px solid var(--line);border-radius:18px;padding:19px 20px;box-shadow:var(--shadow);margin-bottom:16px;animation:rise .45s ease both}
+.hero-row{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.hero h2{margin:0;font-size:17px;letter-spacing:-.02em}
+.hero p{margin:5px 0 0;color:var(--muted);font-size:11px;line-height:1.55}
+.role-pill{display:inline-flex;align-items:center;gap:7px;border:1px solid #dbe7ff;background:#f5f8ff;color:#2563eb;padding:7px 10px;border-radius:999px;font-size:10px;font-weight:850;white-space:nowrap}
+.role-pill .dot{width:6px;height:6px;border-radius:50%;background:#2563eb;box-shadow:0 0 0 4px #dbeafe}
+
+.filters{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow);animation:rise .5s ease both}
+.filter-grid{display:grid;grid-template-columns:1.1fr 1.1fr 1.1fr .9fr 1.25fr;gap:11px}
+.field label{display:block;margin:0 0 6px 2px;color:#667085;font-size:9px;text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+.field select,.field input{width:100%;height:39px;border:1px solid #d9e0eb;background:#fff;color:#172033;border-radius:9px;padding:0 11px;outline:0;font-size:12px;transition:.16s ease}
+.field select:hover,.field input:hover{border-color:#b9c7dc}
+.field select:focus,.field input:focus{border-color:#80a9ff;box-shadow:0 0 0 3px #dbeafe}
+.mode-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding-top:13px;border-top:1px solid #edf0f5}
+.mode-left{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.mode-title{font-size:10px;font-weight:850;margin-right:3px}
+.mode-option{display:inline-flex;align-items:center;gap:6px;border:1px solid #dfe5ef;background:#fff;padding:7px 10px;border-radius:9px;font-size:10px;font-weight:750;color:#475467;transition:.16s ease}
+.mode-option:hover{border-color:#b7c8e8;background:#f8fbff}
+.mode-option.active{border-color:#80a9ff;background:#f5f8ff;color:#2563eb;box-shadow:0 0 0 2px #eff6ff}
+.mode-option input{accent-color:#2563eb}
+.default-note{font-size:9px;color:#98a2b3}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:16px 0;animation:rise .55s ease both}
+.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px 17px;box-shadow:var(--shadow);transition:.2s ease}
+.stat:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(15,23,42,.08)}
+.stat-label{font-size:9px;color:#98a2b3;text-transform:uppercase;letter-spacing:.09em;font-weight:900}
+.stat-value{font-size:26px;font-weight:850;letter-spacing:-.04em;margin-top:5px}
+.stat-sub{font-size:9px;color:#98a2b3;margin-top:3px}
+
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;animation:rise .6s ease both}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 19px;border-bottom:1px solid #edf0f5}
+.panel-title{display:flex;align-items:center;gap:10px}
+.panel-icon{width:34px;height:34px;border-radius:10px;background:#eff6ff;color:#2563eb;display:grid;place-items:center;font-weight:900}
+.panel h2{margin:0;font-size:16px;letter-spacing:-.02em}
+.panel-head p{margin:4px 0 0;color:#98a2b3;font-size:10px}
+.actions{display:flex;gap:8px}
+.btn{border:1px solid #d9e0eb;background:#fff;color:#344054;border-radius:9px;padding:9px 12px;font-size:10px;font-weight:850;transition:.17s ease}
+.btn:hover:not(:disabled){transform:translateY(-1px);border-color:#b9c7dc;background:#f8fbff}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 6px 14px rgba(37,99,235,.18)}
+.btn.primary:hover:not(:disabled){background:var(--blue2);box-shadow:0 9px 20px rgba(37,99,235,.24)}
+.btn.danger{color:#b91c1c;background:#fff;border-color:#fecaca}
+
+.readonly-strip{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 18px;background:#f8fafc;border-bottom:1px solid #edf0f5}
+.readonly-badge{display:inline-flex;align-items:center;gap:6px;color:#475467;background:#fff;border:1px solid #e4e7ec;border-radius:999px;padding:5px 9px;font-size:9px;font-weight:850}
+.readonly-badge .lock{font-size:10px}
+.context{display:flex;gap:17px;flex-wrap:wrap;font-size:9px;color:#98a2b3}
+.context strong{font-size:10px;color:#344054}
+
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th{text-align:left;background:#fafbfc;color:#98a2b3;font-size:9px;text-transform:uppercase;letter-spacing:.08em;padding:11px 18px;border-bottom:1px solid #edf0f5}
+td{padding:12px 18px;border-bottom:1px solid #f0f2f6;font-size:11px;vertical-align:middle}
+tr{transition:.14s ease}
+tbody tr:hover{background:#fbfdff}
+.student{display:flex;align-items:center;gap:10px}
+.student-av{width:35px;height:35px;border-radius:10px;background:#f1f5f9;color:#475569;display:grid;place-items:center;font-size:10px;font-weight:900}
+.name{font-weight:850}.adm{font-size:9px;color:#98a2b3;margin-top:2px}
+.statuses{display:flex;gap:5px;flex-wrap:wrap}
+.status{border:1px solid #dfe4ec;background:#fff;color:#667085;border-radius:8px;padding:6px 9px;font-size:9px;font-weight:850;transition:.14s ease}
+.status:hover{transform:translateY(-1px);border-color:#b9c7dc}
+.status.sel[data-s=PRESENT]{background:var(--green-bg);border-color:#86efac;color:var(--green)}
+.status.sel[data-s=ABSENT]{background:var(--red-bg);border-color:#fca5a5;color:var(--red)}
+.status.sel[data-s=LATE]{background:var(--amber-bg);border-color:#fcd34d;color:var(--amber)}
+.status.sel[data-s=EXCUSED]{background:var(--purple-bg);border-color:#c4b5fd;color:var(--purple)}
+.notes{width:160px;border:1px solid #e1e6ef;border-radius:8px;padding:7px 9px;font-size:10px;outline:0}
+.notes:focus{border-color:#80a9ff;box-shadow:0 0 0 3px #dbeafe}
+.badge{display:inline-flex;align-items:center;border-radius:999px;padding:5px 9px;font-size:9px;font-weight:850}
+.badge.present{background:var(--green-bg);color:var(--green)}
+.badge.absent{background:var(--red-bg);color:var(--red)}
+.badge.late{background:var(--amber-bg);color:var(--amber)}
+.badge.excused{background:var(--purple-bg);color:var(--purple)}
+.badge.none{background:#f8fafc;color:#98a2b3;border:1px solid #e4e7ec}
+.recorded{font-size:9px;color:#667085}.recorded strong{color:#344054}
+
+.empty{padding:58px 20px;text-align:center;color:#98a2b3}
+.empty-icon{width:44px;height:44px;border-radius:14px;background:#f3f7ff;color:#2563eb;display:grid;place-items:center;margin:0 auto 10px;font-size:19px;font-weight:800}
+.empty h3{margin:0 0 5px;color:#344054;font-size:14px}
+.empty p{margin:0 auto;max-width:480px;font-size:10px;line-height:1.6}
+.loading-row{padding:45px;text-align:center;color:#98a2b3;font-size:11px}
+
+.banner{position:fixed;right:25px;bottom:25px;z-index:100;max-width:390px;background:#172033;color:#fff;border-radius:11px;padding:12px 15px;font-size:11px;box-shadow:0 18px 40px rgba(15,23,42,.2);opacity:0;pointer-events:none;transform:translateY(10px);transition:.2s ease}
+.banner.show{opacity:1;transform:none}.banner.success{background:#166534}.banner.error{background:#991b1b}
+
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.48);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:20px;z-index:90}
+.modal.open{display:flex}
+.modal-card{width:min(820px,100%);max-height:88vh;overflow:auto;background:#fff;border-radius:18px;box-shadow:0 30px 80px rgba(15,23,42,.25);animation:modalIn .2s ease}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;padding:19px 20px;border-bottom:1px solid #edf0f5}
+.modal-head h3{margin:0;font-size:16px}.modal-head p{margin:4px 0 0;color:#98a2b3;font-size:10px}
+.close{width:30px;height:30px;border:0;border-radius:9px;background:#f3f5f8;color:#475467;font-size:18px}
+.modal-body{padding:18px 20px}
+.history-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:15px}
+.history-stat{border:1px solid #e6eaf1;border-radius:12px;padding:12px;background:#fafcff}
+.history-stat b{display:block;font-size:19px}.history-stat span{font-size:9px;color:#98a2b3}
+.history-table{max-height:420px;overflow:auto;border:1px solid #edf0f5;border-radius:12px}
+.history-table table{min-width:620px}
+.modal-foot{padding:13px 20px;border-top:1px solid #edf0f5;display:flex;justify-content:flex-end}
+
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes modalIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(max-width:1100px){.filter-grid{grid-template-columns:repeat(3,1fr)}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:820px){.sidebar{width:195px}.main{margin-left:195px;padding:22px 16px}.topbar{flex-direction:column}.user-card{align-self:flex-end}}
+@media(max-width:620px){.sidebar{position:static;width:100%;min-height:auto}.nav{display:none}.sidebar-bottom{margin-top:10px}.main{margin-left:0;padding:17px 13px}.filter-grid,.stats{grid-template-columns:1fr}.hero-row,.mode-row,.panel-head{align-items:flex-start;flex-direction:column}.actions{width:100%}.actions .btn{flex:1}.history-summary{grid-template-columns:repeat(2,1fr)}}
+
+/* CONNECTSUKUU_HOA_ATTENDANCE_ANALYTICS_CLEAN */
+.hoa-analytics-clean{
+  margin-top:16px;
+  border:1px solid #dbe7f7;
+  border-radius:16px;
+  background:linear-gradient(135deg,#f8fbff 0%,#ffffff 74%);
+  box-shadow:0 8px 24px rgba(15,23,42,.05);
+  overflow:hidden;
+}
+.hoa-analytics-clean .hoa-a-head{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:16px 18px;border-bottom:1px solid #e8eef7;
+}
+.hoa-analytics-clean .hoa-a-title{display:flex;align-items:center;gap:10px}
+.hoa-analytics-clean .hoa-a-icon{
+  width:34px;height:34px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;background:#eaf2ff;color:#2563eb;font-weight:800;
+}
+.hoa-analytics-clean h3{margin:0;font-size:15px;color:#172033}
+.hoa-analytics-clean p{margin:3px 0 0;color:#667085;font-size:11px}
+.hoa-analytics-clean .hoa-a-badge{
+  border:1px solid #cfe0ff;background:#f4f8ff;color:#2563eb;border-radius:999px;
+  padding:6px 10px;font-size:10px;font-weight:800;white-space:nowrap;
+}
+.hoa-a-grid{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:14px 18px;
+}
+.hoa-a-card{
+  border:1px solid #e7edf5;border-radius:12px;padding:12px;background:#fff;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+.hoa-a-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.07);border-color:#cfe0ff}
+.hoa-a-label{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#667085}
+.hoa-a-value{margin-top:6px;font-size:22px;font-weight:850;color:#172033}
+.hoa-a-sub{margin-top:3px;font-size:10px;color:#98a2b3}
+.hoa-a-progress{height:8px;border-radius:999px;background:#edf2f7;overflow:hidden;margin-top:10px}
+.hoa-a-progress span{
+  display:block;height:100%;width:0;border-radius:inherit;
+  background:linear-gradient(90deg,#2563eb,#14b8a6);transition:width .35s ease;
+}
+.hoa-a-status{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:0 18px 18px;
+}
+.hoa-a-status-card{border-radius:12px;padding:10px 12px;background:#f8fafc;border:1px solid #edf1f6}
+.hoa-a-status-card strong{display:block;font-size:15px;color:#172033}
+.hoa-a-status-card span{display:block;margin-top:2px;font-size:10px;color:#667085}
+@media(max-width:850px){.hoa-a-grid,.hoa-a-status{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.hoa-analytics-clean .hoa-a-head{align-items:flex-start;flex-direction:column}.hoa-a-grid,.hoa-a-status{grid-template-columns:1fr}}
+/* END_CONNECTSUKUU_HOA_ATTENDANCE_ANALYTICS_CLEAN */
+
+</style>
+
+<style id="connectsukuu-global-shell-standard">
+/* ConnectSukuu canonical shell: 255px sidebar, consistent brand and right-pinned profile. */
+.sidebar,.app-sidebar,.cs-assessment-sidebar{width:255px!important;min-width:255px!important;max-width:255px!important;box-sizing:border-box!important}
+.sidebar .brand,.app-sidebar .brand,.cs-assessment-sidebar .brand{display:flex!important;align-items:center!important;gap:10px!important;min-height:40px!important;height:40px!important;padding:0 10px!important;margin:0 0 22px!important;line-height:1!important;white-space:nowrap!important}
+.sidebar .brand img,.app-sidebar .brand img,.cs-assessment-sidebar .brand img{display:block!important;width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;object-fit:contain!important;flex:0 0 34px!important;border-radius:9px!important}
+.sidebar .brand .brand-word,.app-sidebar .brand .brand-word,.cs-assessment-sidebar .brand .brand-word{display:block!important;color:#fff!important;font-size:20px!important;font-weight:800!important;letter-spacing:-.02em!important;line-height:1!important}
+.sidebar .brand .brand-accent,.app-sidebar .brand .brand-accent,.cs-assessment-sidebar .brand .brand-accent{color:#60a5fa!important}
+.sidebar .brand .brand-mark,.app-sidebar .brand .brand-mark,.cs-assessment-sidebar .brand .brand-mark{width:34px!important;height:34px!important;min-width:34px!important;display:grid!important;place-items:center!important;flex:0 0 34px!important;border-radius:9px!important;overflow:hidden!important}
+@media(min-width:821px){
+ body .app-shell{grid-template-columns:255px minmax(0,1fr)!important}
+ body .app-sidebar{width:255px!important;min-width:255px!important;max-width:255px!important}
+ body .app-main{min-width:0!important;width:auto!important}
+ body .main{margin-left:255px!important;width:calc(100% - 255px)!important;min-width:0!important}
+ body .cs-assessment-main-shift{margin-left:255px!important}
+ body .cs-assessment-sidebar{width:255px!important;min-width:255px!important;max-width:255px!important}
+}
+/* Same working analogy as Dashboard + Assessments: header flex, profile margin-left:auto. */
+body .topbar,body .app-topbar{display:flex!important;align-items:center!important;justify-content:flex-start!important;width:100%!important;max-width:none!important;box-sizing:border-box!important;min-height:54px!important;height:54px!important;padding:0 20px!important;position:sticky!important;top:0!important;z-index:120!important}
+body .topbar>.user,body .topbar .user,body .topbar>.topbar-user,body .topbar .topbar-user,body .app-topbar>.user,body .app-topbar .who,body .app-topbar>.topbar-user{margin-left:auto!important;margin-right:0!important;position:static!important;right:auto!important;top:auto!important;transform:none!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:10px!important;flex:0 0 auto!important;white-space:nowrap!important}
+body .app-topbar .who{padding:6px 12px!important;box-sizing:border-box!important}
+body .topbar .user-info,body .topbar .topbar-user .cs-academic-user-copy{display:flex!important;flex-direction:column!important;justify-content:center!important;line-height:1.15!important}
+body .topbar .user-role,body .topbar .topbar-user .cs-academic-role{color:#64748b!important;font-size:11px!important;font-weight:650!important}
+body .topbar .avatar,body .app-topbar .avatar,body .app-topbar .app-avatar{flex:0 0 auto!important}
+body .topbar-title,body .app-topbar h1{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+@media(max-width:820px){body .topbar,body .app-topbar{padding-left:18px!important;padding-right:18px!important}}
+</style>
+
+
+<style id="connectsukuu-teacher-role-canonical-shell">
+:root{--csk-sidebar:255px;--csk-header:72px;--csk-border:#e5e7eb;--csk-ink:#172033;--csk-muted:#667085;--csk-bg:#f6f8fc}
+html,body{margin:0!important;min-height:100%;background:var(--csk-bg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{overflow-x:hidden!important}
+.csk-teacher-sidebar{position:fixed!important;inset:0 auto 0 0!important;width:var(--csk-sidebar)!important;z-index:1000!important;background:#fff!important;border-right:1px solid var(--csk-border)!important;display:flex!important;flex-direction:column!important;box-sizing:border-box!important;overflow:hidden!important}
+.csk-teacher-brand{height:var(--csk-header);display:flex;align-items:center;gap:11px;padding:0 20px;border-bottom:1px solid var(--csk-border);box-sizing:border-box;flex:0 0 var(--csk-header)}
+.csk-teacher-brand img{width:34px;height:34px;object-fit:contain}.csk-teacher-brand strong{font-size:17px;color:var(--csk-ink);letter-spacing:-.02em}
+.csk-teacher-nav{padding:18px 12px;display:flex;flex-direction:column;gap:5px;overflow:auto;flex:1}
+.csk-teacher-nav-label{font-size:10px;font-weight:800;letter-spacing:.12em;color:#98a2b3;padding:8px 12px 5px}
+.csk-teacher-nav a{min-height:44px;display:flex;align-items:center;gap:12px;padding:0 13px;border-radius:11px;text-decoration:none;color:#475467;font-size:13.5px;font-weight:650;box-sizing:border-box;transition:.18s ease}
+.csk-teacher-nav a:hover{background:#f2f4f7;color:#1d2939;transform:translateX(1px)}
+.csk-teacher-nav a.active{background:#eef4ff;color:#175cd3;font-weight:750}
+.csk-icon{width:20px;text-align:center;font-size:17px;line-height:1;flex:0 0 20px}
+.csk-teacher-logout{margin:0 12px 14px;width:calc(100% - 24px);height:44px;border:1px solid #e4e7ec;background:#fff;border-radius:11px;color:#475467;font-weight:700;cursor:pointer}
+.csk-teacher-logout:hover{background:#f9fafb}
+.csk-teacher-main{margin-left:var(--csk-sidebar)!important;min-height:100vh!important;box-sizing:border-box!important}
+.csk-teacher-topbar{position:sticky!important;top:0!important;height:var(--csk-header)!important;z-index:900!important;background:rgba(255,255,255,.96)!important;backdrop-filter:blur(12px);border-bottom:1px solid var(--csk-border)!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:0 30px!important;box-sizing:border-box!important}
+.csk-teacher-title{font-size:20px!important;font-weight:750!important;color:var(--csk-ink)!important;margin:0!important;letter-spacing:-.02em}
+.csk-teacher-profile{margin-left:auto!important;display:flex!important;align-items:center!important;gap:10px!important;min-width:0!important;text-align:right!important}
+.csk-teacher-avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#eef4ff;color:#175cd3;font-size:13px;font-weight:800;flex:0 0 38px}
+.csk-teacher-profile-copy{display:flex;flex-direction:column;align-items:flex-end;line-height:1.2;min-width:0}.csk-teacher-profile-email{font-size:12px;font-weight:700;color:#344054;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.csk-teacher-profile-role{font-size:11px;color:#667085;margin-top:3px}
+.csk-teacher-content{width:100%!important;max-width:none!important;box-sizing:border-box!important;padding:28px 30px 44px!important}
+.csk-teacher-content>*{max-width:1180px;margin-left:auto;margin-right:auto}
+/* Preserve the existing module functionality while making its outer chrome consistent. */
+.csk-teacher-content .page,.csk-teacher-content .content,.csk-teacher-content main{max-width:1180px!important;margin-left:auto!important;margin-right:auto!important}
+.csk-teacher-content table{max-width:100%}
+@media(max-width:900px){:root{--csk-sidebar:0px}.csk-teacher-sidebar{position:static!important;width:100%!important;height:auto!important}.csk-teacher-nav{max-height:360px}.csk-teacher-main{margin-left:0!important}.csk-teacher-topbar{padding:0 16px!important}.csk-teacher-content{padding:20px 16px 34px!important}}
+</style>
+
+
+
+<style id="connectsukuu-teacher-shell-standardized">
+:root{
+  --csk-t-sidebar:255px;
+  --csk-t-header:58px;
+  --csk-t-navy:#0b1730;
+  --csk-t-navy-2:#101d38;
+  --csk-t-blue:#2563eb;
+  --csk-t-ink:#172033;
+  --csk-t-muted:#667085;
+  --csk-t-line:#e4e7ec;
+  --csk-t-bg:#f7f9fc;
+}
+html,body{min-height:100%;}
+body{margin:0!important;background:var(--csk-t-bg)!important;overflow-x:hidden!important;}
+
+/* Legacy shells are hidden. The Teacher pages keep their business logic/content. */
+body>.sidebar,
+body>.app-sidebar,
+body>.layout>.sidebar,
+body>.app-shell>.app-sidebar,
+body>.app-layout>.app-sidebar,
+body>.cs-assessment-sidebar,
+body>.csk-teacher-sidebar:not(.csk-teacher-sidebar-final){display:none!important;}
+.topbar,.app-topbar,.cs-assessment-topbar,
+body header.topbar,body header.app-topbar,
+.csk-teacher-topbar:not(.csk-teacher-topbar-final){display:none!important;}
+.csk-teacher-profile,.cs-assessment-profile,.user-card{display:none!important;}
+
+.csk-teacher-sidebar-final{
+  position:fixed!important;left:0!important;top:0!important;bottom:0!important;
+  width:var(--csk-t-sidebar)!important;min-width:var(--csk-t-sidebar)!important;
+  max-width:var(--csk-t-sidebar)!important;height:100vh!important;
+  z-index:5000!important;display:flex!important;flex-direction:column!important;
+  box-sizing:border-box!important;overflow:hidden!important;
+  background:linear-gradient(180deg,var(--csk-t-navy) 0%,var(--csk-t-navy-2) 100%)!important;
+  border-right:1px solid rgba(255,255,255,.08)!important;color:#fff!important;
+}
+.csk-teacher-brand-final{
+  height:var(--csk-t-header)!important;min-height:var(--csk-t-header)!important;
+  display:flex!important;align-items:center!important;gap:10px!important;
+  padding:0 18px!important;box-sizing:border-box!important;
+  border-bottom:1px solid rgba(255,255,255,.08)!important;flex:0 0 var(--csk-t-header)!important;
+}
+.csk-teacher-brand-final .brand-mark{
+  width:34px!important;height:34px!important;min-width:34px!important;border-radius:9px!important;
+  display:grid!important;place-items:center!important;background:#2563eb!important;color:#fff!important;
+  font-size:17px!important;font-weight:900!important;box-shadow:0 6px 16px rgba(37,99,235,.28)!important;overflow:hidden!important;
+}
+.csk-teacher-brand-final .brand-mark img{width:34px!important;height:34px!important;display:block!important;object-fit:cover!important;}
+.csk-teacher-brand-final .brand-connect{color:#fff!important;font-size:19px!important;font-weight:800!important;letter-spacing:-.035em!important;}
+.csk-teacher-brand-final .brand-sukuu{color:#60a5fa!important;}
+.csk-teacher-nav-final{
+  padding:16px 12px!important;display:flex!important;flex-direction:column!important;gap:4px!important;
+  overflow-y:auto!important;overflow-x:hidden!important;flex:1!important;
+}
+.csk-teacher-nav-final .nav-label{
+  font-size:10px!important;font-weight:800!important;letter-spacing:.12em!important;
+  color:#8492aa!important;padding:10px 12px 6px!important;
+}
+.csk-teacher-nav-final a{
+  min-height:44px!important;height:44px!important;display:flex!important;align-items:center!important;
+  gap:11px!important;padding:0 12px!important;border-radius:9px!important;text-decoration:none!important;
+  color:#c2ccdc!important;font-size:13px!important;font-weight:650!important;box-sizing:border-box!important;
+  white-space:nowrap!important;overflow:hidden!important;transition:background .16s ease,color .16s ease!important;
+}
+.csk-teacher-nav-final a:hover{background:rgba(255,255,255,.07)!important;color:#fff!important;transform:none!important;}
+.csk-teacher-nav-final a.active{background:rgba(37,99,235,.22)!important;color:#fff!important;box-shadow:inset 3px 0 0 #3b82f6!important;}
+.csk-teacher-nav-final .nav-icon{width:20px!important;min-width:20px!important;text-align:center!important;color:inherit!important;font-size:16px!important;line-height:1!important;}
+.csk-teacher-logout-final{
+  margin:0 14px 14px!important;width:calc(100% - 28px)!important;height:42px!important;
+  border:1px solid rgba(255,255,255,.14)!important;background:rgba(255,255,255,.035)!important;
+  color:#e5eaf3!important;border-radius:8px!important;font-size:12px!important;font-weight:750!important;cursor:pointer!important;
+}
+.csk-teacher-logout-final:hover{background:rgba(255,255,255,.09)!important;color:#fff!important;}
+
+.csk-teacher-main-final{
+  margin-left:var(--csk-t-sidebar)!important;min-height:100vh!important;width:calc(100% - var(--csk-t-sidebar))!important;
+  box-sizing:border-box!important;background:var(--csk-t-bg)!important;position:relative!important;
+  padding-top:var(--csk-t-header)!important;
+}
+.csk-teacher-header-final{
+  position:fixed!important;left:var(--csk-t-sidebar)!important;right:0!important;top:0!important;
+  height:var(--csk-t-header)!important;min-height:var(--csk-t-header)!important;
+  z-index:4900!important;background:#fff!important;border-bottom:1px solid var(--csk-t-line)!important;
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  padding:0 20px!important;box-sizing:border-box!important;
+}
+.csk-teacher-header-title-final{
+  margin:0!important;padding:0!important;color:var(--csk-t-ink)!important;
+  font-size:19px!important;font-weight:750!important;line-height:1!important;letter-spacing:-.025em!important;
+}
+.csk-teacher-profile-final{
+  display:flex!important;align-items:center!important;gap:10px!important;min-width:0!important;
+  padding:6px 9px!important;border:1px solid #e5e7eb!important;border-radius:10px!important;
+  background:#fff!important;box-shadow:0 2px 8px rgba(15,23,42,.04)!important;
+}
+.csk-teacher-profile-copy-final{
+  display:flex!important;flex-direction:column!important;align-items:flex-end!important;
+  min-width:0!important;line-height:1.15!important;
+}
+.csk-teacher-profile-email-final{
+  max-width:210px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+  color:#344054!important;font-size:11px!important;font-weight:750!important;
+}
+.csk-teacher-profile-role-final{margin-top:3px!important;color:#98a2b3!important;font-size:10px!important;font-weight:500!important;}
+.csk-teacher-avatar-final{
+  width:34px!important;height:34px!important;min-width:34px!important;border-radius:50%!important;
+  display:grid!important;place-items:center!important;background:#eff6ff!important;color:#2563eb!important;
+  font-size:12px!important;font-weight:850!important;
+}
+
+/* Same usable content width on every Teacher menu: the attendance canvas width is the standard. */
+.csk-teacher-content-final{
+  width:100%!important;max-width:none!important;box-sizing:border-box!important;
+  padding:24px 28px 44px!important;margin:0!important;min-height:calc(100vh - var(--csk-t-header))!important;
+}
+.csk-teacher-content-final>*{max-width:none!important;margin-left:0!important;margin-right:0!important;}
+.csk-teacher-content-final .content,.csk-teacher-content-final .page,.csk-teacher-content-final main{max-width:none!important;margin-left:0!important;margin-right:0!important;}
+.csk-teacher-content-final table{max-width:100%!important;}
+
+@media(max-width:900px){
+  :root{--csk-t-sidebar:0px;}
+  .csk-teacher-sidebar-final{position:relative!important;width:100%!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:0!important;}
+  .csk-teacher-brand-final{flex-basis:58px!important;}
+  .csk-teacher-nav-final{max-height:360px!important;}
+  .csk-teacher-main-final{margin-left:0!important;width:100%!important;padding-top:58px!important;}
+  .csk-teacher-header-final{left:0!important;padding:0 14px!important;}
+  .csk-teacher-content-final{padding:20px 16px 34px!important;}
+  .csk-teacher-profile-email-final{max-width:150px!important;}
+}
+</style>
+<style id="connectsukuu-teacher-profile-dialog">
+.csk-profile-trigger,.csk-teacher-profile-final{cursor:pointer!important}
+.csk-profile-trigger:focus-visible{outline:3px solid #93c5fd!important;outline-offset:2px!important}
+.csk-profile-modal{position:fixed;inset:0;z-index:12000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(10,20,40,.58);backdrop-filter:blur(4px)}
+.csk-profile-modal.open{display:flex}
+.csk-profile-dialog{width:min(560px,100%);max-height:min(86vh,760px);overflow:auto;background:#fff;border:1px solid #e4eaf3;border-radius:18px;box-shadow:0 24px 80px rgba(0,0,0,.25);color:#172033}
+.csk-profile-head{position:sticky;top:0;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:20px 22px;background:#fff;border-bottom:1px solid #edf0f5}
+.csk-profile-head h2{margin:0 0 5px;font-size:20px;letter-spacing:-.02em}.csk-profile-head p{margin:0;color:#667085;font-size:12px;line-height:1.5}
+.csk-profile-close{width:34px;height:34px;border:1px solid #e4e7ec;border-radius:10px;background:#fff;font-size:22px;cursor:pointer;color:#475467}
+.csk-profile-body{display:grid;gap:13px;padding:18px 22px 22px}
+.csk-profile-section{border:1px solid #e5eaf2;border-radius:13px;padding:15px;background:#fbfcff}
+.csk-profile-section h3{margin:0 0 5px;font-size:14px}.csk-profile-section p{margin:0 0 12px;color:#667085;font-size:12px;line-height:1.5}
+.csk-profile-identity{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.csk-profile-photo{width:52px;height:52px;flex:0 0 52px;border-radius:50%;display:grid;place-items:center;overflow:hidden;background:#eaf1ff;color:#175cd3;font-weight:800}
+.csk-profile-photo img{width:100%;height:100%;object-fit:cover}
+.csk-profile-name{font-size:14px;font-weight:800}.csk-profile-role{margin-top:3px;font-size:11px;color:#667085}
+.csk-profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.csk-profile-field{display:flex;flex-direction:column;gap:5px;min-width:0}.csk-profile-field label{font-size:11px;font-weight:750;color:#475467}
+.csk-profile-field input{box-sizing:border-box;width:100%;min-height:38px;border:1px solid #d5deeb;border-radius:9px;padding:9px 10px;font:inherit;font-size:12px;background:#fff}
+.csk-profile-field input[readonly]{background:#f2f4f7;color:#667085}
+.csk-profile-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:11px}
+.csk-profile-help{font-size:11px!important;margin:8px 0 0!important}
+.csk-profile-status{display:none;margin-top:10px;padding:9px 11px;border-radius:9px;background:#fef3f2;color:#b42318;font-size:12px;line-height:1.45}
+.csk-profile-status.show{display:block}.csk-profile-status.ok{background:#ecfdf3;color:#027a48}
+@media(max-width:560px){.csk-profile-grid{grid-template-columns:1fr}.csk-profile-head{padding:17px}.csk-profile-body{padding:14px}.csk-profile-dialog{max-height:92vh}}
+</style>
+<link rel="stylesheet" href="/assets/css/teacher-communications.css?v=20261015-1">
+<link rel="stylesheet" href="/assets/css/mobile-shell.css" media="(max-width:820px)"><script src="/assets/js/mobile-shell.js" defer></script></head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div>
+    <div class="brand"><img src="/assets/images/favicon.svg" alt="ConnectSukuu"><span class="brand-word">Connect<span class="brand-accent">Sukuu</span></span></div>
+<nav class="nav">
+      <div class="nav-section">Workspace</div>
+      <a href="app-dashboard.html" data-role-nav="OWNER,HEAD_TEACHER,ADMINISTRATOR,HEAD_OF_ACADEMICS,ACCOUNTANT,TEACHER">Dashboard</a>
+      <a href="app-team.html" data-role-nav="OWNER,HEAD_TEACHER">Team &amp; Roles</a>
+      <a href="app-academic.html" data-role-nav="HEAD_TEACHER,ADMINISTRATOR,HEAD_OF_ACADEMICS,ACCOUNTANT,TEACHER">Academic Setup</a>
+      <a href="app-students.html" data-role-nav="OWNER,HEAD_TEACHER,ADMINISTRATOR,HEAD_OF_ACADEMICS">Students</a>
+      <a href="app-attendance.html" class="active" data-role-nav="HEAD_TEACHER,ADMINISTRATOR,HEAD_OF_ACADEMICS,TEACHER">Attendance</a>
+      <div class="nav-section">Teaching</div>
+      <a href="app-teaching-assignments.html" data-role-nav="HEAD_TEACHER,HEAD_OF_ACADEMICS,TEACHER">Teaching Assignments</a>
+      <a href="app-timetable.html" data-role-nav="HEAD_TEACHER,HEAD_OF_ACADEMICS,TEACHER">Timetable</a>
+      <div class="nav-section">System</div>
+      <a href="app-settings.html" data-role-nav="OWNER">Settings</a>
+    </nav>
+  </div>
+  <div class="sidebar-bottom"><button id="logoutBtn" class="logout">↪ Log out</button></div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <div class="topbar-title">Students Attendance</div>
+  <div class="user"><div class="avatar" id="userAvatar">U</div><span id="userName">User</span></div>
+</header>
+
+<section class="content">
+  <div class="heading">
+    <div>
+      <div class="eyebrow">School Operations</div>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="hero-row">
+      <div>
+        <h2 id="heroTitle">Attendance Overview</h2>
+        <p id="heroText">Review attendance records by class, date, lesson and student. Teachers record attendance; leadership reviews the results.</p>
+      </div>
+      <span class="role-pill"><span class="dot"></span><span id="rolePillText">Read-only oversight</span></span>
+    </div>
+  </section>
+
+  <section class="filters">
+    <div class="filter-grid">
+      <div class="field"><label>Academic year</label><select id="year"><option value="">Loading…</option></select></div>
+      <div class="field"><label>Term</label><select id="term"><option value="">Select year first</option></select></div>
+      <div class="field"><label>Class</label><select id="class"><option value="">Select term first</option></select></div>
+      <div class="field"><label>Attendance date</label><input id="date" type="date"></div>
+      <div class="field hidden" id="lessonField"><label>Lesson</label><select id="lesson"><option value="">Select lesson</option></select></div>
+<div class="field hidden" id="studentSearchField"><label>Find student</label><input id="studentSearch" type="search" placeholder="Name or admission number"></div>
+    </div>
+    <div class="mode-row">
+      <div class="mode-left">
+        <span class="mode-title">Attendance mode</span>
+        <label class="mode-option" id="subjectMode"><input type="radio" name="mode" value="SUBJECT"> Subject-based</label>
+        <label class="mode-option" id="classMode"><input type="radio" name="mode" value="CLASS"> Class-based</label>
+      </div>
+      <span class="default-note" id="defaultNote">Loading school default…</span>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat"><div class="stat-label">Students</div><div class="stat-value" id="statTotal">—</div><div class="stat-sub" id="statTotalSub">selected roster</div></div>
+    <div class="stat"><div class="stat-label">Present</div><div class="stat-value" id="statPresent">—</div><div class="stat-sub">recorded as present</div></div>
+    <div class="stat"><div class="stat-label">Absent</div><div class="stat-value" id="statAbsent">—</div><div class="stat-sub">recorded as absent</div></div>
+    <div class="stat"><div class="stat-label" id="statFourthLabel">Remaining</div><div class="stat-value" id="statFourth">—</div><div class="stat-sub" id="statFourthSub">not yet recorded</div></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <div class="panel-title">
+        <div class="panel-icon" id="panelIcon">✓</div>
+        <div><h2 id="panelTitle">Attendance Overview</h2><p id="panelSub">Choose the academic context above to load attendance.</p></div>
+      </div>
+      <div class="actions" id="teacherActions">
+        <button class="btn" id="allBtn" disabled>Mark all present</button>
+        <button class="btn primary" id="saveBtn" disabled>Save attendance</button>
+      </div>
+    </div>
+    <div id="readonlyStrip" class="readonly-strip">
+      <div class="context">
+        <span>Mode <strong id="ctxMode">—</strong></span>
+        <span>Class <strong id="ctxClass">—</strong></span>
+        <span id="ctxLessonWrap">Lesson <strong id="ctxLesson">—</strong></span>
+        <span>Date <strong id="ctxDate">—</strong></span>
+      </div>
+      <span class="readonly-badge"><span class="lock">🔒</span> Read-only review</span>
+    </div>
+    
+<div id="tableWrap" class="table-wrap hidden"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+    <div id="empty" class="empty"><div class="empty-icon">✓</div><h3 id="emptyTitle">Choose an academic context</h3><p id="emptyText">Select an academic year, term and class. Subject-based attendance also requires a lesson.</p></div>
+  </section>
+</main>
+</div>
+
+<div class="modal" id="historyModal">
+  <div class="modal-card">
+    <div class="modal-head"><div><h3 id="historyTitle">Student attendance</h3><p id="historySubtitle">Attendance details for the selected student.</p></div><button class="close" id="closeHistory">×</button></div>
+    <div class="modal-body">
+      <div class="history-summary">
+        <div class="history-stat"><b id="hTotal">—</b><span>records shown</span></div>
+        <div class="history-stat"><b id="hPresent">—</b><span>present</span></div>
+        <div class="history-stat"><b id="hAbsent">—</b><span>absent</span></div>
+        <div class="history-stat"><b id="hOther">—</b><span>late / excused</span></div>
+      </div>
+      <div class="history-table"><table><thead><tr><th>Date</th><th>Mode</th><th>Lesson / context</th><th>Status</th><th>Recorded by</th></tr></thead><tbody id="historyBody"></tbody></table></div>
+    </div>
+    <div class="modal-foot"><button class="btn" id="closeHistory2">Close</button></div>
+  </div>
+</div>
+
+<div class="banner" id="banner"></div>
+
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+(() => {
+'use strict';
+
+const user = requireAuthOrRedirect();
+if (!user) return;
+
+const $ = id => document.getElementById(id);
+const role = user.role;
+const isTeacher = role === 'TEACHER';
+const isReviewer = ['HEAD_TEACHER','HEAD_OF_ACADEMICS','ADMINISTRATOR'].includes(role);
+if (!isTeacher && !isReviewer) { location.href='app-dashboard.html'; return; }
+
+const state = {
+  years: [], terms: [], classes: [], lessons: [], students: [], records: [],
+  mode: 'SUBJECT', defaultMode: 'SUBJECT'
+};
+
+const days = ['', 'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+function esc(v){return String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function api(path,opt={}) {
+  return apiFetch(path,opt).then(async r=>{
+    if(!r) throw new Error('Authentication expired.');
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(d.error||d.message||`Request failed (${r.status})`);
+    return d;
+  });
+}
+function showBanner(message,type=''){const b=$('banner');b.textContent=message;b.className='banner show '+type;clearTimeout(window.__attendanceBanner);window.__attendanceBanner=setTimeout(()=>b.className='banner',4200)}
+function fill(el,items,placeholder,label){el.innerHTML=`<option value="">${esc(placeholder)}</option>`;(items||[]).forEach(x=>{const o=document.createElement('option');o.value=x.id;o.textContent=label(x);el.appendChild(o)})}
+function fmtStatus(s){return s ? s.charAt(0)+s.slice(1).toLowerCase() : 'Not recorded'}
+function statusClass(s){return s ? s.toLowerCase() : 'none'}
+function dateToday(){return new Date().toISOString().slice(0,10)}
+function selectedDay(){const d=$('date').value;if(!d)return null;const parts=d.split('-').map(Number);return new Date(Date.UTC(parts[0],parts[1]-1,parts[2])).getUTCDay() || 7}
+
+function setupIdentity(){
+  $('userName').textContent=`${user.firstName||''} ${user.lastName||''}`.trim()||user.email||'User';
+  $('userAvatar').textContent=(user.firstName||user.email||'?').charAt(0).toUpperCase();
+  document.querySelectorAll('[data-role-nav]').forEach(a=>a.classList.toggle('hidden',!a.dataset.roleNav.split(',').includes(role)));
+
+  if(isTeacher){
+    $('panelSub').textContent='Record attendance for your assigned class or lesson. Changes are saved in one batch to avoid double entry.';
+    $('heroTitle').textContent='Take Attendance';
+    $('heroText').textContent='Record attendance for your assigned class or lesson. Changes are saved in one batch to avoid double entry.';
+    $('rolePillText').textContent='Teacher recording';
+    $('panelTitle').textContent='Take attendance';
+    $('panelIcon').textContent='✓';
+    $('teacherActions').classList.remove('hidden');
+    $('readonlyStrip').classList.add('hidden');
+    $('statFourthLabel').textContent='Remaining';
+    $('statFourthSub').textContent='not yet recorded';
+  } else {
+    $('teacherActions').classList.add('hidden');
+    $('readonlyStrip').classList.remove('hidden');
+    $('studentSearchField').classList.remove('hidden');
+    $('panelSub').textContent='Search attendance by academic context, class, date, lesson and student. Attendance entry remains with teachers.';
+    $('heroTitle').textContent='Attendance Overview';
+    $('heroText').textContent='Search attendance by academic context, class, date, lesson and student. Attendance entry remains with teachers.';
+    $('rolePillText').textContent='Read-only oversight';
+    $('panelTitle').textContent='Attendance Overview';
+    $('panelIcon').textContent='⌕';
+    $('statFourthLabel').textContent='Late / Excused';
+    $('statFourthSub').textContent='recorded statuses';
+  }
+}
+
+function setMode(mode){
+  state.mode=mode;
+  $('subjectMode').classList.toggle('active',mode==='SUBJECT');
+  $('classMode').classList.toggle('active',mode==='CLASS');
+  $('lessonField').classList.toggle('hidden',mode!=='SUBJECT');
+  $('subjectMode').querySelector('input').checked=mode==='SUBJECT';
+  $('classMode').querySelector('input').checked=mode==='CLASS';
+}
+
+async function loadYears(){
+  state.years=await api('/api/academic-years');
+  fill($('year'),state.years,'Select academic year',y=>`${y.name}${y.isCurrent?' — Current':''}`);
+  const current=state.years.find(y=>y.isCurrent)||state.years[0];
+  if(current){$('year').value=current.id;await loadTerms();}
+}
+async function loadTerms(){
+  const y=$('year').value;
+  state.terms=[];state.classes=[];state.lessons=[];state.students=[];state.records=[];
+  fill($('term'),[],'Select term',x=>x.name);fill($('class'),[],'Select class',x=>x.name);fill($('lesson'),[],'Select lesson',x=>x.name);
+  clearTable();
+  if(!y)return;
+  const selectedYear=state.years.find(x=>x.id===y);
+  state.terms=Array.isArray(selectedYear?.terms)?selectedYear.terms:await api(`/api/academic-years/${encodeURIComponent(y)}/terms`);
+  fill($('term'),state.terms,'Select term',t=>`${t.name}${t.isCurrent?' — Current':''}`);
+  const current=state.terms.find(t=>t.isCurrent)||state.terms[0];
+  if(current)$('term').value=current.id;
+  state.classes=await api(`/api/classes?academicYearId=${encodeURIComponent(y)}`);
+  fill($('class'),state.classes,'Select class',c=>`${c.name}${c.section?' — '+c.section:''}`);
+  await loadLessons();
+  updateContext();
+}
+async function loadLessons(){
+  fill($('lesson'),[],'Select lesson',x=>x.name);state.lessons=[];
+  if(state.mode!=='SUBJECT'||!$('year').value||!$('term').value||!$('class').value)return;
+  const all=await api(`/api/attendance/lessons?academicYearId=${encodeURIComponent($('year').value)}&termId=${encodeURIComponent($('term').value)}&classId=${encodeURIComponent($('class').value)}`);
+  const day=selectedDay();
+  state.lessons=day ? all.filter(x=>Number(x.dayOfWeek)===day) : all;
+  fill($('lesson'),state.lessons,'Select lesson',x=>`${days[x.dayOfWeek]||'Day'} · ${x.startTime}–${x.endTime} · ${x.teachingAssignment?.subject?.name||'Lesson'} · ${`${x.teachingAssignment?.teacher?.firstName||''} ${x.teachingAssignment?.teacher?.lastName||''}`.trim()}`);
+  if(state.lessons.length===1)$('lesson').value=state.lessons[0].id;
+}
+function ready(){return Boolean($('year').value&&$('term').value&&$('class').value&&(state.mode==='CLASS'||$('lesson').value))}
+function clearTable(){
+  $('tableWrap').classList.add('hidden');$('tbody').innerHTML='';$('thead').innerHTML='';
+  $('empty').classList.remove('hidden');$('emptyTitle').textContent='Choose an academic context';
+  $('emptyText').textContent=state.mode==='SUBJECT'?'Select an academic year, term and class, then choose a lesson for the selected date.':'Select an academic year, term and class to review daily attendance.';
+  updateStats([]);updateContext();
+}
+function updateContext(){
+  const c=state.classes.find(x=>x.id===$('class').value);
+  const l=state.lessons.find(x=>x.id===$('lesson').value);
+  $('ctxMode').textContent=state.mode==='SUBJECT'?'Subject-based':'Class-based';
+  $('ctxClass').textContent=c?.name||'—';$('ctxDate').textContent=$('date').value||'—';
+  $('ctxLessonWrap').classList.toggle('hidden',state.mode!=='SUBJECT');
+  $('ctxLesson').textContent=l?`${l.teachingAssignment?.subject?.name||'Lesson'} · ${l.startTime}–${l.endTime}`:'—';
+}
+async function loadRoster(){
+  if(!ready()){clearTable();return;}
+  $('emptyTitle').textContent='Loading attendance…';$('emptyText').textContent='Fetching the selected roster and attendance records.';
+  $('tableWrap').classList.add('hidden');$('empty').classList.remove('hidden');
+  try{
+    state.students=await api(`/api/attendance/students?academicYearId=${encodeURIComponent($('year').value)}&termId=${encodeURIComponent($('term').value)}&classId=${encodeURIComponent($('class').value)}`);
+    let p=`/api/attendance?academicYearId=${encodeURIComponent($('year').value)}&termId=${encodeURIComponent($('term').value)}&classId=${encodeURIComponent($('class').value)}&attendanceDate=${encodeURIComponent($('date').value)}&attendanceMode=${state.mode}`;
+    if(state.mode==='SUBJECT')p+=`&timetableEntryId=${encodeURIComponent($('lesson').value)}`;
+    state.records=await api(p);
+    renderTable();
+  }catch(e){state.students=[];state.records=[];clearTable();$('emptyTitle').textContent='Could not load attendance';$('emptyText').textContent=e.message;showBanner(e.message,'error')}
+}
+function recordFor(id){return state.records.find(r=>r.studentId===id)}
+function renderTable(){
+  updateContext();$('empty').classList.add('hidden');$('tableWrap').classList.remove('hidden');
+  if(isTeacher){
+    $('thead').innerHTML='<tr><th>Student</th><th>Attendance status</th><th>Notes</th><th>Saved</th></tr>';
+    $('tbody').innerHTML=state.students.map(s=>{
+      const e=recordFor(s.id),st=e?.status||'',ini=(`${s.firstName||''}${s.lastName||''}`.trim().slice(0,2)||'?').toUpperCase();
+      return `<tr data-id="${esc(s.id)}"><td><div class="student"><div class="student-av">${esc(ini)}</div><div><div class="name">${esc(`${s.firstName||''} ${s.lastName||''}`.trim())}</div><div class="adm">${esc(s.admissionNumber||'No admission number')}</div></div></div></td><td><div class="statuses">${['PRESENT','ABSENT','LATE','EXCUSED'].map(x=>`<button type="button" class="status ${st===x?'sel':''}" data-s="${x}">${fmtStatus(x)}</button>`).join('')}</div></td><td><input class="notes" maxlength="500" placeholder="Optional note" value="${esc(e?.notes||'')}"></td><td>${e?'<span class="badge present">Saved</span>':'<span class="badge none">New</span>'}</td></tr>`;
+    }).join('');
+    document.querySelectorAll('.status').forEach(btn=>btn.addEventListener('click',()=>{const row=btn.closest('tr');row.querySelectorAll('.status').forEach(x=>x.classList.remove('sel'));btn.classList.add('sel');updateStatsFromTeacher();}));
+    $('saveBtn').disabled=false;$('allBtn').disabled=false;
+    updateStatsFromTeacher();
+  } else {
+    $('thead').innerHTML='<tr><th>Student</th><th>Status</th><th>Attendance context</th><th>Recorded by</th><th></th></tr>';
+    const q=document.getElementById('studentSearch')?.value?.trim().toLowerCase()||'';
+    const rows=state.records.filter(r=>{const name=`${r.student?.firstName||''} ${r.student?.lastName||''} ${r.student?.admissionNumber||''}`.toLowerCase();return !q||name.includes(q)});
+    $('tbody').innerHTML=rows.length?rows.map(r=>{
+      const a=r.timetableEntry?.teachingAssignment,l=a?.subject?.name;
+      const context=r.attendanceMode==='SUBJECT'?(l?`${l} · ${r.timetableEntry?.startTime||''}–${r.timetableEntry?.endTime||''}`:'Subject lesson'):'Daily class attendance';
+      return `<tr><td><div class="student"><div class="student-av">${esc((`${r.student?.firstName||''}${r.student?.lastName||''}`.trim().slice(0,2)||'?').toUpperCase())}</div><div><div class="name">${esc(`${r.student?.firstName||''} ${r.student?.lastName||''}`.trim()||'Student')}</div><div class="adm">${esc(r.student?.admissionNumber||'No admission number')}</div></div></div></td><td><span class="badge ${statusClass(r.status)}">${fmtStatus(r.status)}</span></td><td><div>${esc(context)}</div><div class="adm">${esc(r.attendanceMode==='SUBJECT'?(days[r.timetableEntry?.dayOfWeek]||''):'Class-based')}</div></td><td><span class="recorded">${esc(`${r.recordedBy?.firstName||''} ${r.recordedBy?.lastName||''}`.trim()||'—')}<br><strong>${esc(r.recordedBy?.role||'')}</strong></span></td><td><button type="button" class="btn view-student" data-id="${esc(r.studentId)}">Student view</button></td></tr>`;
+    }).join(''):`<tr><td colspan="5"><div class="empty"><div class="empty-icon">⌕</div><h3>No attendance records</h3><p>No records match the selected academic context and date.</p></div></td></tr>`;
+    document.querySelectorAll('.view-student').forEach(b=>b.addEventListener('click',()=>openHistory(b.dataset.id)));
+    updateStatsFromRecords(state.records);
+  }
+}
+function updateStatsFromTeacher(){
+  const rows=[...document.querySelectorAll('#tbody tr')],statuses=rows.map(r=>r.querySelector('.status.sel')?.dataset.s||'');
+  $('statTotal').textContent=state.students.length;$('statTotalSub').textContent='active students in class';
+  $('statPresent').textContent=statuses.filter(x=>x==='PRESENT').length;
+  $('statAbsent').textContent=statuses.filter(x=>x==='ABSENT').length;
+  $('statFourth').textContent=statuses.filter(x=>x==='LATE'||x==='EXCUSED').length;
+  $('statFourthSub').textContent='late or excused';
+}
+function updateStatsFromRecords(records){
+  $('statTotal').textContent=state.students.length||records.length||0;$('statTotalSub').textContent='active students / records';
+  $('statPresent').textContent=records.filter(r=>r.status==='PRESENT').length;
+  $('statAbsent').textContent=records.filter(r=>r.status==='ABSENT').length;
+  $('statFourth').textContent=records.filter(r=>r.status==='LATE'||r.status==='EXCUSED').length;
+}
+function updateStatsFromEmpty(){updateStatsFromRecords([])}
+function updateStats(records){$('statTotal').textContent=state.students.length||0;$('statPresent').textContent=records.filter(r=>r.status==='PRESENT').length;$('statAbsent').textContent=records.filter(r=>r.status==='ABSENT').length;$('statFourth').textContent=records.filter(r=>r.status==='LATE'||r.status==='EXCUSED').length}
+async function save(){
+  if(!isTeacher||!ready())return;
+  const btn=$('saveBtn');btn.disabled=true;btn.textContent='Saving…';
+  try{
+    const records=state.students.map(s=>{const row=document.querySelector(`tr[data-id="${CSS.escape(s.id)}"]`);return{studentId:s.id,status:row?.querySelector('.status.sel')?.dataset.s||'PRESENT',notes:row?.querySelector('.notes')?.value.trim()||null}});
+    const payload={academicYearId:$('year').value,termId:$('term').value,classId:$('class').value,attendanceDate:$('date').value,attendanceMode:state.mode,records};
+    if(state.mode==='SUBJECT')payload.timetableEntryId=$('lesson').value;
+    const r=await api('/api/attendance/bulk',{method:'POST',body:JSON.stringify(payload)});
+    showBanner(`${r.count||records.length} attendance record${(r.count||records.length)===1?'':'s'} saved successfully.`,'success');
+    await loadRoster();
+  }catch(e){showBanner(e.message,'error')}finally{btn.disabled=false;btn.textContent='Save attendance'}
+}
+function allPresent(){
+  if(!isTeacher)return;
+  document.querySelectorAll('#tbody .status[data-s="PRESENT"]').forEach(btn=>{const row=btn.closest('tr');row.querySelectorAll('.status').forEach(x=>x.classList.remove('sel'));btn.classList.add('sel')});
+  updateStatsFromTeacher();
+}
+async function openHistory(studentId){
+  const student=state.students.find(s=>s.id===studentId)||state.records.find(r=>r.studentId===studentId)?.student;
+  if(!student)return;
+
+  const term=state.terms.find(t=>t.id===$('term').value);
+  const from=(term?.startsAt||'').slice(0,10);
+  const to=(term?.endsAt||'').slice(0,10);
+
+  $('historyTitle').textContent=`${student.firstName||''} ${student.lastName||''}`.trim()||'Student attendance';
+  $('historySubtitle').textContent=`${student.admissionNumber||'No admission number'} · selected term attendance history`;
+  $('historyBody').innerHTML='<tr><td colspan="5" style="text-align:center;color:#98a2b3;padding:30px">Loading student attendance history…</td></tr>';
+  $('historyModal').classList.add('open');
+
+  try{
+    let p=`/api/attendance?academicYearId=${encodeURIComponent($('year').value)}&termId=${encodeURIComponent($('term').value)}&classId=${encodeURIComponent($('class').value)}&studentId=${encodeURIComponent(studentId)}`;
+    if(from)p+=`&from=${encodeURIComponent(from)}`;
+    if(to)p+=`&to=${encodeURIComponent(to)}`;
+    const rows=await api(p);
+
+    $('hTotal').textContent=rows.length;
+    $('hPresent').textContent=rows.filter(r=>r.status==='PRESENT').length;
+    $('hAbsent').textContent=rows.filter(r=>r.status==='ABSENT').length;
+    $('hOther').textContent=rows.filter(r=>r.status==='LATE'||r.status==='EXCUSED').length;
+
+    $('historyBody').innerHTML=rows.length?rows.map(r=>{
+      const a=r.timetableEntry?.teachingAssignment;
+      const context=r.attendanceMode==='SUBJECT'
+        ? `${a?.subject?.name||'Subject lesson'} · ${r.timetableEntry?.startTime||''}–${r.timetableEntry?.endTime||''}`
+        : 'Daily class attendance';
+      const recorded=`${r.recordedBy?.firstName||''} ${r.recordedBy?.lastName||''}`.trim()||'—';
+      return `<tr><td>${esc((r.attendanceDate||'').slice(0,10))}</td><td>${esc(r.attendanceMode==='SUBJECT'?'Subject':'Class')}</td><td>${esc(context)}</td><td><span class="badge ${statusClass(r.status)}">${fmtStatus(r.status)}</span></td><td>${esc(recorded)}</td></tr>`;
+    }).join(''):'<tr><td colspan="5" style="text-align:center;color:#98a2b3;padding:30px">No attendance records found for this student in the selected term and class.</td></tr>';
+  }catch(e){
+    $('historyBody').innerHTML=`<tr><td colspan="5" style="text-align:center;color:#b91c1c;padding:30px">${esc(e.message)}</td></tr>`;
+    $('hTotal').textContent='—';$('hPresent').textContent='—';$('hAbsent').textContent='—';$('hOther').textContent='—';
+  }
+}
+function updateDefaultNote(){ $('defaultNote').textContent=`School default: ${state.defaultMode==='CLASS'?'Class-based':'Subject-based'}` }
+async function init(){
+  setupIdentity();$('date').value=dateToday();
+  try{const s=await api('/api/settings');state.defaultMode=['CLASS','SUBJECT'].includes(s.defaultAttendanceMode)?s.defaultAttendanceMode:'SUBJECT'}catch(_){state.defaultMode='SUBJECT'}
+  setMode(state.defaultMode);updateDefaultNote();await loadYears();
+}
+$('year').addEventListener('change',loadTerms);
+$('term').addEventListener('change',async()=>{await loadLessons();await loadRoster()});
+$('class').addEventListener('change',async()=>{await loadLessons();await loadRoster()});
+$('date').addEventListener('change',async()=>{if(state.mode==='SUBJECT'){await loadLessons();if(state.lessons.length===1)$('lesson').value=state.lessons[0].id}await loadRoster()});
+$('lesson').addEventListener('change',loadRoster);
+$('studentSearch').addEventListener('input',()=>{if(!isTeacher)renderTable()});
+document.querySelectorAll('input[name="mode"]').forEach(x=>x.addEventListener('change',async()=>{setMode(x.value);await loadLessons();await loadRoster()}));
+$('saveBtn').addEventListener('click',save);$('allBtn').addEventListener('click',allPresent);
+$('logoutBtn').addEventListener('click',()=>AUTH.logout());
+$('closeHistory').addEventListener('click',()=>$('historyModal').classList.remove('open'));$('closeHistory2').addEventListener('click',()=>$('historyModal').classList.remove('open'));
+$('historyModal').addEventListener('click',e=>{if(e.target===$('historyModal'))$('historyModal').classList.remove('open')});
+init().catch(e=>showBanner(e.message,'error'));
+})();
+</script>
+
+<script id="connectsukuu-teacher-role-canonical-runtime">
+(function(){
+'use strict';
+function user(){try{if(window.AUTH&&typeof AUTH.getUser==='function')return AUTH.getUser()||{};return JSON.parse(localStorage.getItem('cs_user')||'null')||{};}catch(_){return {};}}
+var u=user(); if(String(u.role||'').toUpperCase()!=='TEACHER') return;
+var file=(location.pathname.split('/').pop()||'').toLowerCase();
+var map={"/roles/teacher/teacher-dashboard.html":"dashboard","/roles/teacher/teacher-attendance.html":"attendance","/roles/teacher/teacher-teaching-assignments.html":"assignments","/roles/teacher/teacher-timetable.html":"timetable","/roles/teacher/teacher-assessments.html":"assessments","/roles/teacher/teacher-learning.html":"learning"};
+var key=map[file]||'';
+function initials(){var n=[u.firstName,u.lastName].filter(Boolean).join(' ').trim();return (n||u.email||'T').split(/\s+/).map(function(x){return x.charAt(0)}).join('').slice(0,2).toUpperCase();}
+function build(){
+  var side=document.querySelector('.csk-teacher-sidebar');
+  if(!side){side=document.createElement('aside');side.className='csk-teacher-sidebar';side.innerHTML='<div class="csk-teacher-brand"><img src="/assets/images/favicon.svg" alt="ConnectSukuu"><strong>ConnectSukuu</strong></div><nav class="csk-teacher-nav">__NAV__</nav><button type="button" class="csk-teacher-logout" id="cskTeacherLogout">↪ Log out</button><button type="button" id="logoutBtn" hidden aria-hidden="true"></button>';document.body.prepend(side);}
+  var nav=side.querySelector('.csk-teacher-nav'); if(nav){nav.innerHTML='\n<div class="csk-teacher-nav-label">WORKSPACE</div>\n<a href="/roles/teacher/teacher-dashboard.html" data-csk-teacher-link="dashboard"><span class="csk-icon">⌂</span><span>Dashboard</span></a>\n<a href="/roles/teacher/teacher-attendance.html" data-csk-teacher-link="attendance"><span class="csk-icon">✓</span><span>Attendance</span></a>\n<div class="csk-teacher-nav-label">TEACHING</div>\n<a href="/roles/teacher/teacher-teaching-assignments.html" data-csk-teacher-link="assignments"><span class="csk-icon">⇄</span><span>Teaching Assignments</span></a>\n<a href="/roles/teacher/teacher-timetable.html" data-csk-teacher-link="timetable"><span class="csk-icon">▦</span><span>Timetable</span></a>\n<a href="/roles/teacher/teacher-assessments.html" data-csk-teacher-link="assessments"><span class="csk-icon">★</span><span>Assessments &amp; Reports</span></a>\n<a href="/roles/teacher/teacher-learning.html" data-csk-teacher-link="learning"><span class="csk-icon">▶</span><span>Learning &amp; Live Classes</span></a>\n';nav.querySelectorAll('[data-csk-teacher-link]').forEach(function(a){a.classList.toggle('active',a.getAttribute('data-csk-teacher-link')===key);});}
+  var old=document.querySelector('.csk-teacher-topbar'); if(!old){var oldTop=document.querySelector('header.topbar,header.app-topbar,.topbar,.app-topbar'); if(oldTop){oldTop.classList.add('csk-teacher-topbar');oldTop.innerHTML='<h1 class="csk-teacher-title">'+({dashboard:'Dashboard',attendance:'Attendance',assignments:'Teaching Assignments',timetable:'Timetable',assessments:'Assessments & Reports',learning:'Learning & Live Classes'}[key]||'Teacher Workspace')+'</h1><div class="csk-teacher-profile"><div class="csk-teacher-profile-copy"><span class="csk-teacher-profile-email" id="userName">'+esc(u.email||'Teacher')+'</span><span class="csk-teacher-profile-role" id="userRole">Teacher</span></div><div class="csk-teacher-avatar" id="userAvatar">'+initials()+'</div></div>';}}
+  else {old.classList.add('csk-teacher-topbar');}
+  var main=document.querySelector('.csk-teacher-main'); if(!main){main=document.querySelector('main.main,main.app-main,main');if(main){main.classList.add('csk-teacher-main');}}
+  if(main){var content=main.querySelector('.csk-teacher-content');if(!content){content=document.createElement('div');content.className='csk-teacher-content';while(main.firstChild&&main.firstChild!==document.querySelector('.csk-teacher-topbar'))content.appendChild(main.firstChild);var top=document.querySelector('.csk-teacher-topbar');if(top&&top.parentElement===main)main.insertBefore(top,content);main.appendChild(content);}}
+  var lb=document.getElementById('cskTeacherLogout');if(lb&&!lb.dataset.bound){lb.dataset.bound='1';lb.onclick=function(){try{if(window.AUTH&&typeof AUTH.logout==='function'){AUTH.logout();return}}catch(_){}localStorage.removeItem('cs_token');localStorage.removeItem('cs_user');location.href='/auth/signin.html';};}
+}
+function esc(s){return String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]});}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',build);else build();
+})();
+</script>
+
+
+
+<script id="connectsukuu-teacher-shell-standardized-runtime">
+(function(){
+'use strict';
+var PAGES={
+ '/roles/teacher/teacher-dashboard.html':{key:'dashboard',title:'Dashboard'},
+ '/roles/teacher/teacher-attendance.html':{key:'attendance',title:'Attendance'},
+ '/roles/teacher/teacher-teaching-assignments.html':{key:'assignments',title:'Teaching Assignments'},
+ '/roles/teacher/teacher-timetable.html':{key:'timetable',title:'Timetable'},
+ '/roles/teacher/teacher-assessments.html':{key:'assessments',title:'Assessments & Reports'},
+ '/roles/teacher/teacher-learning.html':{key:'learning',title:'Learning & Live Classes'}
+};
+var file=(location.pathname.split('/').pop()||'').toLowerCase(), page=PAGES[file];
+if(!page){
+  var t=(document.title||'').toLowerCase();
+  if(t.indexOf('learning')>=0) page=PAGES['/roles/teacher/teacher-learning.html'];
+  else if(t.indexOf('assessment')>=0 || t.indexOf('report')>=0) page=PAGES['/roles/teacher/teacher-assessments.html'];
+  else if(t.indexOf('timetable')>=0) page=PAGES['/roles/teacher/teacher-timetable.html'];
+  else if(t.indexOf('teaching assignment')>=0) page=PAGES['/roles/teacher/teacher-teaching-assignments.html'];
+  else if(t.indexOf('attendance')>=0) page=PAGES['/roles/teacher/teacher-attendance.html'];
+  else if(t.indexOf('dashboard')>=0) page=PAGES['/roles/teacher/teacher-dashboard.html'];
+  else page={key:'dashboard',title:'Teacher Workspace'};
+}
+function user(){try{if(window.AUTH&&typeof AUTH.getUser==='function')return AUTH.getUser()||{};return JSON.parse(localStorage.getItem('cs_user')||'null')||{};}catch(e){return {};}}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function initials(u){var n=[u.firstName,u.lastName].filter(Boolean).join(' ').trim()||u.email||'Teacher';return n.split(/\s+/).map(function(x){return x.charAt(0);}).join('').slice(0,2).toUpperCase();}
+function nav(){return '<div class="nav-label">WORKSPACE</div>'+
+'<a href="/roles/teacher/teacher-dashboard.html" data-t="dashboard"><span class="nav-icon">⌂</span><span>Dashboard</span></a>'+ 
+'<a href="/roles/teacher/teacher-attendance.html" data-t="attendance"><span class="nav-icon">✓</span><span>Attendance</span></a>'+ 
+'<div class="nav-label">TEACHING</div>'+ 
+'<a href="/roles/teacher/teacher-teaching-assignments.html" data-t="assignments"><span class="nav-icon">⇄</span><span>Teaching Assignments</span></a>'+ 
+'<a href="/roles/teacher/teacher-timetable.html" data-t="timetable"><span class="nav-icon">▦</span><span>Timetable</span></a>'+ 
+'<a href="/roles/teacher/teacher-assessments.html" data-t="assessments"><span class="nav-icon">★</span><span>Assessments &amp; Reports</span></a>'+ 
+'<a href="/roles/teacher/teacher-learning.html" data-t="learning"><span class="nav-icon">▶</span><span>Learning &amp; Live Classes</span></a>';}
+function hideLegacy(){
+ document.querySelectorAll('.topbar,.app-topbar,.cs-assessment-topbar,header.topbar,header.app-topbar,.user-card,.cs-assessment-profile,.csk-teacher-profile').forEach(function(el){el.style.display='none';});
+ document.querySelectorAll('body>.sidebar,body>.app-sidebar,body>.cs-assessment-sidebar').forEach(function(el){el.style.display='none';});
+}
+function build(){
+ var u=user();
+ /* Existing page authentication guards remain authoritative.
+    Do not redirect from the visual shell runtime; this prevents a race
+    with AUTH/localStorage initialization from deleting the shell. */
+ hideLegacy();
+ document.querySelectorAll('.csk-teacher-sidebar-final,.csk-teacher-header-final').forEach(function(el){el.remove();});
+ var side=document.createElement('aside');side.className='csk-teacher-sidebar-final';
+ side.innerHTML='<div class="csk-teacher-brand-final"><span class="brand-mark"><img src="/assets/images/favicon.svg" alt="" aria-hidden="true"></span><span class="brand-connect">Connect<span class="brand-sukuu">Sukuu</span></span></div><nav class="csk-teacher-nav-final">'+nav()+'</nav><button type="button" class="csk-teacher-logout-final" id="cskTeacherLogoutFinal">↪ Log out</button>';
+ document.body.insertBefore(side,document.body.firstChild);
+ side.querySelectorAll('[data-t]').forEach(function(a){a.classList.toggle('active',a.getAttribute('data-t')===page.key);});
+ var main=document.querySelector('body>main') || document.querySelector('main.main,main.app-main,main');
+ if(!main){main=document.createElement('main');document.body.appendChild(main);}
+ main.classList.add('csk-teacher-main-final');
+ var legacyHeaders=[];
+ Array.prototype.slice.call(main.children).forEach(function(el){if(el.matches&&el.matches('.topbar,.app-topbar,header.topbar,header.app-topbar,.cs-assessment-topbar'))legacyHeaders.push(el);});
+ legacyHeaders.forEach(function(el){el.remove();});
+ var content=main.querySelector('.csk-teacher-content-final');
+ if(!content){
+   content=document.createElement('div');content.className='csk-teacher-content-final';
+   var children=Array.prototype.slice.call(main.children);
+   children.forEach(function(el){content.appendChild(el);});
+   main.appendChild(content);
+ }
+ var header=document.createElement('header');header.className='csk-teacher-header-final';
+ header.innerHTML='<h1 class="csk-teacher-header-title-final">'+page.title+'</h1><div class="csk-teacher-profile-final"><div class="csk-teacher-profile-copy-final"><span class="csk-teacher-profile-email-final">'+esc(u.email||'Teacher')+'</span><span class="csk-teacher-profile-role-final">Teacher</span></div><div class="csk-teacher-avatar-final">'+initials(u)+'</div></div>';
+ main.appendChild(header);
+ var logout=document.getElementById('cskTeacherLogoutFinal');
+ logout.addEventListener('click',function(){try{if(window.AUTH&&typeof AUTH.logout==='function'){AUTH.logout();return;}}catch(e){} localStorage.removeItem('cs_token');localStorage.removeItem('cs_user');location.href='/auth/signin.html';});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',build);else build();
+})();
+</script>
+<div class="csk-profile-modal" id="cskProfileModal" aria-hidden="true">
+  <section class="csk-profile-dialog" role="dialog" aria-modal="true" aria-labelledby="cskProfileTitle">
+    <header class="csk-profile-head"><div><h2 id="cskProfileTitle">My profile</h2><p>Manage your profile photo and password. School-managed contact details are read-only here.</p></div><button class="csk-profile-close" id="cskProfileClose" type="button" aria-label="Close profile">×</button></header>
+    <div class="csk-profile-body">
+      <section class="csk-profile-section">
+        <div class="csk-profile-identity"><div class="csk-profile-photo" id="cskProfilePhoto">T</div><div><div class="csk-profile-name" id="cskProfileName">Teacher</div><div class="csk-profile-role" id="cskProfileRole">Teacher</div></div></div>
+        <div class="csk-profile-field"><label for="cskProfilePhotoFile">Profile picture (PNG, JPG, WEBP or GIF; maximum 5 MB)</label><input type="file" id="cskProfilePhotoFile" accept=".png,.jpg,.jpeg,.webp,.gif"></div>
+        <div class="csk-profile-actions"><button class="btn primary" id="cskProfileUpload" type="button">Upload photo</button></div>
+      </section>
+      <section class="csk-profile-section"><h3>Account details</h3><p>Email and phone are shown for reference. Ask the school Owner or authorized administrator to change them.</p>
+        <div class="csk-profile-grid"><div class="csk-profile-field"><label for="cskProfileEmail">Email address</label><input id="cskProfileEmail" readonly></div><div class="csk-profile-field"><label for="cskProfilePhone">Phone number</label><input id="cskProfilePhone" readonly></div><div class="csk-profile-field"><label for="cskProfileFirst">First name</label><input id="cskProfileFirst" readonly></div><div class="csk-profile-field"><label for="cskProfileLast">Last name</label><input id="cskProfileLast" readonly></div></div>
+      </section>
+      <section class="csk-profile-section"><h3>Change password</h3><p>Use at least 8 characters. Your current password is required.</p>
+        <form id="cskProfilePasswordForm"><div class="csk-profile-grid"><div class="csk-profile-field"><label for="cskProfileCurrent">Current password</label><input id="cskProfileCurrent" name="currentPassword" type="password" autocomplete="current-password" required></div><div class="csk-profile-field"><label for="cskProfileNew">New password</label><input id="cskProfileNew" name="newPassword" type="password" minlength="8" autocomplete="new-password" required></div></div><div class="csk-profile-actions"><button class="btn primary" type="submit" id="cskProfilePasswordSave">Update password</button></div></form>
+      </section>
+      <div class="csk-profile-status" id="cskProfileStatus" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+</div>
+
+<script id="connectsukuu-teacher-learning-runtime">(function(){'use strict';function getUser(){try{return AUTH.getUser()||{}}catch(_){return {}}}var u=getUser();if(String(u.role||'').toUpperCase()!=='TEACHER'){location.replace('/roles/teacher/teacher-dashboard.html');return}document.getElementById('teacherEmail').textContent=u.email||[u.firstName,u.lastName].filter(Boolean).join(' ')||'Teacher';document.getElementById('teacherAvatar').textContent=([u.firstName,u.lastName].filter(Boolean).join('')||'T').slice(0,2).toUpperCase();document.getElementById('cskTeacherLogout').onclick=function(){AUTH.logout()};var videoInput=document.getElementById('rFile');if(videoInput){videoInput.addEventListener('change',function(){var f=videoInput.files&&videoInput.files[0],hint=document.getElementById('rFileHint');if(!hint)return;if(!f){hint.textContent='Choose an MP4, WebM, MOV, AVI or other video file. If your video is not listed, choose “All files” in the file picker.';return}hint.textContent=f.name+' · '+(f.size<1048576?(f.size/1024).toFixed(0)+' KB':(f.size/1048576).toFixed(1)+' MB');var ext=(f.name.split('.').pop()||'').toLowerCase();var allowed=['mp4','m4v','mov','webm','ogv','ogg','avi','mkv','mpeg','mpg','3gp','wmv'];if(!(f.type&&f.type.indexOf('video/')===0)&&allowed.indexOf(ext)<0){hint.textContent='This file does not look like a supported video. Select a video file or use the hosted video URL.';videoInput.value=''}})};var S={a:[],r:[],m:[],l:[]},E={kind:null,id:null};function $(x){return document.getElementById(x)}function esc(v){return String(v??'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]})}function note(t,ok){var e=$('feedback');e.textContent=t;e.className='feedback show'+(ok?' ok':'');if(ok)setTimeout(function(){e.className='feedback'},2500)}async function req(p,o){var r=await apiFetch(p,o);if(!r)throw Error('Your session has expired. Please sign in again.');var d=await r.json().catch(function(){return {}});if(!r.ok)throw Error(d.error||'Request failed.');return d}function fill(){['rAssignment','mAssignment','lAssignment'].forEach(function(id){$(id).innerHTML='<option value="">Select teaching assignment…</option>'+S.a.map(function(x){return '<option value="'+esc(x.id)+'">'+esc((x.schoolClass?.name||'Class')+' · '+(x.subject?.name||'Subject')+' · '+(x.academicYear?.name||'Academic year'))+'</option>'}).join('')})}function meta(x){var a=x.teachingAssignment;return (a?(a.schoolClass?.name||'Class')+' · '+(a.subject?.name||'Subject')+' · '+(a.academicYear?.name||'Academic year'):'Teaching assignment unavailable')}function render(){ $('recordedCount').textContent=S.r.length;$('materialCount').textContent=S.m.length;$('liveCount').textContent=S.l.length;$('recordedList').innerHTML=S.r.length?S.r.map(function(x){return '<article class="item"><div><h3>'+esc(x.title)+'</h3><div class="meta">'+esc(meta(x))+'</div>'+(x.description?'<details class="item-description"><summary>Lesson details</summary><p>'+esc(x.description)+'</p></details>':'')+'</div><div class="item-actions"><button class="btn secondary" data-play="'+esc(x.id)+'">▶ Play</button>'+(x.downloadUrl?'<a class="btn primary" href="'+esc(forceDownload(x.downloadUrl))+'" target="_blank" rel="noopener">Download</a>':'')+'<button class="btn secondary" data-edit-r="'+esc(x.id)+'">Edit</button><button class="btn danger" data-del-r="'+esc(x.id)+'">Delete</button></div></article>'}).join(''):'<div class="sub">No recorded lessons yet.</div>';$('materialList').innerHTML=S.m.length?S.m.map(function(x){return '<article class="item"><div><h3>'+esc(x.title)+'</h3><div class="meta">'+esc(meta(x))+'<br>'+esc(x.materialType||'OTHER')+'</div>'+(x.description?'<details class="item-description"><summary>Material description</summary><p>'+esc(x.description)+'</p></details>':'')+'</div><div class="item-actions"><a class="btn secondary" href="'+esc(x.resourceUrl)+'" target="_blank" rel="noopener">Open</a>'+(x.downloadUrl?'<a class="btn primary" href="'+esc(forceDownload(x.downloadUrl))+'" target="_blank" rel="noopener">Download</a>':'')+'<button class="btn secondary" data-edit-m="'+esc(x.id)+'">Edit</button><button class="btn danger" data-del-m="'+esc(x.id)+'">Delete</button></div></article>'}).join(''):'<div class="sub">No learning materials yet.</div>';$('liveList').innerHTML=S.l.length?S.l.map(function(x){return '<article class="item"><div><h3>'+esc(x.title)+'</h3><div class="meta">'+esc(meta(x))+'<br>'+esc(x.platform)+' · '+new Date(x.scheduledAt).toLocaleString()+' · '+esc(x.durationMinutes)+' min</div>'+(x.instructions?'<details class="item-description"><summary>Class instructions</summary><p>'+esc(x.instructions)+'</p></details>':'')+'</div><div class="item-actions"><a class="btn primary" href="'+esc(x.meetingUrl)+'" target="_blank" rel="noopener">Join</a><button class="btn secondary" data-edit-l="'+esc(x.id)+'">Edit</button><button class="btn danger" data-del-l="'+esc(x.id)+'">Delete</button></div></article>'}).join(''):'<div class="sub">No live classes scheduled yet.</div>'}async function load(){try{var z=await Promise.all([req('/api/learning/assignments'),req('/api/learning/recorded-lessons'),req('/api/learning/materials'),req('/api/learning/live-classes')]);S.a=z[0]||[];S.r=z[1]||[];S.m=z[2]||[];S.l=z[3]||[];fill();render()}catch(e){note(e.message,false)}}function forceDownload(url){url=String(url||'');if(!url.includes('/uploads/learning/'))return url;return url+(url.includes('?')?'&':'?')+'download=1'}async function upload(file,kind){var fd=new FormData();fd.append('file',file);var base=(typeof API_BASE!=='undefined'&&API_BASE)||window.API_BASE||'http://localhost:4000';var authToken=(window.AUTH&&typeof AUTH.getToken==='function'&&AUTH.getToken())||localStorage.getItem('cs_token')||'';if(!authToken)throw Error('Your session has expired. Please sign in again.');var r=await fetch(String(base).replace(/\/$/,'')+'/api/learning/uploads'+(kind==='video'?'/video':''),{method:'POST',headers:{Authorization:'Bearer '+authToken},body:fd});var d=await r.json().catch(function(){return {}});if(!r.ok)throw Error(d.error||'Upload failed.');if(!d.url)throw Error('Upload completed but the server did not return a file URL.');return d.url}function bindTabs(){document.querySelectorAll('.tab').forEach(function(b){b.onclick=function(){document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active')});document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('active')});b.classList.add('active');$(b.dataset.tab).classList.add('active')}})}$('saveRecorded').onclick=async function(){try{var file=$('rFile').files[0],url=$('rVideo').value.trim();if(file)url=await upload(file,'video');if(!$('rAssignment').value||!$('rTitle').value.trim()||!url)throw Error('Select a teaching assignment, title and video file or URL.');await req('/api/learning/recorded-lessons',{method:'POST',body:JSON.stringify({teachingAssignmentId:$('rAssignment').value,title:$('rTitle').value.trim(),videoUrl:url,downloadUrl:$('rDownload').value.trim()||url,description:$('rDesc').value.trim()||null})});note('Recorded lesson uploaded and published successfully.',true);['rTitle','rVideo','rDownload','rDesc'].forEach(function(i){$(i).value=''});$('rFile').value='';load()}catch(e){note(e.message,false)}};$('saveMaterial').onclick=async function(){try{var file=$('mFile').files[0],url=$('mUrl').value.trim();if(file)url=await upload(file);if(!$('mAssignment').value||!$('mTitle').value.trim()||!url)throw Error('Select a teaching assignment, title and material file or URL.');await req('/api/learning/materials',{method:'POST',body:JSON.stringify({teachingAssignmentId:$('mAssignment').value,title:$('mTitle').value.trim(),materialType:$('mType').value,resourceUrl:url,downloadUrl:$('mDownload').value.trim()||url,description:$('mDesc').value.trim()||null})});note('Learning material uploaded and published successfully.',true);['mTitle','mUrl','mDownload','mDesc'].forEach(function(i){$(i).value=''});$('mFile').value='';load()}catch(e){note(e.message,false)}};$('saveLive').onclick=async function(){try{var d=new Date($('lDate').value);if(!$('lAssignment').value||!$('lTitle').value.trim()||Number.isNaN(d.getTime())||!$('lUrl').value.trim())throw Error('Select an assignment and provide title, date/time and meeting URL.');await req('/api/learning/live-classes',{method:'POST',body:JSON.stringify({teachingAssignmentId:$('lAssignment').value,title:$('lTitle').value.trim(),platform:$('lPlatform').value,scheduledAt:d.toISOString(),durationMinutes:Number($('lDuration').value||60),meetingUrl:$('lUrl').value.trim(),instructions:$('lDesc').value.trim()||null})});note('Live class published successfully.',true);['lTitle','lDate','lUrl','lDesc'].forEach(function(i){$(i).value=''});load()}catch(e){note(e.message,false)}};document.addEventListener('click',async function(e){var b=e.target.closest('[data-play],[data-del-r],[data-del-m],[data-del-l],[data-edit-r],[data-edit-m],[data-edit-l]');if(!b)return;try{if(b.dataset.play){var x=S.r.find(function(v){return v.id===b.dataset.play});if(x){$('videoTitle').textContent=x.title;$('videoPlayer').src=x.videoUrl;$('videoModal').classList.add('open');$('videoPlayer').play().catch(function(){})}}else if(b.dataset.delR){await req('/api/learning/recorded-lessons/'+b.dataset.delR,{method:'DELETE'});load()}else if(b.dataset.delM){await req('/api/learning/materials/'+b.dataset.delM,{method:'DELETE'});load()}else if(b.dataset.delL){await req('/api/learning/live-classes/'+b.dataset.delL,{method:'DELETE'});load()}else{var kind=b.dataset.editR?'r':b.dataset.editM?'m':'l';var id=b.dataset.editR||b.dataset.editM||b.dataset.editL;var arr=kind==='r'?S.r:kind==='m'?S.m:S.l;var x=arr.find(function(v){return v.id===id});if(!x)return;var a=x.teachingAssignmentId;var body=kind==='r'?'<div class="field"><label>Title</label><input id="eTitle" value="'+esc(x.title)+'"></div><div class="field"><label>Video URL</label><input id="eUrl" value="'+esc(x.videoUrl)+'"></div><div class="field"><label>Download URL</label><input id="eDownload" value="'+esc(x.downloadUrl||'')+'"></div>':kind==='m'?'<div class="field"><label>Title</label><input id="eTitle" value="'+esc(x.title)+'"></div><div class="field"><label>Resource URL</label><input id="eUrl" value="'+esc(x.resourceUrl)+'"></div><div class="field"><label>Download URL</label><input id="eDownload" value="'+esc(x.downloadUrl||'')+'"></div>':'<div class="field"><label>Title</label><input id="eTitle" value="'+esc(x.title)+'"></div><div class="field"><label>Date &amp; time</label><input id="eDate" type="datetime-local" value="'+new Date(x.scheduledAt).toISOString().slice(0,16)+'"></div><div class="field"><label>Meeting URL</label><input id="eUrl" value="'+esc(x.meetingUrl)+'"></div><div class="field"><label>Duration</label><input id="eDuration" type="number" value="'+esc(x.durationMinutes)+'"></div>';$('editBody').innerHTML=body;$('editModal').classList.add('open');$('saveEdit').onclick=async function(){var payload={teachingAssignmentId:a,title:$('eTitle').value.trim()};if(kind==='r'){payload.videoUrl=$('eUrl').value.trim();payload.downloadUrl=$('eDownload').value.trim()||payload.videoUrl}else if(kind==='m'){payload.resourceUrl=$('eUrl').value.trim();payload.downloadUrl=$('eDownload').value.trim()||payload.resourceUrl}else{payload.scheduledAt=new Date($('eDate').value).toISOString();payload.meetingUrl=$('eUrl').value.trim();payload.durationMinutes=Number($('eDuration').value||60)}await req('/api/learning/'+(kind==='r'?'recorded-lessons':kind==='m'?'materials':'live-classes')+'/'+id,{method:'PATCH',body:JSON.stringify(payload)});$('editModal').classList.remove('open');load()}}}catch(err){note(err.message,false)}});$('closeVideo').onclick=function(){$('videoPlayer').pause();$('videoPlayer').removeAttribute('src');$('videoModal').classList.remove('open')};$('cancelEdit').onclick=function(){$('editModal').classList.remove('open')};bindTabs();load()})();</script>
+
+
+<script id="connectsukuu-teacher-shell-standardized-runtime">
+(function(){
+'use strict';
+var PAGES={
+ '/roles/teacher/teacher-dashboard.html':{key:'dashboard',title:'Dashboard'},
+ '/roles/teacher/teacher-attendance.html':{key:'attendance',title:'Attendance'},
+ '/roles/teacher/teacher-teaching-assignments.html':{key:'assignments',title:'Teaching Assignments'},
+ '/roles/teacher/teacher-timetable.html':{key:'timetable',title:'Timetable'},
+ '/roles/teacher/teacher-assessments.html':{key:'assessments',title:'Assessments & Reports'},
+ '/roles/teacher/teacher-learning.html':{key:'learning',title:'Learning & Live Classes'}
+};
+var file=(location.pathname.split('/').pop()||'').toLowerCase(), page=PAGES[file];
+if(!page){
+  var t=(document.title||'').toLowerCase();
+  if(t.indexOf('learning')>=0) page=PAGES['/roles/teacher/teacher-learning.html'];
+  else if(t.indexOf('assessment')>=0 || t.indexOf('report')>=0) page=PAGES['/roles/teacher/teacher-assessments.html'];
+  else if(t.indexOf('timetable')>=0) page=PAGES['/roles/teacher/teacher-timetable.html'];
+  else if(t.indexOf('teaching assignment')>=0) page=PAGES['/roles/teacher/teacher-teaching-assignments.html'];
+  else if(t.indexOf('attendance')>=0) page=PAGES['/roles/teacher/teacher-attendance.html'];
+  else if(t.indexOf('dashboard')>=0) page=PAGES['/roles/teacher/teacher-dashboard.html'];
+  else page={key:'dashboard',title:'Teacher Workspace'};
+}
+function user(){try{if(window.AUTH&&typeof AUTH.getUser==='function')return AUTH.getUser()||{};return JSON.parse(localStorage.getItem('cs_user')||'null')||{};}catch(e){return {};}}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function initials(u){var n=[u.firstName,u.lastName].filter(Boolean).join(' ').trim()||u.email||'Teacher';return n.split(/\s+/).map(function(x){return x.charAt(0);}).join('').slice(0,2).toUpperCase();}
+function nav(){return '<div class="nav-label">WORKSPACE</div>'+
+'<a href="/roles/teacher/teacher-dashboard.html" data-t="dashboard"><span class="nav-icon">⌂</span><span>Dashboard</span></a>'+ 
+'<a href="/roles/teacher/teacher-attendance.html" data-t="attendance"><span class="nav-icon">✓</span><span>Attendance</span></a>'+ 
+'<div class="nav-label">TEACHING</div>'+ 
+'<a href="/roles/teacher/teacher-teaching-assignments.html" data-t="assignments"><span class="nav-icon">⇄</span><span>Teaching Assignments</span></a>'+ 
+'<a href="/roles/teacher/teacher-timetable.html" data-t="timetable"><span class="nav-icon">▦</span><span>Timetable</span></a>'+ 
+'<a href="/roles/teacher/teacher-assessments.html" data-t="assessments"><span class="nav-icon">★</span><span>Assessments &amp; Reports</span></a>'+ 
+'<a href="/roles/teacher/teacher-learning.html" data-t="learning"><span class="nav-icon">▶</span><span>Learning &amp; Live Classes</span></a>';}
+function hideLegacy(){
+ document.querySelectorAll('.topbar,.app-topbar,.cs-assessment-topbar,header.topbar,header.app-topbar,.user-card,.cs-assessment-profile,.csk-teacher-profile').forEach(function(el){el.style.display='none';});
+ document.querySelectorAll('body>.sidebar,body>.app-sidebar,body>.cs-assessment-sidebar').forEach(function(el){el.style.display='none';});
+}
+function build(){
+ var u=user();
+ /* Existing page authentication guards remain authoritative.
+    Do not redirect from the visual shell runtime; this prevents a race
+    with AUTH/localStorage initialization from deleting the shell. */
+ hideLegacy();
+ document.querySelectorAll('.csk-teacher-sidebar-final,.csk-teacher-header-final').forEach(function(el){el.remove();});
+ var side=document.createElement('aside');side.className='csk-teacher-sidebar-final';
+ side.innerHTML='<div class="csk-teacher-brand-final"><span class="brand-mark"><img src="/assets/images/favicon.svg" alt="" aria-hidden="true"></span><span class="brand-connect">Connect<span class="brand-sukuu">Sukuu</span></span></div><nav class="csk-teacher-nav-final">'+nav()+'</nav><button type="button" class="csk-teacher-logout-final" id="cskTeacherLogoutFinal">↪ Log out</button>';
+ document.body.insertBefore(side,document.body.firstChild);
+ side.querySelectorAll('[data-t]').forEach(function(a){a.classList.toggle('active',a.getAttribute('data-t')===page.key);});
+ var main=document.querySelector('body>main') || document.querySelector('main.main,main.app-main,main');
+ if(!main){main=document.createElement('main');document.body.appendChild(main);}
+ main.classList.add('csk-teacher-main-final');
+ var legacyHeaders=[];
+ Array.prototype.slice.call(main.children).forEach(function(el){if(el.matches&&el.matches('.topbar,.app-topbar,header.topbar,header.app-topbar,.cs-assessment-topbar'))legacyHeaders.push(el);});
+ legacyHeaders.forEach(function(el){el.remove();});
+ var content=main.querySelector('.csk-teacher-content-final');
+ if(!content){
+   content=document.createElement('div');content.className='csk-teacher-content-final';
+   var children=Array.prototype.slice.call(main.children);
+   children.forEach(function(el){content.appendChild(el);});
+   main.appendChild(content);
+ }
+ var header=document.createElement('header');header.className='csk-teacher-header-final';
+ header.innerHTML='<h1 class="csk-teacher-header-title-final">'+page.title+'</h1><div class="csk-teacher-profile-final"><div class="csk-teacher-profile-copy-final"><span class="csk-teacher-profile-email-final">'+esc(u.email||'Teacher')+'</span><span class="csk-teacher-profile-role-final">Teacher</span></div><div class="csk-teacher-avatar-final">'+initials(u)+'</div></div>';
+ main.appendChild(header);
+ var logout=document.getElementById('cskTeacherLogoutFinal');
+ logout.addEventListener('click',function(){try{if(window.AUTH&&typeof AUTH.logout==='function'){AUTH.logout();return;}}catch(e){} localStorage.removeItem('cs_token');localStorage.removeItem('cs_user');location.href='/auth/signin.html';});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',build);else build();
+})();
+</script>
+<script id="connectsukuu-homework-projects-integration">
+(function(){'use strict';
+var tabs=document.querySelector('.tabs'),live=document.getElementById('live');if(!tabs||!live)return;
+var tab=document.createElement('button');tab.type='button';tab.className='tab';tab.dataset.tab='homework';tab.innerHTML='Homework &amp; Projects <span class="count" id="homeworkCount">0</span>';tabs.appendChild(tab);
+var panel=document.createElement('section');panel.id='homework';panel.className='learn-panel panel';panel.innerHTML='<h3>Assign homework or project work</h3><p class="sub">Create take-home work for one of your teaching assignments. Students receive a notification, submit their work here, and the score appears in their ongoing academic performance.</p><div class="form-grid"><div class="field full"><label>Teaching assignment</label><select id="hAssignment" required><option value="">Loading teaching assignments…</option></select></div><div class="field"><label>Homework / project title</label><input id="hTitle" required maxlength="160" placeholder="e.g. Fractions practice project"></div><div class="field"><label>Maximum score</label><input id="hMaxScore" type="number" min="1" max="10000" value="100" required></div><div class="field"><label>Due date &amp; time</label><input id="hDueAt" type="datetime-local"></div><div class="field"><label>Task file (optional)</label><input id="hFile" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.txt,.doc,.docx,.xlsx,.ppt,.pptx,.zip"></div><div class="field"><label>Attachment URL (optional)</label><input id="hAttachment" type="url" placeholder="https://…"></div><div class="field full"><label>Instructions / description</label><textarea id="hDescription" placeholder="Explain the task, expected format and submission requirements…"></textarea></div></div><div class="actions"><button type="button" class="btn primary" id="hPublish">Publish homework / project</button></div><div id="hFeedback" class="feedback"></div><div class="list" id="homeworkList"><div class="sub">Loading homework and projects…</div></div>';
+live.insertAdjacentElement('afterend',panel);
+var style=document.createElement('style');style.textContent='#homework .submission-card{background:#fff;border:1px solid #e4e7ec;border-radius:12px;padding:13px;margin-top:10px}#homework .submission-card h4{margin:0 0 6px;font-size:14px}#homework .submission-card .form-grid{margin-top:10px}#homework .submissions{margin-top:12px;padding-top:12px;border-top:1px solid #eaecf0}#homework .submissions-toggle{margin-top:10px}#homework .homework-status{font-size:12px;color:#667085;margin-top:6px}#homework .score-row{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:8px;align-items:end}@media(max-width:760px){#homework .score-row{grid-template-columns:1fr}}';document.head.appendChild(style);
+function $(id){return document.getElementById(id)}function esc(v){return String(v??'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]})}
+function notice(message,ok){var el=$('hFeedback');el.textContent=message;el.className='feedback show'+(ok?' ok':'')}
+async function request(path,opts){var response=await apiFetch(path,opts||{});if(!response)throw Error('Your session has expired. Please sign in again.');var data=await response.json().catch(function(){return {}});if(!response.ok)throw Error(data.error||'Request failed.');return data}
+var assignments=[],homework=[];
+function assignmentLabel(a){return (a.schoolClass?.name||'Class')+' · '+(a.subject?.name||'Subject')+' · '+(a.academicYear?.name||'Academic year')}
+async function loadAssignments(){assignments=await request('/api/learning/assignments');$('hAssignment').innerHTML='<option value="">Select teaching assignment…</option>'+assignments.map(function(a){return '<option value="'+esc(a.id)+'">'+esc(assignmentLabel(a))+'</option>'}).join('')}
+function render(){ $('homeworkCount').textContent=homework.length;$('homeworkList').innerHTML=homework.length?homework.map(function(a){var submissions=a.submissions||[];return '<article class="item"><div style="flex:1;min-width:0"><h3>'+esc(a.title)+'</h3><div class="meta">'+esc(assignmentLabel(a.teachingAssignment||{}))+'<br>Due: '+esc(a.dueAt?new Date(a.dueAt).toLocaleString():'No deadline')+' · Max score: '+esc(a.maxScore)+'<br>'+esc(a.description||a.instructions||'No extra instructions.')+'</div><div class="homework-status">'+submissions.length+' submission(s) · '+submissions.filter(function(s){return s.score!==null&&s.score!==undefined}).length+' graded</div><div class="submissions" id="submissions-'+esc(a.id)+'" hidden></div></div><div class="item-actions"><button class="btn secondary" type="button" data-view-submissions="'+esc(a.id)+'">View / grade submissions ('+submissions.length+')</button></div></article>'}).join(''):'<div class="sub">No homework or projects assigned yet.</div>'}
+async function loadHomework(){homework=await request('/api/learning/homework');render()}
+$('hPublish').addEventListener('click',async function(){try{var title=$('hTitle').value.trim(),teachingAssignmentId=$('hAssignment').value,maxScore=Number($('hMaxScore').value||100),dueRaw=$('hDueAt').value;if(!teachingAssignmentId||!title)throw Error('Choose a teaching assignment and enter a title.');var attachmentUrl=$('hAttachment').value.trim()||null;var file=$('hFile').files[0];if(file){var fd=new FormData();fd.append('file',file);var up=await fetch(API_BASE+'/api/learning/uploads',{method:'POST',headers:{Authorization:'Bearer '+(AUTH.getToken()||'')},body:fd});if(up.status===401){AUTH.logout();throw Error('Your session has expired. Please sign in again.')} var upData=await up.json().catch(function(){return {}});if(!up.ok)throw Error(upData.error||'Task file upload failed.');attachmentUrl=upData.url;}var body={teachingAssignmentId:teachingAssignmentId,title:title,description:$('hDescription').value.trim(),instructions:$('hDescription').value.trim(),attachmentUrl:attachmentUrl,maxScore:maxScore,dueAt:dueRaw?new Date(dueRaw).toISOString():null};await request('/api/learning/homework',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});notice('Homework or project published. Students in the selected class have been notified.',true);['hTitle','hDueAt','hAttachment','hDescription'].forEach(function(id){$(id).value=''});$('hFile').value='';await loadHomework()}catch(e){notice(e.message,false)}});
+async function viewSubmissions(id){var host=$('submissions-'+id);if(!host)return;if(!host.hidden){host.hidden=true;return}host.hidden=false;host.innerHTML='<div class="sub">Loading submissions…</div>';try{var d=await request('/api/learning/homework/'+encodeURIComponent(id)+'/submissions');var rows=d.submissions||[];host.innerHTML=rows.length?rows.map(function(s){return '<article class="submission-card"><h4>'+esc((s.student?.firstName||'')+' '+(s.student?.lastName||''))+'</h4><div class="meta">Admission: '+esc(s.student?.admissionNumber||'—')+' · Submitted '+esc(new Date(s.submittedAt).toLocaleString())+'</div><p>'+esc(s.submissionText||'No written response attached.')+'</p>'+(s.attachmentUrl?'<p><a href="'+esc(s.attachmentUrl)+'" target="_blank" rel="noopener">Open student attachment</a></p>':'')+'<div class="score-row"><div class="field"><label>Score / '+esc((homework.find(function(a){return a.id===id})||{}).maxScore||100)+'</label><input type="number" min="0" max="'+esc((homework.find(function(a){return a.id===id})||{}).maxScore||100)+'" step="0.1" id="score-'+esc(s.id)+'" value="'+(s.score==null?'':esc(s.score))+'"></div><div class="field"><label>Feedback</label><input id="feedback-'+esc(s.id)+'" value="'+esc(s.feedback||'')+'" placeholder="Feedback for the student"></div><button type="button" class="btn primary" data-grade-submission="'+esc(s.id)+'">Save score</button></div><div class="homework-status">'+(s.gradedAt?'Last graded '+esc(new Date(s.gradedAt).toLocaleString()):'Not graded yet')+'</div></article>'}).join(''):'<div class="sub">No submissions yet. Students will appear here when they submit their work.</div>'}catch(e){host.innerHTML='<div class="feedback show">'+esc(e.message)+'</div>'}}
+document.addEventListener('click',async function(e){var view=e.target.closest('[data-view-submissions]');if(view){viewSubmissions(view.dataset.viewSubmissions);return}var grade=e.target.closest('[data-grade-submission]');if(grade){try{var id=grade.dataset.gradeSubmission;var score=$('score-'+id).value,feedback=$('feedback-'+id).value;await request('/api/learning/homework/submissions/'+encodeURIComponent(id)+'/grade',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({score:Number(score),feedback:feedback})});notice('Score saved. The student will see it in Academic results and receive a notification.',true);var parent=grade.closest('.submissions');var assignmentId=parent?parent.id.replace('submissions-',''):null;await loadHomework();if(assignmentId){var refreshed=$('submissions-'+assignmentId);if(refreshed)refreshed.hidden=true;await viewSubmissions(assignmentId)}}catch(err){notice(err.message,false)}}});
+tab.addEventListener('click',function(){document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('active',x===tab)});document.querySelectorAll('.panel').forEach(function(x){x.classList.toggle('active',x===panel)});});
+// Existing tabs were bound by the original page script. Rebind their shared state so returning from this tab works consistently.
+document.querySelectorAll('.tabs .tab:not([data-tab="homework"])').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('active',x===b)});document.querySelectorAll('.panel').forEach(function(x){x.classList.toggle('active',x.id===b.dataset.tab)});})});
+Promise.all([loadAssignments(),loadHomework()]).catch(function(e){notice(e.message,false)});
+})();
+</script>
+<script id="connectsukuu-teacher-profile-dialog-runtime">
+(function(){
+'use strict';
+var modal=document.getElementById('cskProfileModal');
+if(!modal)return;
+var API=String(typeof API_BASE!=='undefined'?API_BASE:(window.API_BASE||'http://localhost:4000')).replace(/\/$/,'');
+function $(id){return document.getElementById(id)}
+function user(){try{return (window.AUTH&&AUTH.getUser&&AUTH.getUser())||JSON.parse(localStorage.getItem('cs_user')||'{}')||{}}catch(_){return {}}}
+function token(){try{return (window.AUTH&&AUTH.getToken&&AUTH.getToken())||localStorage.getItem('cs_token')||''}catch(_){return localStorage.getItem('cs_token')||''}}
+function initials(u){return ((u.firstName||'T').trim().charAt(0)+(u.lastName||'').trim().charAt(0)).toUpperCase()}
+function status(msg,ok){var e=$('cskProfileStatus');e.textContent=msg;e.className='csk-profile-status show'+(ok?' ok':'')}
+function photoUrl(value){if(!value)return '';if(/^https?:\/\//i.test(value))return value;return API+(value.startsWith('/')?value:'/'+value)}
+var photoObjectUrls=[];
+async function setProfileImage(img,value,fallback){if(!value){fallback();return}try{var src=photoUrl(value),response;if(src.indexOf('/api/auth/profile/photo')!==-1){response=await fetch(src,{headers:{Authorization:'Bearer '+token()},cache:'no-store'});if(!response.ok)throw Error('Photo unavailable');var blob=await response.blob();var objectUrl=URL.createObjectURL(blob);photoObjectUrls.push(objectUrl);img.src=objectUrl}else{img.src=src}}catch(_){fallback()}}
+function paintHeaderPhoto(u){var avatar=document.querySelector('.csk-teacher-profile-final .csk-teacher-avatar-final');if(!avatar)return;var fallback=initials(u||user()),value=u&&u.photoUrl?String(u.photoUrl):'';avatar.innerHTML='';if(!value){avatar.textContent=fallback;return}var img=document.createElement('img');img.alt='';img.loading='eager';img.decoding='async';img.style.cssText='display:block;width:100%;height:100%;object-fit:cover;border-radius:50%';img.onerror=function(){avatar.textContent=fallback};avatar.appendChild(img);setProfileImage(img,value,function(){avatar.textContent=fallback})}
+function showUser(u){u=u||user();$('cskProfileName').textContent=[u.firstName,u.lastName].filter(Boolean).join(' ')||u.email||'Teacher';$('cskProfileRole').textContent=String(u.role||'TEACHER').replace(/_/g,' ');$('cskProfileEmail').value=u.email||'Not provided';$('cskProfilePhone').value=u.phone||'Not provided';$('cskProfileFirst').value=u.firstName||'—';$('cskProfileLast').value=u.lastName||'—';var box=$('cskProfilePhoto');if(u.photoUrl){box.innerHTML='';var image=document.createElement('img');image.alt='Profile photo';image.onerror=function(){box.textContent=initials(u)};box.appendChild(image);setProfileImage(image,u.photoUrl,function(){box.textContent=initials(u)})}else box.textContent=initials(u);paintHeaderPhoto(u)}
+async function refreshSavedProfile(){var cached=user();showUser(cached);if(!token())return;try{var r=await fetch(API+'/api/auth/profile',{headers:{Authorization:'Bearer '+token()},cache:'no-store'});var d=await r.json().catch(function(){return {}});if(!r.ok||!d.user)return;var merged=Object.assign({},cached,d.user);localStorage.setItem('cs_user',JSON.stringify(merged));showUser(merged)}catch(_){/* Cached profile remains visible if the API is temporarily unavailable. */}}
+async function open(){modal.classList.add('open');modal.setAttribute('aria-hidden','false');showUser();$('cskProfileStatus').className='csk-profile-status';var controller=new AbortController();var timer=setTimeout(function(){controller.abort()},10000);try{var r=await fetch(API+'/api/auth/profile',{headers:{Authorization:'Bearer '+token()},signal:controller.signal});var d=await r.json().catch(function(){return {}});if(!r.ok)throw Error(d.error||('Profile refresh failed (HTTP '+r.status+').'));if(d.user){var merged=Object.assign({},user(),d.user);localStorage.setItem('cs_user',JSON.stringify(merged));showUser(merged)}else{throw Error('The profile endpoint returned no user record.')}}catch(e){status((e.name==='AbortError'?'Profile refresh timed out. ':'Could not refresh profile from the server. ')+ 'Showing saved account details. '+(e.message||''),false)}finally{clearTimeout(timer)}}
+function close(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}
+// Render the saved photo immediately, then refresh the persisted profile in the background.
+refreshSavedProfile();
+document.addEventListener('click',function(e){var trigger=e.target.closest('.csk-teacher-profile-final,.csk-teacher-profile');if(trigger){e.preventDefault();open()}});
+$('cskProfileClose').addEventListener('click',close);
+modal.addEventListener('click',function(e){if(e.target===modal)close()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
+$('cskProfileUpload').addEventListener('click',async function(){var file=$('cskProfilePhotoFile').files[0];if(!file){status('Choose a profile photo first.',false);return}if(file.size>5*1024*1024){status('Profile photos must be 5 MB or smaller.',false);return}var fd=new FormData();fd.append('photo',file);var btn=$('cskProfileUpload');btn.disabled=true;btn.textContent='Uploading…';try{var r=await fetch(API+'/api/auth/profile/photo',{method:'POST',headers:{Authorization:'Bearer '+token()},body:fd});var d=await r.json().catch(function(){return {}});if(!r.ok)throw Error(d.error||'Photo upload failed');var merged=Object.assign({},user(),d.user||{});localStorage.setItem('cs_user',JSON.stringify(merged));showUser(merged);status('Profile photo updated.',true);$('cskProfilePhotoFile').value=''}catch(e){status(e.message,false)}finally{btn.disabled=false;btn.textContent='Upload photo'}});
+$('cskProfilePasswordForm').addEventListener('submit',async function(e){e.preventDefault();var currentPassword=$('cskProfileCurrent').value,newPassword=$('cskProfileNew').value;if(newPassword.length<8){status('New password must be at least 8 characters.',false);return}var btn=$('cskProfilePasswordSave');btn.disabled=true;btn.textContent='Updating…';try{var r=await fetch(API+'/api/auth/change-password',{method:'POST',headers:{Authorization:'Bearer '+token(),'Content-Type':'application/json'},body:JSON.stringify({currentPassword:currentPassword,newPassword:newPassword})});var d=await r.json().catch(function(){return {}});if(!r.ok)throw Error(d.error||'Password update failed');$('cskProfilePasswordForm').reset();status('Password changed successfully.',true)}catch(err){status(err.message,false)}finally{btn.disabled=false;btn.textContent='Update password'}});
+var profile=document.querySelector('.csk-teacher-profile-final');if(profile){profile.classList.add('csk-profile-trigger');profile.setAttribute('role','button');profile.setAttribute('tabindex','0');profile.setAttribute('aria-haspopup','dialog');profile.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}})}
+})();
+</script>
+<script src="/assets/js/teacher-communications.js?v=20261015-1"></script>
+</body>
+</html>

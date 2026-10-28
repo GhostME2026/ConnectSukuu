@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attendance</title>
+<link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
+<style>
+:root{
+  --blue:#2563eb;--blue2:#1d4ed8;--ink:#172033;--muted:#667085;--soft:#f5f7fb;
+  --card:#fff;--line:#e5e9f2;--green:#15803d;--green-bg:#ecfdf3;
+  --red:#b91c1c;--red-bg:#fef2f2;--amber:#b45309;--amber-bg:#fffbeb;
+  --purple:#6d28d9;--purple-bg:#f5f3ff;--shadow:0 10px 30px rgba(15,23,42,.055);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--soft);color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.layout{min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:255px;background:#fff;border-right:1px solid var(--line);padding:20px 13px;display:flex;flex-direction:column;z-index:30}
+.brand{display:flex;align-items:center;gap:10px;padding:8px 10px 26px;text-decoration:none;color:var(--ink);font-size:20px;font-weight:850;letter-spacing:-.02em}
+.brand-mark{width:32px;height:32px;border-radius:10px;background:#eff6ff;color:var(--blue);display:grid;place-items:center;box-shadow:0 5px 14px rgba(37,99,235,.13)}
+.nav{display:flex;flex-direction:column;gap:4px}
+.nav-section{padding:14px 11px 7px;color:#98a2b3;font-size:9px;text-transform:uppercase;letter-spacing:.12em;font-weight:900}
+.nav a{display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:10px;text-decoration:none;color:#667085;font-size:12px;font-weight:750;transition:.18s ease}
+.nav a:hover{background:#f5f8ff;color:#2563eb;transform:translateX(2px)}
+.nav a.active{background:#eef5ff;color:#2563eb;box-shadow:inset 3px 0 0 #2563eb}
+.sidebar-bottom{margin-top:auto;padding-top:14px}
+.logout{width:100%;border:0;background:#172033;color:#fff;padding:12px;border-radius:10px;font-size:12px;font-weight:800;transition:.18s ease}
+.logout:hover{background:#0f172a;transform:translateY(-1px);box-shadow:0 8px 18px rgba(15,23,42,.16)}
+
+.main{margin-left:255px;width:calc(100% - 250px);min-width:0}
+.topbar{height:54px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:10}
+.topbar-title{font-size:15px;font-weight:750}
+.user{display:flex;align-items:center;gap:9px;color:#667085;font-size:13px;}
+.avatar{width:32px;height:32px;border-radius:50%;background:#dbeafe;color:#1d4ed8;display:grid;place-items:center;font-weight:800}
+.content{padding:32px;max-width:1450px;margin:0 auto}
+
+.eyebrow{font-size:10px;color:var(--blue);text-transform:uppercase;letter-spacing:.13em;font-weight:900;margin-bottom:6px}
+h1{margin:0;font-size:30px;letter-spacing:-.035em}
+.subtitle{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.55}
+.user-card{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:9px 12px;box-shadow:0 3px 12px rgba(15,23,42,.025)}
+.avatar{width:34px;height:34px;border-radius:10px;background:#172033;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:850}
+.uname{font-size:12px;font-weight:800}.urole{font-size:10px;color:#98a2b3;margin-top:2px}
+
+.hero{background:linear-gradient(135deg,#fff 0%,#f8fbff 100%);border:1px solid var(--line);border-radius:18px;padding:19px 20px;box-shadow:var(--shadow);margin-bottom:16px;animation:rise .45s ease both}
+.hero-row{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.hero h2{margin:0;font-size:17px;letter-spacing:-.02em}
+.hero p{margin:5px 0 0;color:var(--muted);font-size:11px;line-height:1.55}
+.role-pill{display:inline-flex;align-items:center;gap:7px;border:1px solid #dbe7ff;background:#f5f8ff;color:#2563eb;padding:7px 10px;border-radius:999px;font-size:10px;font-weight:850;white-space:nowrap}
+.role-pill .dot{width:6px;height:6px;border-radius:50%;background:#2563eb;box-shadow:0 0 0 4px #dbeafe}
+
+.filters{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow);animation:rise .5s ease both}
+.filter-grid{display:grid;grid-template-columns:1.1fr 1.1fr 1.1fr .9fr 1.25fr;gap:11px}
+.field label{display:block;margin:0 0 6px 2px;color:#667085;font-size:9px;text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+.field select,.field input{width:100%;height:39px;border:1px solid #d9e0eb;background:#fff;color:#172033;border-radius:9px;padding:0 11px;outline:0;font-size:12px;transition:.16s ease}
+.field select:hover,.field input:hover{border-color:#b9c7dc}
+.field select:focus,.field input:focus{border-color:#80a9ff;box-shadow:0 0 0 3px #dbeafe}
+.mode-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding-top:13px;border-top:1px solid #edf0f5}
+.mode-left{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.mode-title{font-size:10px;font-weight:850;margin-right:3px}
+.mode-option{display:inline-flex;align-items:center;gap:6px;border:1px solid #dfe5ef;background:#fff;padding:7px 10px;border-radius:9px;font-size:10px;font-weight:750;color:#475467;transition:.16s ease}
+.mode-option:hover{border-color:#b7c8e8;background:#f8fbff}
+.mode-option.active{border-color:#80a9ff;background:#f5f8ff;color:#2563eb;box-shadow:0 0 0 2px #eff6ff}
+.mode-option input{accent-color:#2563eb}
+.default-note{font-size:9px;color:#98a2b3}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:16px 0;animation:rise .55s ease both}
+.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px 17px;box-shadow:var(--shadow);transition:.2s ease}
+.stat:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(15,23,42,.08)}
+.stat-label{font-size:9px;color:#98a2b3;text-transform:uppercase;letter-spacing:.09em;font-weight:900}
+.stat-value{font-size:26px;font-weight:850;letter-spacing:-.04em;margin-top:5px}
+.stat-sub{font-size:9px;color:#98a2b3;margin-top:3px}
+
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;animation:rise .6s ease both}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 19px;border-bottom:1px solid #edf0f5}
+.panel-title{display:flex;align-items:center;gap:10px}
+.panel-icon{width:34px;height:34px;border-radius:10px;background:#eff6ff;color:#2563eb;display:grid;place-items:center;font-weight:900}
+.panel h2{margin:0;font-size:16px;letter-spacing:-.02em}
+.panel-head p{margin:4px 0 0;color:#98a2b3;font-size:10px}
+.actions{display:flex;gap:8px}
+.btn{border:1px solid #d9e0eb;background:#fff;color:#344054;border-radius:9px;padding:9px 12px;font-size:10px;font-weight:850;transition:.17s ease}
+.btn:hover:not(:disabled){transform:translateY(-1px);border-color:#b9c7dc;background:#f8fbff}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 6px 14px rgba(37,99,235,.18)}
+.btn.primary:hover:not(:disabled){background:var(--blue2);box-shadow:0 9px 20px rgba(37,99,235,.24)}
+.btn.danger{color:#b91c1c;background:#fff;border-color:#fecaca}
+
+.readonly-strip{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 18px;background:#f8fafc;border-bottom:1px solid #edf0f5}
+.readonly-badge{display:inline-flex;align-items:center;gap:6px;color:#475467;background:#fff;border:1px solid #e4e7ec;border-radius:999px;padding:5px 9px;font-size:9px;font-weight:850}
+.readonly-badge .lock{font-size:10px}
+.context{display:flex;gap:17px;flex-wrap:wrap;font-size:9px;color:#98a2b3}
+.context strong{font-size:10px;color:#344054}
+
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th{text-align:left;background:#fafbfc;color:#98a2b3;font-size:9px;text-transform:uppercase;letter-spacing:.08em;padding:11px 18px;border-bottom:1px solid #edf0f5}
+td{padding:12px 18px;border-bottom:1px solid #f0f2f6;font-size:11px;vertical-align:middle}
+tr{transition:.14s ease}
+tbody tr:hover{background:#fbfdff}
+.student{display:flex;align-items:center;gap:10px}
+.student-av{width:35px;height:35px;border-radius:10px;background:#f1f5f9;color:#475569;display:grid;place-items:center;font-size:10px;font-weight:900}
+.name{font-weight:850}.adm{font-size:9px;color:#98a2b3;margin-top:2px}
+.statuses{display:flex;gap:5px;flex-wrap:wrap}
+.status{border:1px solid #dfe4ec;background:#fff;color:#667085;border-radius:8px;padding:6px 9px;font-size:9px;font-weight:850;transition:.14s ease}
+.status:hover{transform:translateY(-1px);border-color:#b9c7dc}
+.status.sel[data-s=PRESENT]{background:var(--green-bg);border-color:#86efac;color:var(--green)}
+.status.sel[data-s=ABSENT]{background:var(--red-bg);border-color:#fca5a5;color:var(--red)}
+.status.sel[data-s=LATE]{background:var(--amber-bg);border-color:#fcd34d;color:var(--amber)}
+.status.sel[data-s=EXCUSED]{background:var(--purple-bg);border-color:#c4b5fd;color:var(--purple)}
+.notes{width:160px;border:1px solid #e1e6ef;border-radius:8px;padding:7px 9px;font-size:10px;outline:0}
+.notes:focus{border-color:#80a9ff;box-shadow:0 0 0 3px #dbeafe}
+.badge{display:inline-flex;align-items:center;border-radius:999px;padding:5px 9px;font-size:9px;font-weight:850}
+.badge.present{background:var(--green-bg);color:var(--green)}
+.badge.absent{background:var(--red-bg);color:var(--red)}
+.badge.late{background:var(--amber-bg);color:var(--amber)}
+.badge.excused{background:var(--purple-bg);color:var(--purple)}
+.badge.none{background:#f8fafc;color:#98a2b3;border:1px solid #e4e7ec}
+.recorded{font-size:9px;color:#667085}.recorded strong{color:#344054}
+
+.empty{padding:58px 20px;text-align:center;color:#98a2b3}
+.empty-icon{width:44px;height:44px;border-radius:14px;background:#f3f7ff;color:#2563eb;display:grid;place-items:center;margin:0 auto 10px;font-size:19px;font-weight:800}
+.empty h3{margin:0 0 5px;color:#344054;font-size:14px}
+.empty p{margin:0 auto;max-width:480px;font-size:10px;line-height:1.6}
+.loading-row{padding:45px;text-align:center;color:#98a2b3;font-size:11px}
+
+.banner{position:fixed;right:25px;bottom:25px;z-index:100;max-width:390px;background:#172033;color:#fff;border-radius:11px;padding:12px 15px;font-size:11px;box-shadow:0 18px 40px rgba(15,23,42,.2);opacity:0;pointer-events:none;transform:translateY(10px);transition:.2s ease}
+.banner.show{opacity:1;transform:none}.banner.success{background:#166534}.banner.error{background:#991b1b}
+
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.48);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:20px;z-index:90}
+.modal.open{display:flex}
+.modal-card{width:min(820px,100%);max-height:88vh;overflow:auto;background:#fff;border-radius:18px;box-shadow:0 30px 80px rgba(15,23,42,.25);animation:modalIn .2s ease}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;padding:19px 20px;border-bottom:1px solid #edf0f5}
+.modal-head h3{margin:0;font-size:16px}.modal-head p{margin:4px 0 0;color:#98a2b3;font-size:10px}
+.close{width:30px;height:30px;border:0;border-radius:9px;background:#f3f5f8;color:#475467;font-size:18px}
+.modal-body{padding:18px 20px}
+.history-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:15px}
+.history-stat{border:1px solid #e6eaf1;border-radius:12px;padding:12px;background:#fafcff}
+.history-stat b{display:block;font-size:19px}.history-stat span{font-size:9px;color:#98a2b3}
+.history-table{max-height:420px;overflow:auto;border:1px solid #edf0f5;border-radius:12px}
+.history-table table{min-width:620px}
+.modal-foot{padding:13px 20px;border-top:1px solid #edf0f5;display:flex;justify-content:flex-end}
+
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes modalIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(max-width:1100px){.filter-grid{grid-template-columns:repeat(3,1fr)}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:820px){.sidebar{width:195px}.main{margin-left:195px;padding:22px 16px}.topbar{flex-direction:column}.user-card{align-self:flex-end}}
+@media(max-width:620px){.sidebar{position:static;width:100%;min-height:auto}.nav{display:none}.sidebar-bottom{margin-top:10px}.main{margin-left:0;padding:17px 13px}.filter-grid,.stats{grid-template-columns:1fr}.hero-row,.mode-row,.panel-head{align-items:flex-start;flex-direction:column}.actions{width:100%}.actions .btn{flex:1}.history-summary{grid-template-columns:repeat(2,1fr)}}
+
+/* CONNECTSUKUU_HOA_ATTENDANCE_ANALYTICS_CLEAN */
+.hoa-analytics-clean{
+  margin-top:16px;
+  border:1px solid #dbe7f7;
+  border-radius:16px;
+  background:linear-gradient(135deg,#f8fbff 0%,#ffffff 74%);
+  box-shadow:0 8px 24px rgba(15,23,42,.05);
+  overflow:hidden;
+}
+.hoa-analytics-clean .hoa-a-head{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:16px 18px;border-bottom:1px solid #e8eef7;
+}
+.hoa-analytics-clean .hoa-a-title{display:flex;align-items:center;gap:10px}
+.hoa-analytics-clean .hoa-a-icon{
+  width:34px;height:34px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;background:#eaf2ff;color:#2563eb;font-weight:800;
+}
+.hoa-analytics-clean h3{margin:0;font-size:15px;color:#172033}
+.hoa-analytics-clean p{margin:3px 0 0;color:#667085;font-size:11px}
+.hoa-analytics-clean .hoa-a-badge{
+  border:1px solid #cfe0ff;background:#f4f8ff;color:#2563eb;border-radius:999px;
+  padding:6px 10px;font-size:10px;font-weight:800;white-space:nowrap;
+}
+.hoa-a-grid{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:14px 18px;
+}
+.hoa-a-card{
+  border:1px solid #e7edf5;border-radius:12px;padding:12px;background:#fff;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+.hoa-a-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.07);border-color:#cfe0ff}
+.hoa-a-label{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#667085}
+.hoa-a-value{margin-top:6px;font-size:22px;font-weight:850;color:#172033}
+.hoa-a-sub{margin-top:3px;font-size:10px;color:#98a2b3}
+.hoa-a-progress{height:8px;border-radius:999px;background:#edf2f7;overflow:hidden;margin-top:10px}
+.hoa-a-progress span{
+  display:block;height:100%;width:0;border-radius:inherit;
+  background:linear-gradient(90deg,#2563eb,#14b8a6);transition:width .35s ease;
+}
+.hoa-a-status{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:0 18px 18px;
+}
+.hoa-a-status-card{border-radius:12px;padding:10px 12px;background:#f8fafc;border:1px solid #edf1f6}
+.hoa-a-status-card strong{display:block;font-size:15px;color:#172033}
+.hoa-a-status-card span{display:block;margin-top:2px;font-size:10px;color:#667085}
+@media(max-width:850px){.hoa-a-grid,.hoa-a-status{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.hoa-analytics-clean .hoa-a-head{align-items:flex-start;flex-direction:column}.hoa-a-grid,.hoa-a-status{grid-template-columns:1fr}}
+/* END_CONNECTSUKUU_HOA_ATTENDANCE_ANALYTICS_CLEAN */
+
+</style>
+
+<style id="connectsukuu-global-shell-standard">
+/* ConnectSukuu canonical shell: 255px sidebar, consistent brand and right-pinned profile. */
+.sidebar,.app-sidebar,.cs-assessment-sidebar{width:255px!important;min-width:255px!important;max-width:255px!important;box-sizing:border-box!important}
+.sidebar .brand,.app-sidebar .brand,.cs-assessment-sidebar .brand{display:flex!important;align-items:center!important;gap:10px!important;min-height:40px!important;height:40px!important;padding:0 10px!important;margin:0 0 22px!important;line-height:1!important;white-space:nowrap!important}
+.sidebar .brand img,.app-sidebar .brand img,.cs-assessment-sidebar .brand img{display:block!important;width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;object-fit:contain!important;flex:0 0 34px!important;border-radius:9px!important}
+.sidebar .brand .brand-word,.app-sidebar .brand .brand-word,.cs-assessment-sidebar .brand .brand-word{display:block!important;color:#fff!important;font-size:20px!important;font-weight:800!important;letter-spacing:-.02em!important;line-height:1!important}
+.sidebar .brand .brand-accent,.app-sidebar .brand .brand-accent,.cs-assessment-sidebar .brand .brand-accent{color:#60a5fa!important}
+.sidebar .brand .brand-mark,.app-sidebar .brand .brand-mark,.cs-assessment-sidebar .brand .brand-mark{width:34px!important;height:34px!important;min-width:34px!important;display:grid!important;place-items:center!important;flex:0 0 34px!important;border-radius:9px!important;overflow:hidden!important}
+@media(min-width:821px){
+ body .app-shell{grid-template-columns:255px minmax(0,1fr)!important}
+ body .app-sidebar{width:255px!important;min-width:255px!important;max-width:255px!important}
+ body .app-main{min-width:0!important;width:auto!important}
+ body .main{margin-left:255px!important;width:calc(100% - 255px)!important;min-width:0!important}
+ body .cs-assessment-main-shift{margin-left:255px!important}
+ body .cs-assessment-sidebar{width:255px!important;min-width:255px!important;max-width:255px!important}
+}
+/* Same working analogy as Dashboard + Assessments: header flex, profile margin-left:auto. */
+body .topbar,body .app-topbar{display:flex!important;align-items:center!important;justify-content:flex-start!important;width:100%!important;max-width:none!important;box-sizing:border-box!important;min-height:54px!important;height:54px!important;padding:0 20px!important;position:sticky!important;top:0!important;z-index:120!important}
+body .topbar>.user,body .topbar .user,body .topbar>.topbar-user,body .topbar .topbar-user,body .app-topbar>.user,body .app-topbar .who,body .app-topbar>.topbar-user{margin-left:auto!important;margin-right:0!important;position:static!important;right:auto!important;top:auto!important;transform:none!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:10px!important;flex:0 0 auto!important;white-space:nowrap!important}
+body .app-topbar .who{padding:6px 12px!important;box-sizing:border-box!important}
+body .topbar .user-info,body .topbar .topbar-user .cs-academic-user-copy{display:flex!important;flex-direction:column!important;justify-content:center!important;line-height:1.15!important}
+body .topbar .user-role,body .topbar .topbar-user .cs-academic-role{color:#64748b!important;font-size:11px!important;font-weight:650!important}
+body .topbar .avatar,body .app-topbar .avatar,body .app-topbar .app-avatar{flex:0 0 auto!important}
+body .topbar-title,body .app-topbar h1{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+@media(max-width:820px){body .topbar,body .app-topbar{padding-left:18px!important;padding-right:18px!important}}
+</style>
+
+<script id="connectsukuu-teacher-shared-page-guard">
+(function(){try{var u=window.AUTH&&typeof AUTH.getUser==='function'?AUTH.getUser():JSON.parse(localStorage.getItem('cs_user')||'null');if(u&&String(u.role||'').toUpperCase()==='TEACHER'){var p=(location.pathname.split('/').pop()||'').toLowerCase();var m={'/roles/headteacher/headteacher-dashboard.html':'/roles/teacher/teacher-dashboard.html','/roles/headteacher/headteacher-attendance.html':'/roles/teacher/teacher-attendance.html','/roles/headteacher/headteacher-teaching-assignments.html':'/roles/teacher/teacher-teaching-assignments.html','/roles/headteacher/headteacher-timetable.html':'/roles/teacher/teacher-timetable.html','/roles/headteacher/headteacher-assessments.html':'/roles/teacher/teacher-assessments.html','app-learning.html':'/roles/teacher/teacher-learning.html'};if(m[p]){location.replace(m[p]);}}}catch(_){}})();
+</script>
+<script id="connectsukuu-role-isolation-guard">
+(function(){
+  'use strict';
+  var EXPECTED_ROLE='HEAD_TEACHER';
+  try{
+    var raw=localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user');
+    if(raw){
+      var user=JSON.parse(raw);
+      if(user && String(user.role||'').toUpperCase()!==EXPECTED_ROLE){
+        location.replace('/auth/signin.html');
+      }
+    }
+  }catch(_){ }
+})();
+</script>
+\n
+
+
+<style id="connectsukuu-headteacher-final-shell-style">
+:root{
+  --csk-ht-sidebar:255px;
+  --csk-ht-header:58px;
+  --csk-ht-navy:#0b1730;
+  --csk-ht-navy-2:#101d38;
+  --csk-ht-blue:#2563eb;
+  --csk-ht-ink:#172033;
+  --csk-ht-muted:#667085;
+  --csk-ht-line:#e4e7ec;
+  --csk-ht-bg:#f7f9fc;
+}
+html,body{width:100%!important;min-width:0!important;min-height:100%!important;margin:0!important;background:var(--csk-ht-bg)!important;color:var(--csk-ht-ink)!important;overflow-x:hidden!important;}
+body *{box-sizing:border-box;}
+
+/* Hide every legacy Head Teacher shell. Business content remains intact. */
+body>.app-shell,body>.layout,body>.app{display:block!important;width:100%!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:100vh!important;margin:0!important;padding:0!important;background:var(--csk-ht-bg)!important;overflow:visible!important;}
+body>.app-shell>.app-sidebar,body>.layout>.sidebar,body>.app>.sidebar,body>.app-sidebar,body>.sidebar,body>.cs-assessment-sidebar{display:none!important;}
+body .app-topbar,body .topbar,body .cs-assessment-topbar{display:none!important;}
+body .app-sidebar-footer,body .sidebar-footer,body .sidebar-bottom,body .academic-sidebar-footer{display:none!important;}
+
+/* One canonical fixed sidebar. */
+.csk-ht-sidebar-final{
+  position:fixed!important;left:0!important;top:0!important;bottom:0!important;
+  width:var(--csk-ht-sidebar)!important;min-width:var(--csk-ht-sidebar)!important;max-width:var(--csk-ht-sidebar)!important;
+  height:100vh!important;min-height:100vh!important;z-index:5000!important;
+  display:flex!important;flex-direction:column!important;overflow:hidden!important;
+  margin:0!important;padding:0!important;background:linear-gradient(180deg,var(--csk-ht-navy),var(--csk-ht-navy-2))!important;
+  border-right:1px solid rgba(255,255,255,.08)!important;color:#fff!important;
+}
+.csk-ht-brand-final{
+  height:var(--csk-ht-header)!important;min-height:var(--csk-ht-header)!important;flex:0 0 var(--csk-ht-header)!important;
+  display:flex!important;align-items:center!important;gap:10px!important;padding:0 18px!important;
+  border-bottom:1px solid rgba(255,255,255,.08)!important;box-sizing:border-box!important;
+}
+.csk-ht-brand-final .brand-mark{
+  width:34px!important;height:34px!important;min-width:34px!important;border-radius:9px!important;
+  display:grid!important;place-items:center!important;background:#2563eb!important;overflow:hidden!important;
+}
+.csk-ht-brand-final .brand-mark img{width:34px!important;height:34px!important;display:block!important;object-fit:cover!important;}
+.csk-ht-brand-final .brand-connect{color:#fff!important;font-size:19px!important;font-weight:800!important;letter-spacing:-.035em!important;}
+.csk-ht-brand-final .brand-sukuu{color:#60a5fa!important;}
+.csk-ht-nav-final{padding:16px 12px!important;display:flex!important;flex-direction:column!important;gap:4px!important;overflow-y:auto!important;overflow-x:hidden!important;flex:1!important;}
+.csk-ht-nav-final .nav-label{font-size:10px!important;font-weight:800!important;letter-spacing:.12em!important;color:#8492aa!important;padding:10px 12px 6px!important;margin:0!important;}
+.csk-ht-nav-final a{
+  min-height:44px!important;height:44px!important;width:100%!important;display:flex!important;align-items:center!important;gap:11px!important;
+  padding:0 12px!important;border-radius:9px!important;text-decoration:none!important;color:#c2ccdc!important;font-size:13px!important;font-weight:650!important;
+  line-height:1.2!important;white-space:nowrap!important;overflow:hidden!important;transition:background .16s ease,color .16s ease!important;
+}
+.csk-ht-nav-final a:hover{background:rgba(255,255,255,.07)!important;color:#fff!important;transform:none!important;}
+.csk-ht-nav-final a.active{background:rgba(37,99,235,.22)!important;color:#fff!important;box-shadow:inset 3px 0 0 #3b82f6!important;}
+.csk-ht-nav-final .nav-icon{width:20px!important;min-width:20px!important;height:20px!important;display:grid!important;place-items:center!important;color:inherit!important;line-height:1!important;}
+.csk-ht-nav-final .nav-icon svg{width:17px!important;height:17px!important;display:block!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important;}
+.csk-ht-logout-final{margin:0 14px 14px!important;width:calc(100% - 28px)!important;height:42px!important;min-height:42px!important;border:1px solid rgba(255,255,255,.14)!important;background:rgba(255,255,255,.035)!important;color:#e5eaf3!important;border-radius:8px!important;font-size:12px!important;font-weight:750!important;cursor:pointer!important;}
+.csk-ht-logout-final:hover{background:rgba(255,255,255,.09)!important;color:#fff!important;}
+
+/* One canonical fixed header and one scrollable content region. */
+.csk-ht-main-final{
+  display:block!important;position:relative!important;margin-left:var(--csk-ht-sidebar)!important;
+  width:calc(100% - var(--csk-ht-sidebar))!important;min-width:0!important;min-height:100vh!important;
+  padding:var(--csk-ht-header) 0 0!important;background:var(--csk-ht-bg)!important;box-sizing:border-box!important;
+}
+.csk-ht-header-final{
+  position:fixed!important;left:var(--csk-ht-sidebar)!important;right:0!important;top:0!important;width:auto!important;
+  height:var(--csk-ht-header)!important;min-height:var(--csk-ht-header)!important;z-index:4900!important;
+  background:#fff!important;border-bottom:1px solid var(--csk-ht-line)!important;display:flex!important;align-items:center!important;
+  justify-content:space-between!important;padding:0 20px!important;box-sizing:border-box!important;
+}
+.csk-ht-header-title-final{margin:0!important;padding:0!important;color:var(--csk-ht-ink)!important;font-size:19px!important;font-weight:750!important;line-height:1!important;letter-spacing:-.025em!important;}
+.csk-ht-profile-final{display:flex!important;align-items:center!important;gap:10px!important;min-width:0!important;padding:6px 9px!important;border:1px solid #e5e7eb!important;border-radius:10px!important;background:#fff!important;box-shadow:0 2px 8px rgba(15,23,42,.04)!important;}
+.csk-ht-profile-copy-final{display:flex!important;flex-direction:column!important;align-items:flex-end!important;min-width:0!important;line-height:1.15!important;}
+.csk-ht-profile-email-final{max-width:210px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;color:#344054!important;font-size:11px!important;font-weight:750!important;}
+.csk-ht-profile-role-final{margin-top:3px!important;color:#98a2b3!important;font-size:10px!important;font-weight:500!important;}
+.csk-ht-avatar-final{width:34px!important;height:34px!important;min-width:34px!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:#eff6ff!important;color:#2563eb!important;font-size:12px!important;font-weight:850!important;}
+.csk-ht-main-final>.app-content,.csk-ht-main-final>.content,.csk-ht-main-final>.page,.csk-ht-main-final>section.content{width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:24px 28px 44px!important;box-sizing:border-box!important;}
+.csk-ht-main-final>.app-content{height:calc(100vh - var(--csk-ht-header))!important;min-height:calc(100vh - var(--csk-ht-header))!important;overflow-y:auto!important;overflow-x:hidden!important;}
+.csk-ht-main-final>.app-content table,.csk-ht-main-final>.content table,.csk-ht-main-final>.page table{max-width:100%!important;}
+
+/* HT must never display the HoA dashboard/intelligence layer. */
+body.cs-headteacher-final-shell #csHoaDashboard,body.cs-headteacher-final-shell #csHoaAcademicIntelligence,body.cs-headteacher-final-shell .cs-hoa-dashboard,body.cs-headteacher-final-shell .cs-hoa-intel{display:none!important;visibility:hidden!important;}
+
+/* Keep the Students Actions column inside the table. */
+body.cs-headteacher-final-shell #students-table{width:100%!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;}
+body.cs-headteacher-final-shell #students-table th,body.cs-headteacher-final-shell #students-table td{overflow:hidden!important;text-overflow:ellipsis!important;vertical-align:middle!important;}
+body.cs-headteacher-final-shell #students-table th:last-child,body.cs-headteacher-final-shell #students-table td:last-child{width:120px!important;min-width:120px!important;max-width:120px!important;text-align:center!important;}
+body.cs-headteacher-final-shell #students-table td:last-child .student-actions,body.cs-headteacher-final-shell #students-table td:last-child .cs-row-actions{width:100%!important;display:flex!important;justify-content:center!important;align-items:center!important;gap:6px!important;overflow:hidden!important;}
+
+@media(max-width:900px){
+  :root{--csk-ht-sidebar:0px;}
+  html,body{overflow-x:hidden!important;}
+  .csk-ht-sidebar-final{position:relative!important;width:100%!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:0!important;}
+  .csk-ht-nav-final{max-height:360px!important;overflow-y:auto!important;}
+  .csk-ht-main-final{margin-left:0!important;width:100%!important;padding-top:58px!important;}
+  .csk-ht-header-final{left:0!important;padding:0 14px!important;}
+  .csk-ht-main-final>.app-content,.csk-ht-main-final>.content,.csk-ht-main-final>.page,.csk-ht-main-final>section.content{padding:20px 16px 34px!important;}
+  .csk-ht-profile-email-final{max-width:150px!important;}
+}
+</style>
+<link rel="stylesheet" href="/roles/headteacher/headteacher-ui-refinement.css">
+<style id="ht-final-shell-guard">
+body.cs-headteacher-final-shell .cs-shell{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important;}
+body.cs-headteacher-final-shell aside[class*="sidebar"]:not(.csk-ht-sidebar-final),body.cs-headteacher-final-shell #cs-ht-final-sidebar,body.cs-headteacher-final-shell .cs-ht-sidebar{display:none!important;visibility:hidden!important;width:0!important;min-width:0!important;max-width:0!important;}
+body.cs-headteacher-final-shell .app-topbar,body.cs-headteacher-final-shell .topbar,body.cs-headteacher-final-shell .cs-topbar,body.cs-headteacher-final-shell .cs-ht-header{display:none!important;visibility:hidden!important;}
+body.cs-headteacher-final-shell .csk-ht-sidebar-final{display:flex!important;}
+body.cs-headteacher-final-shell .csk-ht-header-final{display:flex!important;}
+</style>
+<style id="cs-ht-canonical-header-guard">
+body.cs-headteacher-final-shell .csk-ht-header-final{display:flex!important;visibility:visible!important;opacity:1!important;position:fixed!important;left:255px!important;right:0!important;top:0!important;width:auto!important;height:58px!important;min-height:58px!important;z-index:99999!important;align-items:center!important}
+body.cs-headteacher-final-shell .csk-ht-main-final{padding-top:58px!important;min-height:0!important}
+body.cs-headteacher-final-shell .csk-ht-profile-final{display:flex!important;align-items:center!important;margin-left:auto!important;position:relative!important;right:auto!important;bottom:auto!important}
+body.cs-headteacher-final-shell .csk-ht-header-final .csk-ht-profile-final{margin-left:auto!important}
+@media(max-width:760px){body.cs-headteacher-final-shell .csk-ht-header-final{left:76px!important;padding-left:12px!important;padding-right:12px!important}}
+</style>
+<link rel="stylesheet" href="/assets/css/mobile-shell.css" media="(max-width:820px)"><script src="/assets/js/mobile-shell.js" defer></script></head>
+<body>
+
+
+<div class="layout">
+<aside class="sidebar">
+  <div>
+    <div class="brand"><img src="/assets/images/favicon.svg" alt="ConnectSukuu"><span class="brand-word">Connect<span class="brand-accent">Sukuu</span></span></div>
+<nav class="nav">
+<div class="section-label nav-section">Workspace</div>
+<a data-page="dashboard" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-dashboard.html"><span>Dashboard</span></a>
+<a data-page="team" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-team.html"><span>Team &amp; Roles</span></a>
+<a data-page="academic" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-academic.html"><span>Academic Setup</span></a>
+<a data-page="students" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-students.html"><span>Students</span></a>
+<a data-page="attendance" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-attendance.html"><span>Attendance</span></a>
+<div class="section-label nav-section">Teaching</div>
+<a data-page="teaching-assignments" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-teaching-assignments.html"><span>Teaching Assignments</span></a>
+<a data-page="timetable" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-timetable.html"><span>Timetable</span></a>
+<a data-page="assessments" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-assessments.html"><span>Assessments &amp; Reports</span></a>
+<div class="section-label nav-section">Finance</div>
+<a data-page="finance" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-finance.html"><span>Finance</span></a>
+<div class="section-label nav-section">System</div>
+<a data-page="settings" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-settings.html"><span>Settings</span></a>
+</nav>
+  </div>
+  <div class="sidebar-bottom"><button id="logoutBtn" class="logout">↪ Log out</button></div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <div class="topbar-title">Students Attendance</div>
+  <div class="user"><div class="avatar" id="userAvatar">U</div><span id="userName">User</span></div>
+</header>
+
+<section class="content">
+  <div class="heading">
+    <div>
+      <div class="eyebrow">School Operations</div>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="hero-row">
+      <div>
+        <h2 id="heroTitle">Attendance Overview</h2>
+        <p id="heroText">Review attendance records by class, date, lesson and student. Teachers record attendance; leadership reviews the results.</p>
+      </div>
+      <span class="role-pill"><span class="dot"></span><span id="rolePillText">Read-only oversight</span></span>
+    </div>
+  </section>
+
+  <section class="filters">
+    <div class="filter-grid">
+      <div class="field"><label>Academic year</label><select id="year"><option value="">Loading…</option></select></div>
+      <div class="field"><label>Term</label><select id="term"><option value="">Select year first</option></select></div>
+      <div class="field"><label>Class</label><select id="class"><option value="">Select term first</option></select></div>
+      <div class="field"><label>Attendance date</label><input id="date" type="date"></div>
+      <div class="field hidden" id="lessonField"><label>Lesson</label><select id="lesson"><option value="">Select lesson</option></select></div>
+<div class="field hidden" id="studentSearchField"><label>Find student</label><input id="studentSearch" type="search" placeholder="Name or admission number"></div>
+    </div>
+    <div class="mode-row">
+      <div class="mode-left">
+        <span class="mode-title">Attendance mode</span>
+        <label class="mode-option" id="subjectMode"><input type="radio" name="mode" value="SUBJECT"> Subject-based</label>
+        <label class="mode-option" id="classMode"><input type="radio" name="mode" value="CLASS"> Class-based</label>
+      </div>
+      <span class="default-note" id="defaultNote">Loading school default…</span>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat"><div class="stat-label">Students</div><div class="stat-value" id="statTotal">—</div><div class="stat-sub" id="statTotalSub">selected roster</div></div>
+    <div class="stat"><div class="stat-label">Present</div><div class="stat-value" id="statPresent">—</div><div class="stat-sub">recorded as present</div></div>
+    <div class="stat"><div class="stat-label">Absent</div><div class="stat-value" id="statAbsent">—</div><div class="stat-sub">recorded as absent</div></div>
+    <div class="stat"><div class="stat-label" id="statFourthLabel">Remaining</div><div class="stat-value" id="statFourth">—</div><div class="stat-sub" id="statFourthSub">not yet recorded</div></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <div class="panel-title">
+        <div class="panel-icon" id="panelIcon">✓</div>
+        <div><h2 id="panelTitle">Attendance Overview</h2><p id="panelSub">Choose the academic context above to load attendance.</p></div>
+      </div>
+      <div class="actions" id="teacherActions">
+        <button class="btn" id="allBtn" disabled>Mark all present</button>
+        <button class="btn primary" id="saveBtn" disabled>Save attendance</button>
+      </div>
+    </div>
+    <div id="readonlyStrip" class="readonly-strip">
+      <div class="context">
+        <span>Mode <strong id="ctxMode">—</strong></span>
+        <span>Class <strong id="ctxClass">—</strong></span>
+        <span id="ctxLessonWrap">Lesson <strong id="ctxLesson">—</strong></span>
+        <span>Date <strong id="ctxDate">—</strong></span>
+      </div>
+      <span class="readonly-badge"><span class="lock">🔒</span> Read-only review</span>
+    </div>
+    
+<!-- CONNECTSUKUU_HOA_ATTENDANCE_ANALYTICS_CLEAN -->
+<section id="hoaAttendanceAnalyticsClean" class="hoa-analytics-clean" aria-label="Head of Academics attendance analytics" style="display:none">
+  <div class="hoa-a-head">
+    <div class="hoa-a-title">
+      <div class="hoa-a-icon">▥</div>
+      <div>
+        <h3>Attendance analytics</h3>
+        <p>Read-only academic oversight. Teachers remain responsible for recording attendance.</p>
+      </div>
+    </div>
+    <span class="hoa-a-badge">Head of Academics</span>
+  </div>
+  <div class="hoa-a-grid">
+    <div class="hoa-a-card">
+      <div class="hoa-a-label">Attendance rate</div>
+      <div class="hoa-a-value" id="hoaAttendanceRateClean">—</div>
+      <div class="hoa-a-progress"><span id="hoaAttendanceProgressClean"></span></div>
+    </div>
+    <div class="hoa-a-card">
+      <div class="hoa-a-label">Records reviewed</div>
+      <div class="hoa-a-value" id="hoaRecordsReviewedClean">—</div>
+      <div class="hoa-a-sub">selected context</div>
+    </div>
+    <div class="hoa-a-card">
+      <div class="hoa-a-label">Late / excused</div>
+      <div class="hoa-a-value" id="hoaLateExcusedClean">—</div>
+      <div class="hoa-a-sub">recorded statuses</div>
+    </div>
+    <div class="hoa-a-card">
+      <div class="hoa-a-label">Absent rate</div>
+      <div class="hoa-a-value" id="hoaAbsentRateClean">—</div>
+      <div class="hoa-a-sub">selected records</div>
+    </div>
+  </div>
+  <div class="hoa-a-status">
+    <div class="hoa-a-status-card"><strong id="hoaPresentCountClean">—</strong><span>Present</span></div>
+    <div class="hoa-a-status-card"><strong id="hoaAbsentCountClean">—</strong><span>Absent</span></div>
+    <div class="hoa-a-status-card"><strong id="hoaLateCountClean">—</strong><span>Late</span></div>
+    <div class="hoa-a-status-card"><strong id="hoaExcusedCountClean">—</strong><span>Excused</span></div>
+  </div>
+</section>
+<!-- END_CONNECTSUKUU_HOA_ATTENDANCE_ANALYTICS_CLEAN -->
+
+<div id="tableWrap" class="table-wrap hidden"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+    <div id="empty" class="empty"><div class="empty-icon">✓</div><h3 id="emptyTitle">Choose an academic context</h3><p id="emptyText">Select an academic year, term and class. Subject-based attendance also requires a lesson.</p></div>
+  </section>
+</main>
+</div>
+
+<div class="modal" id="historyModal">
+  <div class="modal-card">
+    <div class="modal-head"><div><h3 id="historyTitle">Student attendance</h3><p id="historySubtitle">Attendance details for the selected student.</p></div><button class="close" id="closeHistory">×</button></div>
+    <div class="modal-body">
+      <div class="history-summary">
+        <div class="history-stat"><b id="hTotal">—</b><span>records shown</span></div>
+        <div class="history-stat"><b id="hPresent">—</b><span>present</span></div>
+        <div class="history-stat"><b id="hAbsent">—</b><span>absent</span></div>
+        <div class="history-stat"><b id="hOther">—</b><span>late / excused</span></div>
+      </div>
+      <div class="history-table"><table><thead><tr><th>Date</th><th>Mode</th><th>Lesson / context</th><th>Status</th><th>Recorded by</th></tr></thead><tbody id="historyBody"></tbody></table></div>
+    </div>
+    <div class="modal-foot"><button class="btn" id="closeHistory2">Close</button></div>
+  </div>
+</div>
+
+<div class="banner" id="banner"></div>
+
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+(() => {
+'use strict';
+
+const user = requireAuthOrRedirect();
+if (!user) return;
+
+const $ = id => document.getElementById(id);
+const role = user.role;
+const isTeacher = role === 'TEACHER';
+const isReviewer = ['HEAD_TEACHER','HEAD_OF_ACADEMICS','ADMINISTRATOR'].includes(role);
+if (!isTeacher && !isReviewer) { location.href='/roles/headteacher/headteacher-dashboard.html'; return; }
+
+const state = {
+  years: [], terms: [], classes: [], lessons: [], students: [], records: [],
+  mode: 'SUBJECT', defaultMode: 'SUBJECT'
+};
+
+const days = ['', 'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+function esc(v){return String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function api(path,opt={}) {
+  return apiFetch(path,opt).then(async r=>{
+    if(!r) throw new Error('Authentication expired.');
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(d.error||d.message||`Request failed (${r.status})`);
+    return d;
+  });
+}
+function showBanner(message,type=''){const b=$('banner');b.textContent=message;b.className='banner show '+type;clearTimeout(window.__attendanceBanner);window.__attendanceBanner=setTimeout(()=>b.className='banner',4200)}
+function fill(el,items,placeholder,label){el.innerHTML=`<option value="">${esc(placeholder)}</option>`;(items||[]).forEach(x=>{const o=document.createElement('option');o.value=x.id;o.textContent=label(x);el.appendChild(o)})}
+function fmtStatus(s){return s ? s.charAt(0)+s.slice(1).toLowerCase() : 'Not recorded'}
+function statusClass(s){return s ? s.toLowerCase() : 'none'}
+function dateToday(){return new Date().toISOString().slice(0,10)}
+function selectedDay(){const d=$('date').value;if(!d)return null;const parts=d.split('-').map(Number);return new Date(Date.UTC(parts[0],parts[1]-1,parts[2])).getUTCDay() || 7}
+
+function setupIdentity(){
+  $('userName').textContent=`${user.firstName||''} ${user.lastName||''}`.trim()||user.email||'User';
+  $('userAvatar').textContent=(user.firstName||user.email||'?').charAt(0).toUpperCase();
+  document.querySelectorAll('[data-role-nav]').forEach(a=>a.classList.toggle('hidden',!a.dataset.roleNav.split(',').includes(role)));
+
+  if(isTeacher){
+    $('panelSub').textContent='Record attendance for your assigned class or lesson. Changes are saved in one batch to avoid double entry.';
+    $('heroTitle').textContent='Take Attendance';
+    $('heroText').textContent='Record attendance for your assigned class or lesson. Changes are saved in one batch to avoid double entry.';
+    $('rolePillText').textContent='Teacher recording';
+    $('panelTitle').textContent='Take attendance';
+    $('panelIcon').textContent='✓';
+    $('teacherActions').classList.remove('hidden');
+    $('readonlyStrip').classList.add('hidden');
+    $('statFourthLabel').textContent='Remaining';
+    $('statFourthSub').textContent='not yet recorded';
+  } else {
+    $('teacherActions').classList.add('hidden');
+    $('readonlyStrip').classList.remove('hidden');
+    $('studentSearchField').classList.remove('hidden');
+    $('panelSub').textContent='Search attendance by academic context, class, date, lesson and student. Attendance entry remains with teachers.';
+    $('heroTitle').textContent='Attendance Overview';
+    $('heroText').textContent='Search attendance by academic context, class, date, lesson and student. Attendance entry remains with teachers.';
+    $('rolePillText').textContent='Read-only oversight';
+    $('panelTitle').textContent='Attendance Overview';
+    $('panelIcon').textContent='⌕';
+    $('statFourthLabel').textContent='Late / Excused';
+    $('statFourthSub').textContent='recorded statuses';
+  }
+}
+
+function setMode(mode){
+  state.mode=mode;
+  $('subjectMode').classList.toggle('active',mode==='SUBJECT');
+  $('classMode').classList.toggle('active',mode==='CLASS');
+  $('lessonField').classList.toggle('hidden',mode!=='SUBJECT');
+  $('subjectMode').querySelector('input').checked=mode==='SUBJECT';
+  $('classMode').querySelector('input').checked=mode==='CLASS';
+}
+
+async function loadYears(){
+  state.years=await api('/api/academic-years');
+  fill($('year'),state.years,'Select academic year',y=>`${y.name}${y.isCurrent?' — Current':''}`);
+  const current=state.years.find(y=>y.isCurrent)||state.years[0];
+  if(current){$('year').value=current.id;await loadTerms();}
+}
+async function loadTerms(){
+  const y=$('year').value;
+  state.terms=[];state.classes=[];state.lessons=[];state.students=[];state.records=[];
+  fill($('term'),[],'Select term',x=>x.name);fill($('class'),[],'Select class',x=>x.name);fill($('lesson'),[],'Select lesson',x=>x.name);
+  clearTable();
+  if(!y)return;
+  const selectedYear=state.years.find(x=>x.id===y);
+  state.terms=Array.isArray(selectedYear?.terms)?selectedYear.terms:await api(`/api/academic-years/${encodeURIComponent(y)}/terms`);
+  fill($('term'),state.terms,'Select term',t=>`${t.name}${t.isCurrent?' — Current':''}`);
+  const current=state.terms.find(t=>t.isCurrent)||state.terms[0];
+  if(current)$('term').value=current.id;
+  state.classes=await api(`/api/classes?academicYearId=${encodeURIComponent(y)}`);
+  fill($('class'),state.classes,'Select class',c=>`${c.name}${c.section?' — '+c.section:''}`);
+  await loadLessons();
+  updateContext();
+}
+async function loadLessons(){
+  fill($('lesson'),[],'Select lesson',x=>x.name);state.lessons=[];
+  if(state.mode!=='SUBJECT'||!$('year').value||!$('term').value||!$('class').value)return;
+  const all=await api(`/api/attendance/lessons?academicYearId=${encodeURIComponent($('year').value)}&termId=${encodeURIComponent($('term').value)}&classId=${encodeURIComponent($('class').value)}`);
+  const day=selectedDay();
+  state.lessons=day ? all.filter(x=>Number(x.dayOfWeek)===day) : all;
+  fill($('lesson'),state.lessons,'Select lesson',x=>`${days[x.dayOfWeek]||'Day'} · ${x.startTime}–${x.endTime} · ${x.teachingAssignment?.subject?.name||'Lesson'} · ${`${x.teachingAssignment?.teacher?.firstName||''} ${x.teachingAssignment?.teacher?.lastName||''}`.trim()}`);
+  if(state.lessons.length===1)$('lesson').value=state.lessons[0].id;
+}
+function ready(){return Boolean($('year').value&&$('term').value&&$('class').value&&(state.mode==='CLASS'||$('lesson').value))}
+function clearTable(){
+  $('tableWrap').classList.add('hidden');$('tbody').innerHTML='';$('thead').innerHTML='';
+  $('empty').classList.remove('hidden');$('emptyTitle').textContent='Choose an academic context';
+  $('emptyText').textContent=state.mode==='SUBJECT'?'Select an academic year, term and class, then choose a lesson for the selected date.':'Select an academic year, term and class to review daily attendance.';
+  updateStats([]);updateContext();
+}
+function updateContext(){
+  const c=state.classes.find(x=>x.id===$('class').value);
+  const l=state.lessons.find(x=>x.id===$('lesson').value);
+  $('ctxMode').textContent=state.mode==='SUBJECT'?'Subject-based':'Class-based';
+  $('ctxClass').textContent=c?.name||'—';$('ctxDate').textContent=$('date').value||'—';
+  $('ctxLessonWrap').classList.toggle('hidden',state.mode!=='SUBJECT');
+  $('ctxLesson').textContent=l?`${l.teachingAssignment?.subject?.name||'Lesson'} · ${l.startTime}–${l.endTime}`:'—';
+}
+async function loadRoster(){
+  if(!ready()){clearTable();return;}
+  $('emptyTitle').textContent='Loading attendance…';$('emptyText').textContent='Fetching the selected roster and attendance records.';
+  $('tableWrap').classList.add('hidden');$('empty').classList.remove('hidden');
+  try{
+    state.students=await api(`/api/attendance/students?academicYearId=${encodeURIComponent($('year').value)}&termId=${encodeURIComponent($('term').value)}&classId=${encodeURIComponent($('class').value)}`);
+    let p=`/api/attendance?academicYearId=${encodeURIComponent($('year').value)}&termId=${encodeURIComponent($('term').value)}&classId=${encodeURIComponent($('class').value)}&attendanceDate=${encodeURIComponent($('date').value)}&attendanceMode=${state.mode}`;
+    if(state.mode==='SUBJECT')p+=`&timetableEntryId=${encodeURIComponent($('lesson').value)}`;
+    state.records=await api(p);
+    renderTable();
+  }catch(e){state.students=[];state.records=[];clearTable();$('emptyTitle').textContent='Could not load attendance';$('emptyText').textContent=e.message;showBanner(e.message,'error')}
+}
+function recordFor(id){return state.records.find(r=>r.studentId===id)}
+function renderTable(){
+  updateContext();$('empty').classList.add('hidden');$('tableWrap').classList.remove('hidden');
+  if(isTeacher){
+    $('thead').innerHTML='<tr><th>Student</th><th>Attendance status</th><th>Notes</th><th>Saved</th></tr>';
+    $('tbody').innerHTML=state.students.map(s=>{
+      const e=recordFor(s.id),st=e?.status||'',ini=(`${s.firstName||''}${s.lastName||''}`.trim().slice(0,2)||'?').toUpperCase();
+      return `<tr data-id="${esc(s.id)}"><td><div class="student"><div class="student-av">${esc(ini)}</div><div><div class="name">${esc(`${s.firstName||''} ${s.lastName||''}`.trim())}</div><div class="adm">${esc(s.admissionNumber||'No admission number')}</div></div></div></td><td><div class="statuses">${['PRESENT','ABSENT','LATE','EXCUSED'].map(x=>`<button type="button" class="status ${st===x?'sel':''}" data-s="${x}">${fmtStatus(x)}</button>`).join('')}</div></td><td><input class="notes" maxlength="500" placeholder="Optional note" value="${esc(e?.notes||'')}"></td><td>${e?'<span class="badge present">Saved</span>':'<span class="badge none">New</span>'}</td></tr>`;
+    }).join('');
+    document.querySelectorAll('.status').forEach(btn=>btn.addEventListener('click',()=>{const row=btn.closest('tr');row.querySelectorAll('.status').forEach(x=>x.classList.remove('sel'));btn.classList.add('sel');updateStatsFromTeacher();}));
+    $('saveBtn').disabled=false;$('allBtn').disabled=false;
+    updateStatsFromTeacher();
+  } else {
+    $('thead').innerHTML='<tr><th>Student</th><th>Status</th><th>Attendance context</th><th>Recorded by</th><th></th></tr>';
+    const q=document.getElementById('studentSearch')?.value?.trim().toLowerCase()||'';
+    const rows=state.records.filter(r=>{const name=`${r.student?.firstName||''} ${r.student?.lastName||''} ${r.student?.admissionNumber||''}`.toLowerCase();return !q||name.includes(q)});
+    $('tbody').innerHTML=rows.length?rows.map(r=>{
+      const a=r.timetableEntry?.teachingAssignment,l=a?.subject?.name;
+      const context=r.attendanceMode==='SUBJECT'?(l?`${l} · ${r.timetableEntry?.startTime||''}–${r.timetableEntry?.endTime||''}`:'Subject lesson'):'Daily class attendance';
+      return `<tr><td><div class="student"><div class="student-av">${esc((`${r.student?.firstName||''}${r.student?.lastName||''}`.trim().slice(0,2)||'?').toUpperCase())}</div><div><div class="name">${esc(`${r.student?.firstName||''} ${r.student?.lastName||''}`.trim()||'Student')}</div><div class="adm">${esc(r.student?.admissionNumber||'No admission number')}</div></div></div></td><td><span class="badge ${statusClass(r.status)}">${fmtStatus(r.status)}</span></td><td><div>${esc(context)}</div><div class="adm">${esc(r.attendanceMode==='SUBJECT'?(days[r.timetableEntry?.dayOfWeek]||''):'Class-based')}</div></td><td><span class="recorded">${esc(`${r.recordedBy?.firstName||''} ${r.recordedBy?.lastName||''}`.trim()||'—')}<br><strong>${esc(r.recordedBy?.role||'')}</strong></span></td><td><button type="button" class="btn view-student" data-id="${esc(r.studentId)}">Student view</button></td></tr>`;
+    }).join(''):`<tr><td colspan="5"><div class="empty"><div class="empty-icon">⌕</div><h3>No attendance records</h3><p>No records match the selected academic context and date.</p></div></td></tr>`;
+    document.querySelectorAll('.view-student').forEach(b=>b.addEventListener('click',()=>openHistory(b.dataset.id)));
+    updateStatsFromRecords(state.records);
+  }
+}
+function updateStatsFromTeacher(){
+  const rows=[...document.querySelectorAll('#tbody tr')],statuses=rows.map(r=>r.querySelector('.status.sel')?.dataset.s||'');
+  $('statTotal').textContent=state.students.length;$('statTotalSub').textContent='active students in class';
+  $('statPresent').textContent=statuses.filter(x=>x==='PRESENT').length;
+  $('statAbsent').textContent=statuses.filter(x=>x==='ABSENT').length;
+  $('statFourth').textContent=statuses.filter(x=>x==='LATE'||x==='EXCUSED').length;
+  $('statFourthSub').textContent='late or excused';
+}
+function updateStatsFromRecords(records){
+  $('statTotal').textContent=state.students.length||records.length||0;$('statTotalSub').textContent='active students / records';
+  $('statPresent').textContent=records.filter(r=>r.status==='PRESENT').length;
+  $('statAbsent').textContent=records.filter(r=>r.status==='ABSENT').length;
+  $('statFourth').textContent=records.filter(r=>r.status==='LATE'||r.status==='EXCUSED').length;
+}
+function updateStatsFromEmpty(){updateStatsFromRecords([])}
+function updateStats(records){$('statTotal').textContent=state.students.length||0;$('statPresent').textContent=records.filter(r=>r.status==='PRESENT').length;$('statAbsent').textContent=records.filter(r=>r.status==='ABSENT').length;$('statFourth').textContent=records.filter(r=>r.status==='LATE'||r.status==='EXCUSED').length}
+async function save(){
+  if(!isTeacher||!ready())return;
+  const btn=$('saveBtn');btn.disabled=true;btn.textContent='Saving…';
+  try{
+    const records=state.students.map(s=>{const row=document.querySelector(`tr[data-id="${CSS.escape(s.id)}"]`);return{studentId:s.id,status:row?.querySelector('.status.sel')?.dataset.s||'PRESENT',notes:row?.querySelector('.notes')?.value.trim()||null}});
+    const payload={academicYearId:$('year').value,termId:$('term').value,classId:$('class').value,attendanceDate:$('date').value,attendanceMode:state.mode,records};
+    if(state.mode==='SUBJECT')payload.timetableEntryId=$('lesson').value;
+    const r=await api('/api/attendance/bulk',{method:'POST',body:JSON.stringify(payload)});
+    showBanner(`${r.count||records.length} attendance record${(r.count||records.length)===1?'':'s'} saved successfully.`,'success');
+    await loadRoster();
+  }catch(e){showBanner(e.message,'error')}finally{btn.disabled=false;btn.textContent='Save attendance'}
+}
+function allPresent(){
+  if(!isTeacher)return;
+  document.querySelectorAll('#tbody .status[data-s="PRESENT"]').forEach(btn=>{const row=btn.closest('tr');row.querySelectorAll('.status').forEach(x=>x.classList.remove('sel'));btn.classList.add('sel')});
+  updateStatsFromTeacher();
+}
+async function openHistory(studentId){
+  const student=state.students.find(s=>s.id===studentId)||state.records.find(r=>r.studentId===studentId)?.student;
+  if(!student)return;
+
+  const term=state.terms.find(t=>t.id===$('term').value);
+  const from=(term?.startsAt||'').slice(0,10);
+  const to=(term?.endsAt||'').slice(0,10);
+
+  $('historyTitle').textContent=`${student.firstName||''} ${student.lastName||''}`.trim()||'Student attendance';
+  $('historySubtitle').textContent=`${student.admissionNumber||'No admission number'} · selected term attendance history`;
+  $('historyBody').innerHTML='<tr><td colspan="5" style="text-align:center;color:#98a2b3;padding:30px">Loading student attendance history…</td></tr>';
+  $('historyModal').classList.add('open');
+
+  try{
+    let p=`/api/attendance?academicYearId=${encodeURIComponent($('year').value)}&termId=${encodeURIComponent($('term').value)}&classId=${encodeURIComponent($('class').value)}&studentId=${encodeURIComponent(studentId)}`;
+    if(from)p+=`&from=${encodeURIComponent(from)}`;
+    if(to)p+=`&to=${encodeURIComponent(to)}`;
+    const rows=await api(p);
+
+    $('hTotal').textContent=rows.length;
+    $('hPresent').textContent=rows.filter(r=>r.status==='PRESENT').length;
+    $('hAbsent').textContent=rows.filter(r=>r.status==='ABSENT').length;
+    $('hOther').textContent=rows.filter(r=>r.status==='LATE'||r.status==='EXCUSED').length;
+
+    $('historyBody').innerHTML=rows.length?rows.map(r=>{
+      const a=r.timetableEntry?.teachingAssignment;
+      const context=r.attendanceMode==='SUBJECT'
+        ? `${a?.subject?.name||'Subject lesson'} · ${r.timetableEntry?.startTime||''}–${r.timetableEntry?.endTime||''}`
+        : 'Daily class attendance';
+      const recorded=`${r.recordedBy?.firstName||''} ${r.recordedBy?.lastName||''}`.trim()||'—';
+      return `<tr><td>${esc((r.attendanceDate||'').slice(0,10))}</td><td>${esc(r.attendanceMode==='SUBJECT'?'Subject':'Class')}</td><td>${esc(context)}</td><td><span class="badge ${statusClass(r.status)}">${fmtStatus(r.status)}</span></td><td>${esc(recorded)}</td></tr>`;
+    }).join(''):'<tr><td colspan="5" style="text-align:center;color:#98a2b3;padding:30px">No attendance records found for this student in the selected term and class.</td></tr>';
+  }catch(e){
+    $('historyBody').innerHTML=`<tr><td colspan="5" style="text-align:center;color:#b91c1c;padding:30px">${esc(e.message)}</td></tr>`;
+    $('hTotal').textContent='—';$('hPresent').textContent='—';$('hAbsent').textContent='—';$('hOther').textContent='—';
+  }
+}
+function updateDefaultNote(){ $('defaultNote').textContent=`School default: ${state.defaultMode==='CLASS'?'Class-based':'Subject-based'}` }
+async function init(){
+  setupIdentity();$('date').value=dateToday();
+  try{const s=await api('/api/settings');state.defaultMode=['CLASS','SUBJECT'].includes(s.defaultAttendanceMode)?s.defaultAttendanceMode:'SUBJECT'}catch(_){state.defaultMode='SUBJECT'}
+  setMode(state.defaultMode);updateDefaultNote();await loadYears();
+}
+$('year').addEventListener('change',loadTerms);
+$('term').addEventListener('change',async()=>{await loadLessons();await loadRoster()});
+$('class').addEventListener('change',async()=>{await loadLessons();await loadRoster()});
+$('date').addEventListener('change',async()=>{if(state.mode==='SUBJECT'){await loadLessons();if(state.lessons.length===1)$('lesson').value=state.lessons[0].id}await loadRoster()});
+$('lesson').addEventListener('change',loadRoster);
+$('studentSearch').addEventListener('input',()=>{if(!isTeacher)renderTable()});
+document.querySelectorAll('input[name="mode"]').forEach(x=>x.addEventListener('change',async()=>{setMode(x.value);await loadLessons();await loadRoster()}));
+$('saveBtn').addEventListener('click',save);$('allBtn').addEventListener('click',allPresent);
+$('logoutBtn').addEventListener('click',()=>AUTH.logout());
+$('closeHistory').addEventListener('click',()=>$('historyModal').classList.remove('open'));$('closeHistory2').addEventListener('click',()=>$('historyModal').classList.remove('open'));
+$('historyModal').addEventListener('click',e=>{if(e.target===$('historyModal'))$('historyModal').classList.remove('open')});
+init().catch(e=>showBanner(e.message,'error'));
+})();
+</script>
+
+<!-- CONNECTSUKUU_HOA_ATTENDANCE_ANALYTICS_CLEAN_JS -->
+<script>
+(function(){
+  'use strict';
+
+  function hoaAttendanceApi(path){
+    return apiFetch(path).then(async function(r){
+      if(!r) throw new Error('Authentication expired.');
+      var data=await r.json().catch(function(){return []});
+      if(!r.ok) throw new Error(data.error||data.message||('Request failed ('+r.status+')'));
+      return data;
+    });
+  }
+
+  function hoaRows(data){
+    if(Array.isArray(data)) return data;
+    if(Array.isArray(data?.records)) return data.records;
+    if(Array.isArray(data?.data)) return data.data;
+    if(Array.isArray(data?.attendance)) return data.attendance;
+    return [];
+  }
+
+  async function refreshHoaAttendanceAnalytics(){
+    var user=AUTH.getUser ? AUTH.getUser() : null;
+    var panel=document.getElementById('hoaAttendanceAnalyticsClean');
+    if(!panel) return;
+    if(!user || user.role!=='HEAD_OF_ACADEMICS'){
+      panel.style.display='none';
+      return;
+    }
+    panel.style.display='block';
+
+    var year=document.getElementById('year')?.value||'';
+    var term=document.getElementById('term')?.value||'';
+    var cls=document.getElementById('class')?.value||'';
+    var date=document.getElementById('date')?.value||'';
+    var lesson=document.getElementById('lesson')?.value||'';
+    var subjectMode=document.getElementById('subjectMode');
+    var mode=(subjectMode && subjectMode.classList.contains('active'))?'SUBJECT':'CLASS';
+
+    var ids=['hoaAttendanceRateClean','hoaRecordsReviewedClean','hoaLateExcusedClean','hoaAbsentRateClean','hoaPresentCountClean','hoaAbsentCountClean','hoaLateCountClean','hoaExcusedCountClean'];
+    ids.forEach(function(id){var e=document.getElementById(id);if(e)e.textContent='—'});
+    var bar=document.getElementById('hoaAttendanceProgressClean');if(bar)bar.style.width='0%';
+
+    if(!year || !term || !cls || !date || (mode==='SUBJECT' && !lesson)) return;
+
+    try{
+      var query='/api/attendance?academicYearId='+encodeURIComponent(year)
+        +'&termId='+encodeURIComponent(term)
+        +'&classId='+encodeURIComponent(cls)
+        +'&attendanceDate='+encodeURIComponent(date)
+        +'&attendanceMode='+encodeURIComponent(mode);
+      if(mode==='SUBJECT') query+='&timetableEntryId='+encodeURIComponent(lesson);
+
+      var rows=hoaRows(await hoaAttendanceApi(query));
+      var total=rows.length;
+      var present=rows.filter(function(x){return x.status==='PRESENT'}).length;
+      var absent=rows.filter(function(x){return x.status==='ABSENT'}).length;
+      var late=rows.filter(function(x){return x.status==='LATE'}).length;
+      var excused=rows.filter(function(x){return x.status==='EXCUSED'}).length;
+      var attended=present+late+excused;
+      var rate=total?Math.round(attended/total*100):0;
+      var absentRate=total?Math.round(absent/total*100):0;
+      function set(id,value){var e=document.getElementById(id);if(e)e.textContent=value}
+      set('hoaAttendanceRateClean',rate+'%');
+      set('hoaRecordsReviewedClean',total);
+      set('hoaLateExcusedClean',late+excused);
+      set('hoaAbsentRateClean',absentRate+'%');
+      set('hoaPresentCountClean',present);
+      set('hoaAbsentCountClean',absent);
+      set('hoaLateCountClean',late);
+      set('hoaExcusedCountClean',excused);
+      if(bar)bar.style.width=rate+'%';
+    }catch(error){
+      console.warn('ConnectSukuu Head of Academics attendance analytics:',error);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded',function(){
+    ['year','term','class','date','lesson'].forEach(function(id){
+      var e=document.getElementById(id);
+      if(e)e.addEventListener('change',function(){setTimeout(refreshHoaAttendanceAnalytics,120)});
+    });
+    setTimeout(refreshHoaAttendanceAnalytics,700);
+    setTimeout(refreshHoaAttendanceAnalytics,1600);
+  });
+
+  window.connectSukuuRefreshHoaAttendanceAnalytics=refreshHoaAttendanceAnalytics;
+})();
+</script>
+<!-- END_CONNECTSUKUU_HOA_ATTENDANCE_ANALYTICS_CLEAN_JS -->
+
+\n
+
+
+
+\n
+<style id="connectsukuu-ht-shell-refinement-style">
+/* FINAL HT SHELL REFINEMENT — keep business UI intact */
+:root{
+  --csk-ht-sidebar:255px!important;
+  --csk-ht-header:58px!important;
+}
+
+/* One consistent dark HT sidebar, including Finance. */
+body .csk-ht-sidebar-final{
+  display:flex!important;
+  position:fixed!important;
+  left:0!important;
+  top:0!important;
+  bottom:0!important;
+  width:255px!important;
+  min-width:255px!important;
+  max-width:255px!important;
+  height:100vh!important;
+  background:linear-gradient(180deg,#0b1730 0%,#101d38 100%)!important;
+  color:#fff!important;
+  border-right:1px solid rgba(255,255,255,.08)!important;
+  z-index:5000!important;
+}
+body .csk-ht-sidebar-final .csk-ht-brand-final{
+  flex:0 0 58px!important;
+  height:58px!important;
+  min-height:58px!important;
+}
+body .csk-ht-sidebar-final .csk-ht-nav-final{
+  flex:1 1 auto!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+}
+body .csk-ht-sidebar-final .csk-ht-logout-final{
+  flex:0 0 auto!important;
+}
+
+/* Header stays exactly fixed and aligned to the sidebar. */
+body .csk-ht-header-final{
+  position:fixed!important;
+  left:255px!important;
+  right:0!important;
+  top:0!important;
+  height:58px!important;
+  min-height:58px!important;
+  z-index:4900!important;
+}
+
+/* Remove the second centered 1180px frame that caused the large blank band. */
+body .csk-ht-main-final{
+  margin-left:255px!important;
+  width:calc(100% - 255px)!important;
+  min-width:0!important;
+  padding-top:58px!important;
+}
+body .csk-ht-main-final > .app-content,
+body .csk-ht-main-final > .content,
+body .csk-ht-main-final > .page,
+body .csk-ht-main-final > section.content,
+body .csk-ht-content{
+  width:100%!important;
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  box-sizing:border-box!important;
+}
+
+/* Neutralize common legacy page-width wrappers without changing their contents. */
+body .csk-ht-content > .page-container,
+body .csk-ht-content > .container,
+body .csk-ht-content > .content-container,
+body .csk-ht-content > .page-shell,
+body .csk-ht-content > .main-content,
+body .csk-ht-content > .dashboard-content,
+body .csk-ht-content > .finance-content{
+  width:100%!important;
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+}
+
+/* Keep readable inner cards while allowing the shell itself to use the screen. */
+body .csk-ht-content .page-title,
+body .csk-ht-content .page-header,
+body .csk-ht-content .hero,
+body .csk-ht-content .heading,
+body .csk-ht-content .team-hero{
+  max-width:100%!important;
+}
+
+/* Prevent any old sidebar from becoming visible on Finance after renderAppChrome(). */
+body .csk-ht-sidebar-final ~ .layout > .sidebar,
+body .csk-ht-sidebar-final ~ .app-shell > .app-sidebar,
+body .csk-ht-sidebar-final ~ .app > .sidebar,
+body .csk-ht-sidebar-final ~ .sidebar,
+body .csk-ht-sidebar-final ~ .cs-assessment-sidebar{
+  display:none!important;
+}
+
+/* Mobile keeps the existing responsive behavior. */
+@media(max-width:900px){
+  :root{--csk-ht-sidebar:0px!important;}
+  body .csk-ht-sidebar-final{
+    position:relative!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    height:auto!important;
+    min-height:0!important;
+  }
+  body .csk-ht-header-final{
+    left:0!important;
+    right:0!important;
+  }
+  body .csk-ht-main-final{
+    margin-left:0!important;
+    width:100%!important;
+    padding-top:58px!important;
+  }
+  body .csk-ht-content{
+    padding:20px 16px 34px!important;
+  }
+}
+</style>
+
+
+<script id="connectsukuu-headteacher-final-shell-runtime">
+(function(){
+'use strict';
+var ROLE='HEAD_TEACHER';
+var PAGES={
+ dashboard:{title:'Dashboard',file:'/roles/headteacher/headteacher-dashboard.html'},
+ team:{title:'Team & Roles',file:'/roles/headteacher/headteacher-team.html'},
+ academic:{title:'Academic Setup',file:'/roles/headteacher/headteacher-academic.html'},
+ students:{title:'Students',file:'/roles/headteacher/headteacher-students.html'},
+ attendance:{title:'Attendance',file:'/roles/headteacher/headteacher-attendance.html'},
+ 'security-logs':{title:'Security Logs',file:'/roles/headteacher/headteacher-security-logs.html'},
+ 'teaching-assignments':{title:'Teaching Assignments',file:'/roles/headteacher/headteacher-teaching-assignments.html'},
+ timetable:{title:'Timetable',file:'/roles/headteacher/headteacher-timetable.html'},
+ assessments:{title:'Assessments & Report Cards',file:'/roles/headteacher/headteacher-assessments.html'},
+ finance:{title:'Finance',file:'/roles/headteacher/headteacher-finance.html'},
+ announcements:{title:'Announcements',file:'/roles/headteacher/headteacher-announcements.html'},
+ messages:{title:'Messages',file:'/roles/headteacher/headteacher-messages.html'},
+ notifications:{title:'Notifications',file:'/roles/headteacher/headteacher-notifications.html'},
+ support:{title:'Support',file:'/roles/headteacher/headteacher-support.html'},
+ settings:{title:'Settings',file:'/roles/headteacher/headteacher-settings.html'}
+};
+function currentKey(){var p=(location.pathname.split('/').pop()||'headteacher-dashboard').toLowerCase().replace(/\.html$/,'');for(var k in PAGES){if(k===p||PAGES[k].file.toLowerCase().replace(/\.html$/,'')===p)return k;}return 'dashboard';}
+var pageKey=currentKey();
+function getUser(){try{if(window.AUTH&&typeof AUTH.getUser==='function'){var u=AUTH.getUser();if(u)return u;}}catch(e){}try{return JSON.parse(localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user')||'null')||{};}catch(e){return {};}}
+function isHT(){return String(getUser().role||document.body.dataset.role||'').toUpperCase()===ROLE;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function initials(u){var n=[u.firstName,u.lastName].filter(Boolean).join(' ').trim()||u.email||'Head Teacher';return n.split(/\s+/).map(function(x){return x.charAt(0);}).join('').slice(0,2).toUpperCase();}
+var ICONS={
+ dashboard:'<rect x="3" y="3" width="18" height="18" rx="3"></rect><path d="M8 8h3v3H8zM13 8h3v3h-3zM8 13h3v3H8zM13 13h3v3h-3z"></path>',
+ team:'<path d="M16 20v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V20"></path><circle cx="9.5" cy="7" r="3"></circle><path d="M16 8a3 3 0 0 1 0 6M19 20v-1.5a4 4 0 0 0-3-3.87"></path>',
+ academic:'<path d="M3 9l9-5 9 5-9 5-9-5z"></path><path d="M7 11.5V16c2.8 2 7.2 2 10 0v-4.5M21 10v6"></path>',
+ students:'<circle cx="9" cy="8" r="3"></circle><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 11a3 3 0 1 0 0-6M17 14a5 5 0 0 1 4 5v1"></path>',
+ attendance:'<path d="M4 5h16v15H4z"></path><path d="M8 3v4M16 3v4M7 11h3M14 11h3M7 15h3"></path>',
+ 'security-logs':'<circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path>',
+ announcements:'<path d="M4 4h16v16H4z"></path><path d="M8 8h8M8 12h8M8 16h5"></path>',
+ messages:'<path d="M4 5h16v12H8l-4 3z"></path><path d="M8 9h8M8 13h5"></path>',
+ notifications:'<path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path>',
+ support:'<circle cx="12" cy="12" r="9"></circle><path d="M9.6 9a2.5 2.5 0 1 1 4.4 1.6c-1.2 1.1-2 1.4-2 3"></path><path d="M12 17h.01"></path>',
+ 'teaching-assignments':'<path d="M4 5h16v14H4z"></path><path d="M8 3v4M16 3v4M7 12h10M7 16h6"></path>',
+ timetable:'<rect x="3" y="4" width="18" height="17" rx="2"></rect><path d="M16 2v4M8 2v4M3 9h18M8 13h.01M12 13h.01M16 13h.01M8 17h.01M12 17h.01"></path>',
+ assessments:'<path d="M5 3h14v18H5z"></path><path d="M8 7h8M8 11h8M8 15h5"></path>',
+ finance:'<circle cx="12" cy="12" r="9"></circle><path d="M15 8.5c-.7-.7-1.7-1.1-3-1.1-1.7 0-3 .8-3 2s1.1 2 3 2 3 .8 3 2-1.3 2-3 2c-1.3 0-2.3-.4-3-1.1M12 6v12"></path>',
+ settings:'<circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.7 1.7-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-2.4v-.2a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1-1.7-1.7.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0 1.6-1h.2v-2.4h-.2a1.7 1.7 0 0 0-1.6-1 1.7 1.7 0 0 0 .3-1.9l-.1-.1 1.7-1.7.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1.9 0 1.7 1.7 0 0 0 1-1.6V4h2.4v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.7 1.7-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0-.1 1.9 1.7 1.7 0 0 0-1.6 1h.2v2.4h-.2a1.7 1.7 0 0 0-1.6 1z"></path>'
+};
+function navHtml(){var h='<div class="nav-label">WORKSPACE</div>';function a(k,label){return '<a href="'+PAGES[k].file+'" data-csk-ht-nav="'+k+'"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true">'+ICONS[k]+'</svg></span><span>'+label+'</span></a>';}h+=a('dashboard','Dashboard')+a('team','Team &amp; Roles')+a('academic','Academic Setup')+a('students','Students')+a('attendance','Attendance')+a('security-logs','Security Logs');h+='<div class="nav-label">TEACHING</div>'+a('teaching-assignments','Teaching Assignments')+a('timetable','Timetable')+a('assessments','Assessments &amp; Reports');h+='<div class="nav-label">FINANCE</div>'+a('finance','Finance');h+='<div class="nav-label">COMMUNICATION</div>'+a('announcements','Announcements')+a('messages','Messages')+a('notifications','Notifications')+a('support','Support');h+='<div class="nav-label">ADMINISTRATION</div>'+a('settings','Settings');return h;}
+function hideLegacy(){document.querySelectorAll('body>.app-shell>.app-sidebar,body>.layout>.sidebar,body>.app>.sidebar,body>.app-sidebar,body>.sidebar,body>.cs-assessment-sidebar').forEach(function(el){el.style.display='none';});document.querySelectorAll('body .app-topbar,body .topbar,body .cs-assessment-topbar,body .app-sidebar-footer,body .sidebar-footer,body .sidebar-bottom,body .academic-sidebar-footer').forEach(function(el){el.style.display='none';});document.querySelectorAll('body>.app-shell,body>.layout,body>.app').forEach(function(el){el.style.display='block';el.style.width='100%';el.style.minWidth='0';el.style.maxWidth='none';});}
+function findMain(){return document.querySelector('main.app-main,main.main,.app-main,.main,.cs-main');}
+function hideHoa(){document.body.classList.add('cs-headteacher-final-shell');document.body.classList.remove('hoa-dashboard');document.querySelectorAll('#csHoaDashboard,#csHoaAcademicIntelligence,.cs-hoa-dashboard,.cs-hoa-intel,.ht-note-panel,.ht-dashboard-pulse,.ht-dashboard-pulse-rail').forEach(function(el){el.style.display='none';el.setAttribute('aria-hidden','true');});}
+function buildSidebar(){var side=document.querySelector('.csk-ht-sidebar-final');if(!side){side=document.createElement('aside');side.className='csk-ht-sidebar-final';side.innerHTML='<div class="csk-ht-brand-final"><span class="brand-mark"><img src="/assets/images/favicon.svg" alt="" aria-hidden="true"></span><span class="brand-connect">Connect<span class="brand-sukuu">Sukuu</span></span></div><nav class="csk-ht-nav-final">'+navHtml()+'</nav><button type="button" class="csk-ht-logout-final" id="cskHtLogoutFinal">↪ Log out</button>';document.body.insertBefore(side,document.body.firstChild);side.querySelector('#cskHtLogoutFinal').addEventListener('click',function(){try{if(window.AUTH&&typeof AUTH.logout==='function'){AUTH.logout();return;}}catch(e){}try{localStorage.removeItem('cs_token');localStorage.removeItem('cs_user');localStorage.removeItem('connectsukuu_user');}catch(e){}location.replace('/auth/signin.html');});}
+ side.querySelectorAll('[data-csk-ht-nav]').forEach(function(a){if(!a.dataset.bound){a.dataset.bound='1';a.addEventListener('click',function(ev){ev.preventDefault();location.assign(a.getAttribute('href'));},true);}});
+ side.querySelectorAll('[data-csk-ht-nav]').forEach(function(a){a.classList.toggle('active',String(a.getAttribute('data-csk-ht-nav'))===pageKey);});
+ return side;}
+function buildHeader(){var h=document.querySelector('.csk-ht-header-final');var u=getUser();if(!h){h=document.createElement('header');h.className='csk-ht-header-final';h.innerHTML='<h1 class="csk-ht-header-title-final"></h1><a class="cs-role-bell" id="cs-bell" href="/roles/headteacher/headteacher-notifications.html" aria-label="Notifications" title="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg><span id="cs-unread-count" class="cs-badge-count cs-hidden">0</span></a><div class="csk-ht-profile-final"><div class="csk-ht-avatar-final" aria-hidden="true"></div><div class="csk-ht-profile-copy-final"><span class="csk-ht-profile-email-final"></span><span class="csk-ht-profile-role-final">Head Teacher</span></div></div>';document.body.appendChild(h);}h.querySelector('.csk-ht-header-title-final').textContent=PAGES[pageKey].title;h.querySelector('.csk-ht-profile-email-final').textContent=[u.firstName,u.lastName].filter(Boolean).join(' ').trim()||u.name||u.email||'Head Teacher';h.querySelector('.csk-ht-avatar-final').textContent=initials(u);return h;}
+function normalizeMain(){var main=findMain();if(!main)return null;main.classList.add('csk-ht-main-final');main.style.removeProperty('grid-column');main.style.removeProperty('grid-row');main.querySelectorAll(':scope > .app-topbar,:scope > .topbar,:scope > .cs-topbar,:scope > .cs-assessment-topbar').forEach(function(el){el.style.setProperty('display','none','important');});return main;}
+function normalizeTitle(){document.title=PAGES[pageKey].title;}
+function normalizeStudentTable(){if(pageKey!=='students')return;var table=document.getElementById('students-table');if(!table)return;table.style.tableLayout='fixed';table.style.width='100%';table.querySelectorAll('th:last-child,td:last-child').forEach(function(c){c.style.width='120px';c.style.minWidth='120px';c.style.maxWidth='120px';c.style.textAlign='center';});}
+function run(){if(!isHT())return;document.body.classList.add('cs-headteacher-final-shell');hideLegacy();hideHoa();normalizeTitle();normalizeMain();buildSidebar();buildHeader();normalizeStudentTable();}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();[80,250,700,1400,2500].forEach(function(ms){setTimeout(run,ms);});try{new MutationObserver(function(){if(isHT())hideLegacy();}).observe(document.body,{childList:true,subtree:true});}catch(e){}
+})();
+</script>
+<script src="/assets/js/role-shell-extension.js"></script>
+<link rel="stylesheet" href="/roles/headteacher/headteacher-final-freeze.css">
+</body>
+</html>

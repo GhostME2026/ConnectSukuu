@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assessments & Report Cards</title>
+<link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
+<style>
+:root{
+  --ink:#172033;--muted:#667085;--line:#e7ebf2;--panel:#fff;--bg:#f5f7fb;
+  --blue:#2563eb;--blue-soft:#eff6ff;--violet:#7c3aed;--violet-soft:#f5f3ff;
+  --green:#15803d;--green-soft:#ecfdf3;--amber:#b45309;--amber-soft:#fffbeb;
+  --red:#b91c1c;--red-soft:#fef2f2;--slate:#475569;--shadow:0 12px 35px rgba(15,23,42,.07)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.page{max-width:1480px;margin:0 auto;padding:28px 30px 60px}
+.hero{display:flex;justify-content:space-between;gap:24px;align-items:flex-end;margin-bottom:24px}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.13em;font-weight:850;color:var(--blue);margin-bottom:7px}
+.hero h1{font-size:31px;letter-spacing:-.035em;margin:0}
+.hero p{margin:8px 0 0;color:var(--muted);max-width:760px;line-height:1.55}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:0;border-radius:11px;padding:10px 15px;font-weight:800;transition:.18s;display:inline-flex;align-items:center;gap:7px}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 8px 20px rgba(37,99,235,.2)}
+.btn-secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.btn-success{background:var(--green);color:#fff}
+.btn-warning{background:#f59e0b;color:#fff}
+.btn-danger{background:#dc2626;color:#fff}
+.btn-sm{padding:7px 10px;font-size:12px}
+.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px;margin-bottom:22px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:17px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.stat:after{content:"";position:absolute;right:-25px;top:-28px;width:80px;height:80px;border-radius:50%;background:var(--blue-soft)}
+.stat:nth-child(2):after{background:var(--violet-soft)}
+.stat:nth-child(3):after{background:var(--amber-soft)}
+.stat:nth-child(4):after{background:var(--green-soft)}
+.stat:nth-child(5):after{background:#f0fdfa}
+.stat-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800}
+.stat-value{font-size:27px;font-weight:900;margin-top:5px;position:relative;z-index:1}
+.context{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;box-shadow:var(--shadow);margin-bottom:18px}
+.field label{display:block;font-size:11px;font-weight:850;color:var(--slate);margin:0 0 6px}
+.field select,.field input,.field textarea{width:100%;border:1px solid #dbe1ea;background:#fff;border-radius:10px;padding:10px 11px;color:var(--ink);outline:none}
+.field select:focus,.field input:focus,.field textarea:focus{border-color:#93b4ff;box-shadow:0 0 0 3px #2563eb14}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.tab{border:0;background:transparent;color:var(--muted);padding:12px 15px;font-weight:850;border-bottom:2px solid transparent}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+.panel-head{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;align-items:center}
+.panel-head h2{margin:0;font-size:17px}
+.panel-head p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.table-wrap{overflow:auto}
+.sidebar-footer{position:absolute;left:16px;right:16px;bottom:20px}
+.logout-btn{width:100%;border:0;background:#1b2638;color:#d5dbea;padding:11px;border-radius:9px;font-weight:700}
+.logout-btn:hover{background:#253249;color:#fff}
+.main{margin-left:250px;width:calc(100% - 250px);min-width:0}
+.topbar{height:54px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:10}
+.topbar-title{font-size:15px;font-weight:750}
+
+table{width:100%;border-collapse:collapse;min-width:850px}
+th,td{text-align:left;padding:12px 15px;border-bottom:1px solid #eef1f5;font-size:13px;vertical-align:middle}
+th{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#718096;background:#fbfcfe}
+tr:last-child td{border-bottom:0}
+tr:hover td{background:#fafcff}
+.badge{display:inline-flex;align-items:center;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900;letter-spacing:.03em}
+.badge.DRAFT{background:#f1f5f9;color:#475569}.badge.SUBMITTED{background:var(--amber-soft);color:var(--amber)}
+.badge.CLOSED,.badge.FINALIZED{background:var(--blue-soft);color:#1d4ed8}.badge.ENDORSED{background:var(--violet-soft);color:#6d28d9}
+.badge.RELEASED{background:var(--green-soft);color:var(--green)}.badge.RETURNED{background:var(--red-soft);color:var(--red)}
+.muted{color:var(--muted)}.empty{padding:48px 20px;text-align:center;color:var(--muted)}
+.empty strong{display:block;color:var(--ink);font-size:16px;margin-bottom:5px}
+.row-actions{display:flex;gap:6px;flex-wrap:wrap}
+.drawer-backdrop,.modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;z-index:80}
+.drawer-backdrop.open,.modal-backdrop.open{display:flex}
+.modal-backdrop{align-items:center;justify-content:center;padding:20px}
+.modal{background:#fff;border-radius:18px;width:min(760px,100%);max-height:90vh;overflow:auto;box-shadow:0 30px 80px rgba(15,23,42,.25)}
+.modal-head{display:flex;justify-content:space-between;align-items:flex-start;padding:19px 20px;border-bottom:1px solid var(--line)}
+.modal-head h2{margin:0;font-size:19px}.modal-head p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.close{border:0;background:#f1f5f9;width:32px;height:32px;border-radius:9px;font-size:20px;color:#475569}
+.modal-body{padding:20px}.modal-foot{padding:15px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.form-grid .full{grid-column:1/-1}
+.notice{padding:11px 13px;border-radius:11px;background:var(--blue-soft);color:#1e40af;font-size:12px;line-height:1.5;margin-bottom:15px}
+.score-list{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.score-row{display:grid;grid-template-columns:1fr 110px 90px;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #eef1f5}
+.score-row:last-child{border-bottom:0}.score-row input{width:100%;padding:8px;border:1px solid #dbe1ea;border-radius:8px}
+.score-name{font-weight:750}.score-adm{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:15px}
+.detail{background:#f8fafc;border:1px solid #edf0f4;border-radius:11px;padding:11px}.detail small{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;font-weight:850}.detail strong{display:block;margin-top:3px;font-size:13px}
+.subject-row{display:grid;grid-template-columns:1.5fr .8fr .8fr .8fr 1.4fr auto;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid #eef1f5}
+.subject-row input,.subject-row select{width:100%;padding:8px;border:1px solid #dbe1ea;border-radius:8px}
+.toast{position:fixed;right:22px;bottom:22px;background:#172033;color:#fff;padding:12px 15px;border-radius:11px;box-shadow:0 15px 35px rgba(0,0,0,.2);display:none;z-index:120;max-width:420px;font-size:13px}
+.toast.show{display:block;animation:toastIn .2s ease}@keyframes toastIn{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+.loading{padding:35px;text-align:center;color:var(--muted)}
+.hidden{display:none!important}
+@media(max-width:1050px){.stats{grid-template-columns:repeat(3,1fr)}.context{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){.page{padding:20px 15px 45px}.hero{align-items:flex-start;flex-direction:column}.stats{grid-template-columns:1fr 1fr}.context{grid-template-columns:1fr}.form-grid,.detail-grid{grid-template-columns:1fr}.score-row{grid-template-columns:1fr 90px}.score-row .score-max{display:none}}
+
+/* CONNECTSUKUU_ASSESSMENT_BRANDING_ALIGNMENT */
+.cs-assessment-brand-mark{
+  width:34px!important;height:34px!important;border-radius:10px!important;
+  display:grid!important;place-items:center!important;
+  background:linear-gradient(135deg,#3b82f6,#60a5fa)!important;
+  color:#fff!important;font-weight:900!important;letter-spacing:-.02em!important;
+  box-shadow:0 8px 18px rgba(37,99,235,.35)!important;
+}
+.cs-assessment-brand > span{
+  color:#fff!important;font-weight:850!important;
+}
+.cs-assessment-brand > span span{
+  color:#60a5fa!important;
+}
+</style>
+
+<style id="connectsukuu-assessment-visual-repair">
+:root{
+  --cs-blue:#2563eb;--cs-blue-dark:#1d4ed8;--cs-ink:#17233c;--cs-muted:#64748b;
+  --cs-bg:#f4f7fb;--cs-card:#ffffff;--cs-line:#e5eaf2;
+  --cs-green:#16a34a;--cs-purple:#7c3aed;--cs-orange:#f59e0b;--cs-teal:#0d9488;
+}
+html,body{min-height:100%;background:linear-gradient(135deg,#f7faff 0%,#f4f7fb 52%,#eef6ff 100%)}
+body{margin:0!important}
+.cs-assessment-sidebar{
+  position:fixed;z-index:1000;left:0;top:0;bottom:0;width:255px;padding:22px 16px;
+  box-sizing:border-box;background:linear-gradient(180deg,#102a56 0%,#173d79 58%,#0f2d5a 100%);
+  color:#fff;box-shadow:12px 0 30px rgba(15,45,90,.16);overflow:auto;
+}
+.cs-assessment-brand{display:flex;align-items:center;gap:10px;padding:5px 8px 22px;font-weight:800;font-size:20px}
+.cs-assessment-brand-mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#3b82f6,#60a5fa);box-shadow:0 8px 18px rgba(37,99,235,.35)}
+.cs-assessment-nav-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9fb7dd;margin:15px 9px 7px;font-weight:800}
+.cs-assessment-nav a{
+  display:flex;align-items:center;gap:10px;text-decoration:none;color:#dbeafe;padding:10px 11px;
+  border-radius:10px;margin:3px 0;font-size:13px;font-weight:650;transition:.18s ease;
+}
+.cs-assessment-nav a:hover{background:rgba(255,255,255,.10);transform:translateX(2px);color:#fff}
+.cs-assessment-nav a.active{background:linear-gradient(90deg,rgba(59,130,246,.95),rgba(37,99,235,.65));color:#fff;box-shadow:0 8px 18px rgba(0,0,0,.14)}
+.cs-assessment-nav a.cs-hidden{display:none}
+.cs-assessment-main-shift{margin-left:248px!important}
+.cs-assessment-stat{
+  position:relative;overflow:hidden;border:1px solid var(--cs-line);background:#fff;
+  box-shadow:0 12px 30px rgba(30,64,175,.07);transition:transform .2s ease,box-shadow .2s ease;
+}
+.cs-assessment-stat:hover{transform:translateY(-3px);box-shadow:0 18px 34px rgba(30,64,175,.13)}
+.cs-assessment-stat:after{content:"";position:absolute;right:-28px;top:-28px;width:90px;height:90px;border-radius:50%;background:currentColor;opacity:.09}
+.cs-stat-blue{color:#2563eb}.cs-stat-purple{color:#7c3aed}.cs-stat-orange{color:#f59e0b}.cs-stat-green{color:#16a34a}.cs-stat-teal{color:#0d9488}
+.cs-assessment-colorful-value{font-size:30px!important;font-weight:850!important;color:currentColor!important}
+.cs-assessment-context{border:1px solid #dbe5f2!important;background:linear-gradient(180deg,#fff,#f8fbff)!important;box-shadow:0 10px 24px rgba(30,64,175,.05)}
+.cs-assessment-panel{box-shadow:0 14px 32px rgba(15,45,90,.07)!important;border-color:#e2e8f0!important}
+@media(max-width:900px){
+ .cs-assessment-sidebar{width:72px;padding:16px 9px}.cs-assessment-brand span:last-child,.cs-assessment-nav-label,.cs-assessment-nav a span.cs-nav-text{display:none}
+ .cs-assessment-nav a{justify-content:center}.cs-assessment-main-shift{margin-left:72px!important}
+}
+@media(max-width:620px){
+ .cs-assessment-sidebar{display:none}.cs-assessment-main-shift{margin-left:0!important}
+}
+</style>
+
+<style id="connectsukuu-hoa-report-review-center-style">
+/* ConnectSukuu standard: one profile, pinned to the far-right of the fixed header. */
+body .topbar,
+body .app-topbar {
+  width: 100% !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+body .topbar > .user,
+body .app-topbar > .user,
+body .topbar .user,
+body .app-topbar .user,
+body .app-topbar .cs-canonical-role-profile,
+body .cs-canonical-role-header .cs-canonical-role-profile {
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  flex: 0 0 auto !important;
+  align-self: center !important;
+}
+
+/* Academic Operations and Academic Quality Control share the same workspace column. */
+body .cs-hoa-review-center {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 18px 0 22px !important;
+}
+body .cs-hoa-review-center .cs-hoa-review-inner {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.cs-hoa-review-head {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:24px;
+  padding:22px 22px 16px;
+  border-bottom:1px solid #e5eaf2;
+}
+.cs-hoa-review-kicker {
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:#2563eb;
+  margin-bottom:7px;
+}
+.cs-hoa-review-title { margin:0; font-size:21px; line-height:1.2; color:#162033; }
+.cs-hoa-review-subtitle { margin:7px 0 0; max-width:820px; color:#66758f; font-size:13px; line-height:1.55; }
+.cs-hoa-review-filter {
+  min-width:190px;
+  padding:10px 12px;
+  border:1px solid #d8e0ec;
+  border-radius:10px;
+  background:#fff;
+  color:#172033;
+  font-weight:600;
+}
+.cs-hoa-review-stats {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  padding:0 18px 14px;
+}
+.cs-hoa-review-stat {
+  min-height:72px;
+  padding:14px 16px;
+  border:1px solid #e2e8f0;
+  border-radius:12px;
+  background:#fff;
+  box-sizing:border-box;
+}
+.cs-hoa-review-stat small { display:block; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:#71809a; }
+.cs-hoa-review-stat strong { display:block; margin-top:7px; font-size:25px; line-height:1; color:#172033; }
+.cs-hoa-review-blue strong { color:#2563eb; }
+.cs-hoa-review-purple strong { color:#7c3aed; }
+.cs-hoa-review-amber strong { color:#d97706; }
+.cs-hoa-review-green strong { color:#059669; }
+.cs-hoa-review-queue { margin:0 18px 18px; border:1px solid #dfe6f0; border-radius:12px; overflow:hidden; background:#fff; }
+.cs-hoa-review-queue-head { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:14px 16px; border-bottom:1px solid #e8edf4; color:#172033; }
+.cs-hoa-review-queue-head span { color:#7a879d; font-size:12px; }
+.cs-hoa-review-item { display:flex; justify-content:space-between; align-items:center; gap:16px; padding:14px 16px; border-bottom:1px solid #edf1f6; }
+.cs-hoa-review-item:last-child { border-bottom:0; }
+.cs-hoa-review-student { font-weight:700; color:#1b263b; }
+.cs-hoa-review-meta { margin-top:4px; font-size:12px; color:#738199; }
+.cs-hoa-review-open { border:1px solid #cbd7e8; background:#fff; border-radius:9px; padding:8px 12px; font-weight:700; color:#1d4ed8; cursor:pointer; }
+.cs-hoa-review-open:hover { background:#eff6ff; border-color:#93c5fd; }
+.cs-hoa-review-empty { padding:30px 18px; text-align:center; color:#75829a; font-size:13px; }
+.cs-hoa-review-empty strong { display:block; color:#263247; margin-bottom:5px; }
+.cs-hoa-review-banner { display:flex; justify-content:space-between; gap:16px; align-items:center; padding:12px 14px; margin-bottom:12px; border:1px solid #dbe7ff; border-radius:10px; background:#f7faff; }
+.cs-hoa-review-banner strong { display:block; color:#1d4ed8; }
+.cs-hoa-review-banner span { display:block; margin-top:3px; color:#64748b; font-size:12px; }
+.cs-hoa-review-status { flex:0 0 auto; padding:6px 9px; border-radius:999px; background:#eef4ff; color:#1d4ed8 !important; font-weight:700; }
+.cs-hoa-review-checklist { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-bottom:14px; }
+.cs-hoa-review-check { padding:10px 12px; border:1px solid #e3e9f2; border-radius:9px; background:#fbfcfe; color:#64748b; font-size:12px; line-height:1.45; }
+.cs-hoa-review-check strong { display:block; color:#334155; margin-bottom:3px; }
+@media(max-width:900px){
+  .cs-hoa-review-head { flex-direction:column; }
+  .cs-hoa-review-filter { width:100%; }
+  .cs-hoa-review-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .cs-hoa-review-checklist { grid-template-columns:1fr; }
+}
+@media(max-width:560px){ .cs-hoa-review-stats { grid-template-columns:1fr; } }
+</style>
+
+<style id="connectsukuu-teacher-report-card-creation-style">
+/* Teacher report-card creation uses the existing ConnectSukuu modal language. */
+#teacherReportCardCreateBtn { margin-left:auto; }
+.cs-trc-note { margin-bottom:14px; padding:11px 13px; border:1px solid #dbe7ff; border-radius:10px; background:#f7faff; color:#5f6f88; font-size:12px; line-height:1.5; }
+.cs-trc-note strong { color:#1d4ed8; }
+.cs-trc-loading { color:#71809a; font-size:12px; padding:8px 0; }
+@media(max-width:700px){ #teacherReportCardCreateBtn { margin-left:0; margin-top:8px; } }
+</style>
+
+<style id="connectsukuu-report-card-definitive-ui">
+.report-mt-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 18px}
+.report-mt-chip{position:relative;overflow:hidden;min-height:82px;padding:15px 16px;border:1px solid transparent;border-radius:16px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 8px 20px rgba(15,23,42,.07)}
+.report-mt-chip::after{content:"";position:absolute;width:72px;height:72px;right:-24px;top:-26px;border-radius:50%;background:rgba(255,255,255,.38)}
+.report-mt-chip small{position:relative;z-index:1;font-size:.68rem;line-height:1.15;letter-spacing:.08em;text-transform:uppercase;font-weight:850;margin:0 0 7px}
+.report-mt-chip strong{position:relative;z-index:1;font-size:1rem;line-height:1.25;font-weight:850;letter-spacing:-.01em}
+.report-mt-blue{background:linear-gradient(135deg,#dcecff,#c9ddff);border-color:#a9c9ff;color:#174ea6}.report-mt-blue small{color:#326bc6}
+.report-mt-purple{background:linear-gradient(135deg,#f0e4ff,#dfcaff);border-color:#c9a9ff;color:#6436a7}.report-mt-purple small{color:#7a4fc1}
+.report-mt-amber{background:linear-gradient(135deg,#ffefcf,#ffd99c);border-color:#f5bf68;color:#8d4d00}.report-mt-amber small{color:#b96a0c}
+.report-mt-subjects{display:grid;gap:14px}.report-mt-subject{border:1px solid #dbe4f0;border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 8px 22px rgba(15,23,42,.055)}
+.report-mt-subject:nth-child(3n+1) .report-mt-subject-head{background:linear-gradient(135deg,#f4f9ff,#e7f0ff);border-bottom-color:#c7dcff}.report-mt-subject:nth-child(3n+2) .report-mt-subject-head{background:linear-gradient(135deg,#fbf7ff,#eee5ff);border-bottom-color:#ddcaff}.report-mt-subject:nth-child(3n) .report-mt-subject-head{background:linear-gradient(135deg,#fffaf2,#ffeed3);border-bottom-color:#f4d19b}
+.report-mt-subject-head{padding:14px 16px;border-bottom:1px solid;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.report-mt-subject-title{display:flex;align-items:center;gap:10px}.report-mt-icon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#4f46e5,#0891b2);font-weight:900;box-shadow:0 7px 16px rgba(79,70,229,.2)}.report-mt-subject-title strong{font-size:1rem;line-height:1.25}.report-mt-subject-title small{display:block;margin-top:3px;color:#64748b;font-size:.78rem}
+.report-mt-owner,.report-mt-pending{font-size:.72rem;font-weight:850;border-radius:999px;padding:5px 9px;background:#e8f7ef;color:#176b42}.report-mt-pending{background:#fff4e5;color:#9a5b00}
+.report-mt-score-grid,.report-mt-edit-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:14px 16px 4px}.report-mt-edit-grid{padding-top:10px}.report-mt-score-card{border-radius:13px;background:#f8fafc;padding:10px 12px}.report-mt-score-card small{display:block;color:#64748b;font-size:.72rem;font-weight:800;text-transform:uppercase}.report-mt-score-card strong{display:block;margin-top:3px;font-size:1rem;color:#172033}.report-mt-edit-grid .field{margin:0}.report-mt-edit-grid input,.report-mt-edit-grid select{width:100%}
+.report-mt-remark{padding:10px 16px}.report-mt-remark label{font-size:.78rem;font-weight:800;display:block;margin-bottom:6px}.report-mt-optional{font-size:.7rem;color:#64748b;font-weight:700}.report-remark-textarea,#teacherRemark{width:100%;box-sizing:border-box;resize:vertical;min-height:82px}
+.report-mt-actions{padding:4px 16px 14px}.report-mt-breakdown{margin:0 16px 16px;border:1px solid #e5e7eb;border-radius:13px;background:#fbfdff}.report-mt-breakdown summary{cursor:pointer;padding:11px 12px;font-weight:850;font-size:.82rem}.report-mt-breakdown-body{padding:0 12px 10px}.report-mt-assessment{display:grid;grid-template-columns:1.7fr .8fr .7fr .8fr;gap:10px;padding:9px 0;border-bottom:1px solid #edf1f6;font-size:.82rem}.report-mt-assessment small{display:block;color:#64748b}.report-mt-empty{font-size:.82rem;color:#64748b;padding:9px 0}
+#teacherRemark{resize:vertical!important;min-height:92px}
+@media(max-width:850px){.report-mt-summary{grid-template-columns:1fr}.report-mt-score-grid,.report-mt-edit-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.report-mt-assessment{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.report-mt-score-grid,.report-mt-edit-grid{grid-template-columns:1fr}.report-mt-subject-head{flex-direction:column}}
+
+<style id="connectsukuu-report-card-calculation-locks">
+.report-overall-value{color:#2563eb!important}
+.report-overall-grade{color:#7c3aed!important}
+.report-mt-generated-lock{
+  margin-top:10px;padding:10px 12px;border:1px solid #dbe7ff;border-radius:9px;
+  background:#f7faff;color:#36517a;font-size:12px;line-height:1.45;
+}
+.report-mt-generated-lock strong{color:#1d4ed8}
+</style>
+</style>
+<style id="connectsukuu-academic-quality-control-width-final">
+body #csHoaReviewCenter{box-sizing:border-box!important;width:auto!important;max-width:none!important}
+body #csHoaReviewCenter .cs-hoa-review-inner{width:100%!important;max-width:none!important;box-sizing:border-box!important}
+@media(max-width:760px){body #csHoaReviewCenter{margin-left:0!important;width:100%!important;max-width:100%!important}}
+</style>
+
+<style id="connectsukuu-hoa-review-workspace-width-fix">
+body .cs-hoa-review-center {
+  box-sizing: border-box !important;
+  width: var(--cs-hoa-workspace-width, 100%) !important;
+  max-width: var(--cs-hoa-workspace-width, 100%) !important;
+}
+</style>
+
+
+
+<style id="connectsukuu-hoa-shell-final">
+:root{--hoa-sidebar:255px;--hoa-header:58px}
+html,body{margin:0!important;width:100%!important;min-width:0!important;background:#f6f8fc!important;color:#172033!important}
+body{overflow:hidden!important}
+.cs-hoa-final-sidebar{position:fixed!important;left:0!important;top:0!important;bottom:0!important;width:var(--hoa-sidebar)!important;height:100vh!important;z-index:5000!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;padding:16px 12px!important;background:#0f172a!important;box-sizing:border-box!important;overflow:hidden!important}
+.cs-hoa-final-brand{height:40px!important;display:flex!important;align-items:center!important;gap:10px!important;padding:0 10px!important;margin:0 0 22px!important;color:#fff!important;text-decoration:none!important}
+.cs-hoa-final-brand img{width:34px!important;height:34px!important}
+.cs-hoa-final-brand>span{font-size:20px!important;font-weight:800!important}
+.cs-hoa-final-brand>span>span{color:#60a5fa!important}
+.cs-hoa-final-nav{display:flex!important;flex-direction:column!important;gap:3px!important;overflow-y:auto!important}
+.cs-hoa-final-section{margin:12px 8px 6px!important;color:#64748b!important;font-size:10px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+.cs-hoa-final-nav a{display:flex!important;align-items:center!important;gap:10px!important;width:100%!important;min-height:38px!important;padding:9px 12px!important;border-radius:8px!important;color:#94a3b8!important;text-decoration:none!important;font-size:13px!important;font-weight:650!important;box-sizing:border-box!important}
+.cs-hoa-final-nav a:hover{color:#fff!important;background:#17233a!important}.cs-hoa-final-nav a.active{
+  background: rgba(37, 99, 235, .22) !important;
+  color: #fff !important;
+  box-shadow: inset 3px 0 0 #3b82f6 !important;
+}
+.cs-hoa-final-icon{width:17px!important;height:17px!important;display:grid!important;place-items:center!important;flex:0 0 17px!important}
+.cs-hoa-final-icon svg{width:17px!important;height:17px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+.cs-hoa-final-logout button{width:100%!important;min-height:38px!important;border:1px solid #263754!important;background:#16243b!important;color:#f8fafc!important;border-radius:8px!important;font-weight:700!important;cursor:pointer!important}
+.cs-hoa-final-topbar{position:sticky!important;top:0!important;left:auto!important;right:auto!important;z-index:4000!important;height:var(--hoa-header)!important;width:100%!important;margin-left:0!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:0 18px!important;background:#fff!important;border-bottom:1px solid #e5e7eb!important;box-sizing:border-box!important}
+.cs-hoa-final-title{font-size:15px!important;font-weight:750!important}
+.cs-hoa-final-profile{display:flex!important;align-items:center!important;gap:9px!important;margin-left:auto!important}
+.cs-hoa-final-avatar{width:34px!important;height:34px!important;border-radius:9px!important;background:#172033!important;color:#fff!important;display:grid!important;place-items:center!important;font-weight:800!important}
+.cs-hoa-final-profile-copy{display:flex!important;flex-direction:column!important;line-height:1.15!important}
+.cs-hoa-final-profile-copy span:first-child{font-size:12px!important;font-weight:750!important;color:#172033!important}
+.cs-hoa-final-profile-copy span:last-child{font-size:10px!important;color:#64748b!important}
+.layout,.app-shell,.app{display:block!important}
+.app-main,.main,.layout>.main,.app>.main,.app-shell>.app-main,.app-shell>.app-content{margin-left:var(--hoa-sidebar)!important;width:calc(100% - var(--hoa-sidebar))!important;min-width:0!important;max-width:none!important;box-sizing:border-box!important;height:calc(100vh - var(--hoa-header))!important;overflow:auto!important}
+.app-main>.app-content,.main>.content,.main>section.content,.app-content,.content,.main-content,section.content{width:100%!important;max-width:none!important;box-sizing:border-box!important}
+@media(max-width:820px){
+body{overflow:auto!important}
+.cs-hoa-final-sidebar{position:relative!important;width:100%!important;height:auto!important}
+.cs-hoa-final-topbar{width:100%!important;margin-left:0!important}
+.app-main,.main,.layout>.main,.app>.main,.app-shell>.app-main,.app-shell>.app-content{margin-left:0!important;width:100%!important;height:auto!important;overflow:visible!important}
+}
+</style>
+
+<style id="connectsukuu-hoa-prebaseline-visual-lock">
+/* HoA pre-baseline visual lock: do not rebuild the shell; only restore the agreed dimensions/state. */
+@media (min-width:821px){
+  :root{--hoa-sidebar:255px!important;--hoa-side:255px!important;}
+  body .cs-hoa-final-sidebar{width:255px!important;min-width:255px!important;}
+  body .app-main,body .main,body .layout>.main,body .app>.main,body .app-shell>.app-main,body .app-shell>.app-content{margin-left:255px!important;width:calc(100% - 255px)!important;}
+</style>
+
+
+<style id="connectsukuu-hoa-freeze-visual-polish">
+/* HoA freeze visual polish — shared shell only; page functionality untouched. */
+.cs-hoa-final-profile{padding:5px 9px 5px 7px!important;border:1px solid #e4e9f1!important;border-radius:12px!important;background:#fff!important;box-shadow:0 4px 14px rgba(15,23,42,.04)!important;box-sizing:border-box!important;}
+.cs-hoa-final-profile-copy{align-items:flex-start!important;min-width:0!important;}
+.cs-hoa-final-profile-copy span:first-child{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:220px!important;}
+.cs-hoa-final-profile-copy span:last-child{margin-top:3px!important;font-weight:650!important;}
+.app-main>.app-content,.main>.content,.main>section.content,.app-content,.content,.main-content,section.content{padding:28px 28px 44px!important;}
+body.hoa-dashboard .app-content{padding:28px 26px 44px!important;}
+@media(max-width:820px){.app-main>.app-content,.main>.content,.main>section.content,.app-content,.content,.main-content,section.content{padding:22px 18px 36px!important;}}
+</style>
+
+<style id="connectsukuu-hoa-stabilization-polish">
+/* Shared HoA presentation lock: the body scope class is required by the existing HoA styles. */
+html,body{width:100%;max-width:100%;min-width:0;overflow-x:hidden;box-sizing:border-box}
+*,*:before,*:after{box-sizing:border-box}
+body.hoa-dashboard{background:#f4f7fb!important;color:#172033!important}
+body.hoa-dashboard .cs-hoa-final-sidebar{position:fixed!important;inset:0 auto 0 0!important;height:100vh!important;z-index:5000!important}
+body.hoa-dashboard .app-main{min-width:0!important;width:auto!important;max-width:none!important;margin-left:255px!important;height:100vh!important;min-height:100vh!important;overflow:hidden!important}
+body.hoa-dashboard .cs-hoa-final-topbar{position:sticky!important;top:0!important;z-index:4000!important;min-height:58px!important}
+body.hoa-dashboard .app-content,body.hoa-dashboard .main>.content,body.hoa-dashboard .page{min-width:0!important;max-width:none!important}
+/* Dashboard metric cards */
+body.hoa-dashboard .cs-hoa-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:15px!important}
+body.hoa-dashboard .cs-hoa-card{min-height:118px!important;border-radius:16px!important;box-shadow:0 7px 20px rgba(15,23,42,.045)!important;transition:transform .18s ease,box-shadow .18s ease}
+body.hoa-dashboard .cs-hoa-card:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(15,23,42,.08)!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(1){background:linear-gradient(145deg,#eaf2ff,#fff 82%)!important;border-color:#cfe0ff!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(2){background:linear-gradient(145deg,#e9fbf1,#fff 82%)!important;border-color:#c9eed9!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(3){background:linear-gradient(145deg,#f3eaff,#fff 82%)!important;border-color:#e2d2ff!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(4){background:linear-gradient(145deg,#fff2dc,#fff 82%)!important;border-color:#f4dfb5!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(5){background:linear-gradient(145deg,#e7f8ff,#fff 82%)!important;border-color:#c9edf8!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(6){background:linear-gradient(145deg,#ffedf3,#fff 82%)!important;border-color:#f4d2df!important}
+/* Statistics and academic-context controls on all HoA menus */
+body.hoa-dashboard .stats{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:13px!important}
+body.hoa-dashboard .stat{min-width:0!important;border-radius:14px!important;border:1px solid #e1e8f2!important;box-shadow:0 5px 16px rgba(15,23,42,.035)!important}
+body.hoa-dashboard .stat:nth-child(1){background:linear-gradient(145deg,#edf4ff,#fff)!important;border-top:3px solid #2563eb!important}
+body.hoa-dashboard .stat:nth-child(2){background:linear-gradient(145deg,#edfbf3,#fff)!important;border-top:3px solid #16a34a!important}
+body.hoa-dashboard .stat:nth-child(3){background:linear-gradient(145deg,#f4edff,#fff)!important;border-top:3px solid #8b5cf6!important}
+body.hoa-dashboard .stat:nth-child(4){background:linear-gradient(145deg,#fff6e8,#fff)!important;border-top:3px solid #f59e0b!important}
+body.hoa-dashboard .stat:nth-child(5){background:linear-gradient(145deg,#eafaff,#fff)!important;border-top:3px solid #0891b2!important}
+body.hoa-dashboard .context{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important}
+body.hoa-dashboard .context select,body.hoa-dashboard select,body.hoa-dashboard input{max-width:100%}
+body.hoa-dashboard .hero{gap:20px;align-items:flex-start}
+body.hoa-dashboard .hero>div:first-child{min-width:0}
+body.hoa-dashboard .hero h1{line-height:1.15;letter-spacing:-.025em}
+/* Student view-only: one View button only; remove all administrator-only controls and keep the action cell compact. */
+body.cs-student-hoa-ht-view-only #add-student-btn,body.cs-student-hoa-ht-view-only #import-student-btn,
+body.cs-student-hoa-ht-view-only .student-bulk-actions,body.cs-student-hoa-ht-view-only .student-select-cell,
+body.cs-student-hoa-ht-view-only #enrollment-modal,body.cs-student-hoa-ht-view-only #import-modal,
+body.cs-student-hoa-ht-view-only .cs-add-student-modal,body.cs-student-hoa-ht-view-only [data-student-action="enrollment"],
+body.cs-student-hoa-ht-view-only [data-student-action="parents"],body.cs-student-hoa-ht-view-only [data-student-action="status"],
+body.cs-student-hoa-ht-view-only [data-student-action="delete"],body.cs-student-hoa-ht-view-only .cs-manage-wrap,
+body.cs-student-hoa-ht-view-only .cs-manage-trigger{display:none!important}
+body.cs-student-hoa-ht-view-only .student-actions{display:flex!important;justify-content:flex-end!important;align-items:center!important;gap:0!important;flex-wrap:nowrap!important;min-width:70px!important}
+body.cs-student-hoa-ht-view-only .student-actions [data-student-action="view"]{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-width:64px!important;margin:0!important;white-space:nowrap!important}
+body.cs-student-hoa-ht-view-only [data-student-management-actions]{width:92px!important;min-width:92px!important;text-align:right!important}
+body.cs-student-hoa-ht-view-only .data-table td,body.cs-student-hoa-ht-view-only .data-table th{vertical-align:middle!important}
+body.cs-student-hoa-ht-view-only .data-table{width:100%!important;table-layout:auto!important}
+@media(max-width:1100px){body.hoa-dashboard .cs-hoa-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}body.hoa-dashboard .stats{grid-template-columns:repeat(3,minmax(0,1fr))!important}body.hoa-dashboard .context{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:820px){body.hoa-dashboard .app-main{margin-left:0!important}body.hoa-dashboard .cs-hoa-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}body.hoa-dashboard .cs-hoa-bottom{grid-template-columns:1fr!important}body.hoa-dashboard .cs-hoa-intel-controls{grid-template-columns:repeat(2,minmax(0,1fr))!important}body.hoa-dashboard .cs-hoa-intel-summary{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:560px){body.hoa-dashboard .cs-hoa-grid,body.hoa-dashboard .stats,body.hoa-dashboard .context{grid-template-columns:1fr!important}body.hoa-dashboard .hero{flex-direction:column!important}body.hoa-dashboard .cs-hoa-intel-controls{grid-template-columns:1fr!important}}
+</style>
+
+<style id="connectsukuu-hoa-final-active-nav-and-data-layout">
+/* Let the complete dashboard scroll so Academic intelligence remains below Academic operations. */
+body.hoa-dashboard .app-main{height:100vh!important;min-height:100vh!important;overflow-y:auto!important;overflow-x:hidden!important}
+body.hoa-dashboard .app-content{height:auto!important;min-height:100%!important;overflow:visible!important;padding-bottom:48px!important}
+/* Consistent full-width academic context selectors and metric rows. */
+body.hoa-dashboard .stats,body.hoa-dashboard .hoa-a-grid{width:100%!important;max-width:none!important;grid-template-columns:repeat(4,minmax(0,1fr))!important}
+body.hoa-dashboard .stat{width:100%!important;min-width:0!important;padding:20px 18px!important}
+body.hoa-dashboard .stat-value{font-size:27px!important;line-height:1.15!important;font-weight:800!important}
+body.hoa-dashboard .stat-label{font-size:11px!important;letter-spacing:.06em!important}
+body.hoa-dashboard .filter-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;width:100%!important}
+body.hoa-dashboard .filter-grid .field{min-width:0!important}
+body.hoa-dashboard .hoa-analytics-clean{width:100%!important;max-width:none!important}
+body.hoa-dashboard .hoa-a-grid{gap:12px!important}
+body.hoa-dashboard .hoa-a-card{min-width:0!important}
+@media(max-width:1000px){body.hoa-dashboard .stats,body.hoa-dashboard .hoa-a-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}body.hoa-dashboard .filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:600px){body.hoa-dashboard .stats,body.hoa-dashboard .hoa-a-grid,body.hoa-dashboard .filter-grid{grid-template-columns:1fr!important}}
+</style>
+
+
+<style id="connectsukuu-hoa-frozen-active-nav">
+.cs-hoa-final-nav a:hover:not(.active) { color:#fff !important; background:#17233a !important; }
+</style>
+
+<style id="connectsukuu-hoa-assessment-neutral-single-row">
+/* Keep all five overview cards in one desktop row and use the calm neutral style of the frozen HT page. */
+.stats { display:grid !important; grid-template-columns:repeat(5,minmax(0,1fr)) !important; gap:12px !important; width:100% !important; }
+.stats .stat { min-width:0 !important; padding:15px 16px !important; background:#fff !important; border:1px solid #e1e8f0 !important; border-top:1px solid #e1e8f0 !important; border-radius:13px !important; box-shadow:0 5px 16px rgba(15,23,42,.035) !important; }
+.stats .stat:after { display:none !important; }
+.stats .stat-label { color:#667085 !important; font-size:10px !important; letter-spacing:.07em !important; }
+.stats .stat-value { color:#2563eb !important; font-size:25px !important; font-weight:800 !important; }
+@media(max-width:1050px) { .stats { grid-template-columns:repeat(3,minmax(0,1fr)) !important; } }
+@media(max-width:720px) { .stats { grid-template-columns:repeat(2,minmax(0,1fr)) !important; } }
+@media(max-width:460px) { .stats { grid-template-columns:minmax(0,1fr) !important; } }
+</style>
+<style id="cs-hoa-assessment-ht-parity-final">
+/* Plain, compact summary row matching the Head Teacher baseline. */
+body.hoa-dashboard .stats{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:12px!important;margin-bottom:18px!important}
+body.hoa-dashboard .stat{min-width:0!important;padding:14px 15px!important;border-radius:12px!important;box-shadow:0 4px 14px rgba(15,23,42,.035)!important;background:#fff!important;border:1px solid #e5eaf2!important}
+body.hoa-dashboard .stat:after{display:none!important}
+body.hoa-dashboard .stat-label{font-size:10px!important;letter-spacing:.06em!important}
+body.hoa-dashboard .stat-value{font-size:24px!important;margin-top:6px!important;color:#2563eb!important}
+@media(max-width:1050px){body.hoa-dashboard .stats{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+@media(max-width:720px){body.hoa-dashboard .stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:460px){body.hoa-dashboard .stats{grid-template-columns:1fr!important}}
+/* Shared HT-style report modal remains scrollable and readable on smaller screens. */
+#reportModal .modal{width:min(980px,96vw)!important;max-height:90vh!important}
+#reportModal .modal-body{overflow:visible}
+#reportModal textarea{width:100%;min-height:72px;resize:vertical}
+#reportSubjects .report-mt-subject{border:1px solid #e2e8f0;border-radius:14px;margin:12px 0;overflow:hidden;background:#fff}
+#reportSubjects .report-mt-subject-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 14px;background:#eff6ff;border-bottom:1px solid #e2e8f0}
+#reportSubjects .report-mt-score-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:12px}
+#reportSubjects .report-mt-score-card{padding:10px;background:#f8fafc;border:1px solid #eef2f7;border-radius:10px}
+#reportSubjects .report-mt-score-card small{display:block;color:#64748b;font-size:10px;text-transform:uppercase;font-weight:800}
+#reportSubjects .report-mt-score-card strong{display:block;margin-top:4px;font-size:16px}
+#reportSubjects .report-mt-breakdown{margin:0 12px 12px;border:1px solid #e5e7eb;border-radius:10px}
+#reportSubjects .report-mt-breakdown summary{padding:10px;cursor:pointer;font-weight:750}
+#reportSubjects .report-mt-breakdown-body{padding:0 10px 10px}
+#reportSubjects .report-mt-assessment{display:grid;grid-template-columns:1.7fr .8fr .7fr .8fr;gap:8px;padding:8px 0;border-bottom:1px solid #edf1f6;font-size:12px}
+@media(max-width:650px){#reportSubjects .report-mt-score-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#reportSubjects .report-mt-assessment{grid-template-columns:1fr 1fr}}
+</style>
+
+<style id="connectsukuu-hoa-nav-color-consistency">
+/* Keep Communication links visually identical to the existing HoA navigation items. */
+.cs-hoa-final-nav a[data-cs-hoa-nav="announcements"],
+.cs-hoa-final-nav a[data-cs-hoa-nav="messages"],
+.cs-hoa-final-nav a[data-cs-hoa-nav="notifications"]{color:#94a3b8!important;background:transparent!important;box-shadow:none!important}
+.cs-hoa-final-nav a[data-cs-hoa-nav="announcements"]:hover,
+.cs-hoa-final-nav a[data-cs-hoa-nav="messages"]:hover,
+.cs-hoa-final-nav a[data-cs-hoa-nav="notifications"]:hover{color:#fff!important;background:#17233a!important}
+.cs-hoa-final-nav a[data-cs-hoa-nav="announcements"].active,
+.cs-hoa-final-nav a[data-cs-hoa-nav="messages"].active,
+.cs-hoa-final-nav a[data-cs-hoa-nav="notifications"].active{background:rgba(37,99,235,.22)!important;color:#fff!important;box-shadow:inset 3px 0 0 #3b82f6!important}
+</style>
+
+<link rel="stylesheet" href="/assets/css/mobile-shell.css" media="(max-width:820px)"><script src="/assets/js/mobile-shell.js" defer></script></head>
+<body class="hoa-dashboard">
+
+<aside class="cs-hoa-final-sidebar" aria-label="Head of Academics navigation"><div class="cs-hoa-final-sidebar-inner"><a class="cs-hoa-final-brand" href="/roles/hoa/hoa-dashboard.html"><img src="/assets/images/favicon.svg" alt="ConnectSukuu"><span>Connect<span>Sukuu</span></span></a><nav class="cs-hoa-final-nav">
+<div class="cs-hoa-final-section">Workspace</div>
+<a data-cs-hoa-nav="dashboard" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-dashboard.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg></span><span>Dashboard</span></a>
+<a data-cs-hoa-nav="academic" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-academic.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><path d="M3 6.5 12 3l9 3.5L12 10 3 6.5Z"/><path d="M6 9v5.5c2 1.8 4 2.5 6 2.5s4-.7 6-2.5V9"/><path d="M21 7v7"/></svg></span><span>Academic Setup</span></a>
+<a data-cs-hoa-nav="students" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-students.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2.5 21c.5-4 2.7-6 6.5-6s6 2 6.5 6"/><path d="M16 11a3 3 0 1 0 0-6"/><path d="M17 15c2.5.3 4 2 4.5 5"/></svg></span><span>Students</span></a>
+<a data-cs-hoa-nav="attendance" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-attendance.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h5M8 16h3"/><path d="m14 16 1.5 1.5L19 14"/></svg></span><span>Attendance</span></a>
+<div class="cs-hoa-final-section">Teaching</div>
+<a data-cs-hoa-nav="teaching" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-teaching-assignments.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 9h18M8 13h3M13 13h3M8 17h3"/></svg></span><span>Teaching Assignments</span></a>
+<a data-cs-hoa-nav="timetable" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-timetable.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18M8 13h3M13 13h3M8 17h3"/></svg></span><span>Timetable</span></a>
+<a data-cs-hoa-nav="activities" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-activities.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18M8 13h3M13 13h3M8 17h3"/></svg></span><span>Activities</span></a>
+<a data-cs-hoa-nav="assessments" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-assessments.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><path d="M5 3h14v18H5z"/><path d="M8 7h8M8 11h8M8 15h5"/><path d="m15 18 1.5 1.5L20 16"/></svg></span><span>Assessments & Reports</span></a>
+<div class="cs-hoa-final-section">Communication</div>
+<a data-cs-hoa-nav="announcements" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-announcements.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><span>Announcements</span></a>
+<a data-cs-hoa-nav="messages" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-messages.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 3z"/><path d="M8 9h8M8 13h5"/></svg></span><span>Messages</span></a>
+<a data-cs-hoa-nav="notifications" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-notifications.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></span><span>Notifications</span></a>
+</nav></div><div class="cs-hoa-final-logout"><button type="button" id="cskHoaFinalLogout">↪ <span>Log out</span></button></div></aside>
+
+<main class="main">
+<header class="cs-hoa-final-topbar"><div class="cs-hoa-final-title">Assessments & Report Cards</div><div class="cs-hoa-final-profile"><div class="cs-hoa-final-avatar" id="cskHoaAvatar">H</div><div class="cs-hoa-final-profile-copy"><span id="cskHoaWho">User</span><span>Head of Academics</span></div></div></header>
+
+
+
+<div class="page">
+  <div class="hero">
+    <div>
+      <div class="eyebrow">Academic Operations</div>
+      <h1>Assessments &amp; Report Cards</h1>
+      <p>Record student performance, move assessments through review, and complete the report-card workflow from teacher submission to final release.</p>
+    </div>
+    <div class="hero-actions">
+      <button class="btn btn-primary" id="newAssessmentBtn">＋ New assessment</button>
+      <button class="btn btn-secondary" id="refreshBtn">↻ Refresh</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Assessments</div><div class="stat-value" id="statAssessments">—</div></div>
+    <div class="stat"><div class="stat-label">Submitted</div><div class="stat-value" id="statSubmitted">—</div></div>
+    <div class="stat"><div class="stat-label">Closed</div><div class="stat-value" id="statClosed">—</div></div>
+    <div class="stat"><div class="stat-label">Report cards</div><div class="stat-value" id="statReports">—</div></div>
+    <div class="stat"><div class="stat-label">Released</div><div class="stat-value" id="statReleased">—</div></div>
+  </div>
+
+  <div class="context">
+    <div class="field"><label>Academic Year</label><select id="year"></select></div>
+    <div class="field"><label>Term</label><select id="term"></select></div>
+    <div class="field"><label>Class</label><select id="class"></select></div>
+    <div class="field"><label>Subject</label><select id="subject"></select></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="assessments">Assessments</button>
+    <button class="tab" data-tab="reports">Report Cards</button>
+  </div>
+
+  <section class="panel" id="assessmentPanel">
+    <div class="panel-head">
+      <div><h2>Assessment register</h2><p>Assessment records for the selected academic context.</p></div>
+      <button class="btn btn-secondary btn-sm" id="loadAssessmentsBtn">Refresh list</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Assessment</th><th>Class</th><th>Subject</th><th>Teacher</th><th>Scores</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="assessmentRows"><tr><td colspan="7"><div class="loading">Loading assessments…</div></td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel hidden" id="reportPanel">
+    <div class="panel-head">
+      <div><h2>Report-card register</h2><p>Track teacher submission, academic endorsement, finalization and release.</p></div>
+      <button class="btn btn-secondary btn-sm" id="loadReportsBtn">Refresh list</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Student</th><th>Class</th><th>Term</th><th>Teacher</th><th>Subjects</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="reportRows"><tr><td colspan="7"><div class="loading">Loading report cards…</div></td></tr></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<!-- Assessment modal -->
+<div class="modal-backdrop" id="assessmentModal">
+  <div class="modal">
+    <div class="modal-head"><div><h2 id="assessmentModalTitle">New assessment</h2><p>Create an assessment for an assigned class and subject.</p></div><button class="close" data-close="assessmentModal">×</button></div>
+    <form id="assessmentForm">
+      <div class="modal-body">
+        <div class="notice">Teachers create and record assessments for their assigned classes/subjects. Head Teacher and Head of Academics review academic work and do not enter teacher assessment scores.</div>
+        <div class="form-grid">
+          <div class="field full"><label>Title</label><input id="assessmentTitle" required placeholder="e.g. Mathematics — Mid-Term Test"></div>
+          <div class="field"><label>Assessment type</label><select id="assessmentType"><option value="CLASSWORK">Classwork</option><option value="QUIZ">Quiz</option><option value="TEST">Test</option><option value="EXAM">Exam</option><option value="ASSIGNMENT">Assignment</option><option value="PROJECT">Project</option></select></div>
+          <div class="field"><label>Maximum score</label><input id="maxScore" type="number" min="1" step="0.01" value="100" required></div>
+          <div class="field"><label>Weight</label><input id="weight" type="number" min="0" step="0.01" value="0"></div>
+          <div class="field"><label>Assessment date</label><input id="assessmentDate" type="date"></div>
+          <div class="field"><label>Academic year</label><select id="newYear"></select></div>
+          <div class="field"><label>Term</label><select id="newTerm"></select></div>
+          <div class="field"><label>Class</label><select id="newClass"></select></div>
+          <div class="field"><label>Subject</label><select id="newSubject"></select></div>
+          <div class="field" id="teacherField"> style="display:none"<label>Teacher</label><select id="teacher"></select></div>
+        </div>
+      </div>
+      <div class="modal-foot"><button type="button" class="btn btn-secondary" data-close="assessmentModal">Cancel</button><button class="btn btn-primary">Create assessment</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- Score modal -->
+<div class="modal-backdrop" id="scoreModal">
+  <div class="modal">
+    <div class="modal-head"><div><h2 id="scoreTitle">Enter scores</h2><p id="scoreMeta">Loading assessment…</p></div><button class="close" data-close="scoreModal">×</button></div>
+    <div class="modal-body">
+      <div id="scoreNotice" class="notice">Enter scores and save. Scores cannot exceed the assessment maximum.</div>
+      <div id="scoreList" class="score-list"><div class="loading">Loading students…</div></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" data-close="scoreModal">Close</button><button class="btn btn-primary" id="saveScoresBtn">Save scores</button><button class="btn btn-success hidden" id="submitAssessmentBtn">Submit assessment</button></div>
+  </div>
+</div>
+
+<!-- Report card modal -->
+<div class="modal-backdrop" id="reportModal">
+  <div class="modal">
+    <div class="modal-head"><div><h2 id="reportTitle">Report card</h2><p id="reportMeta">Loading report card…</p></div><button type="button" class="close" data-close="reportModal" aria-label="Close report card">×</button></div>
+    <div class="modal-body">
+      <div id="reportDetails"></div>
+      <div id="reportSubjects"></div>
+      <div class="field" style="margin-top:14px"><label>Teacher remark</label><textarea id="teacherRemark" rows="3" placeholder="Teacher's overall remark"></textarea></div>
+      <div class="field" style="margin-top:12px"><label>Academic remark</label><textarea id="academicRemark" rows="3" placeholder="Head of Academics remark"></textarea></div>
+      <div class="field" style="margin-top:12px"><label>Final remark</label><textarea id="finalRemark" rows="3" placeholder="Head Teacher final remark"></textarea></div>
+      <div id="returnReasonWrap" class="field hidden" style="margin-top:12px"><label>Return reason</label><textarea id="returnReason" rows="2" placeholder="Explain what needs correction"></textarea></div>
+    </div>
+    <div class="modal-foot" id="reportActions"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script id="connectsukuu-subject-response-normalizer">
+(function(){
+  const originalFetch=window.fetch.bind(window);
+  window.fetch=async function(input,init){
+    const response=await originalFetch(input,init);
+    let url='';
+    try{url=typeof input==='string'?input:(input&&input.url)||'';}catch(_){}
+    if(!/\/api\/subjects\/class\//.test(url))return response;
+    try{
+      const clone=response.clone(),data=await clone.json();
+      if(!Array.isArray(data))return response;
+      const normalized=data.map(x=>({...x,id:x.subjectId||x.subject?.id||x.id||'',subjectId:x.subjectId||x.subject?.id||x.id||'',name:x.name||x.subject?.name||'',code:x.code||x.subject?.code||'',subjectName:x.subjectName||x.subject?.name||''}));
+      return new Response(JSON.stringify(normalized),{
+        status:response.status,statusText:response.statusText,
+        headers:response.headers
+      });
+    }catch(_){return response}
+  };
+})();
+</script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/app.js"></script>
+<script src="/assets/js/role-shell-extension.js"></script>
+
+<script id="connectsukuu-assessment-ui-runtime-repair">
+(function(){
+  function user(){
+    try{return JSON.parse(localStorage.getItem('cs_user')||'null')}catch(_){return null}
+  }
+  function apply(){
+    const role=user()?.role||'';
+    document.querySelectorAll('[data-cs-roles]').forEach(a=>{
+      const allowed=(a.dataset.csRoles||'').split(',').map(x=>x.trim());
+      a.classList.toggle('cs-hidden',!allowed.includes(role));
+    });
+    const main=document.querySelector('main')||document.querySelector('.main')||document.querySelector('.page')||document.body.firstElementChild;
+    if(main && !main.classList.contains('cs-assessment-sidebar'))main.classList.add('cs-assessment-main-shift');
+
+    const statCandidates=[...document.querySelectorAll('.stat-card,.stat,.metric-card,.summary-card,.stats-grid > *,[class*="stat-card"]')];
+    const classes=['cs-stat-blue','cs-stat-purple','cs-stat-orange','cs-stat-green','cs-stat-teal'];
+    statCandidates.slice(0,5).forEach((el,i)=>{
+      el.classList.add('cs-assessment-stat',classes[i]);
+      const value=el.querySelector('strong,.stat-value,.value,.metric-value,[class*="value"]');
+      if(value)value.classList.add('cs-assessment-colorful-value');
+    });
+    document.querySelectorAll('.filters,.context-filters,.filter-panel').forEach(x=>x.classList.add('cs-assessment-context'));
+    document.querySelectorAll('.card,.panel,.table-panel,.workspace-panel').forEach(x=>x.classList.add('cs-assessment-panel'));
+  }
+  document.addEventListener('DOMContentLoaded',()=>{apply();setTimeout(apply,300);setTimeout(apply,1000)});
+})();
+</script>
+
+<script id="connectsukuu-assessment-role-final-runtime">
+(function(){
+'use strict';
+
+function csRole(){
+  try{
+    const u=(typeof AUTH!=='undefined'&&requireAuthOrRedirect)?requireAuthOrRedirect():null;
+    return String(u?.role||'').toUpperCase();
+  }catch(_){return '';}
+}
+const isTeacher=()=>csRole()==='TEACHER';
+const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+
+function csToast(message){
+  const t=document.getElementById('toast'); if(!t)return;
+  t.textContent=message;t.classList.add('show');
+  clearTimeout(window.__csAssessmentRoleToast);
+  window.__csAssessmentRoleToast=setTimeout(()=>t.classList.remove('show'),3600);
+}
+async function csApi(path,options={}){
+  const requestOptions = {
+    ...options,
+    headers: {
+      'Content-Type':'application/json',
+      ...(options.headers||{})
+    }
+  };
+
+  let response;
+
+  if (typeof apiFetch === 'function') {
+    response = await apiFetch(path,requestOptions);
+  } else {
+    const token =
+      (typeof AUTH !== 'undefined' && AUTH && typeof AUTH.getToken === 'function')
+        ? AUTH.getToken()
+        : localStorage.getItem('cs_token');
+
+    if (!token) {
+      throw new Error('ConnectSukuu authentication is unavailable. Please sign in again.');
+    }
+
+    if (typeof API_BASE === 'undefined') {
+      throw new Error('ConnectSukuu API configuration is unavailable.');
+    }
+
+    response = await fetch(`${API_BASE}${path}`,{
+      ...requestOptions,
+      headers:{
+        ...requestOptions.headers,
+        Authorization:`Bearer ${token}`
+      }
+    });
+  }
+
+  if (!response) {
+    throw new Error('ConnectSukuu API did not return a response.');
+  }
+
+  if (response.status === 401) {
+    try {
+      if (typeof AUTH !== 'undefined' && AUTH && typeof AUTH.logout === 'function') {
+        AUTH.logout();
+        return null;
+      }
+    } catch (_) {}
+    throw new Error('Your session has expired. Please sign in again.');
+  }
+
+  const data = await response.json().catch(()=>({}));
+
+  if (!response.ok) {
+    throw new Error(data.error||data.message||`Request failed (${response.status})`);
+  }
+
+  return data;
+}
+function assessmentId(row){
+  const button=row.querySelector('[data-score],[data-submit],[data-close-assessment]');
+  return button?.dataset?.score||button?.dataset?.submit||button?.dataset?.closeAssessment||'';
+}
+function actionCell(row){return row.querySelector('.row-actions')||row.querySelector('td:last-child')||row.lastElementChild;}
+
+function addTeacherActions(tbody){
+  if(!isTeacher())return;
+  tbody.querySelectorAll('tr').forEach(row=>{
+    const id=assessmentId(row),badge=row.querySelector('.badge');
+    if(!id||!badge||String(badge.textContent).trim().toUpperCase()!=='DRAFT')return;
+    const cell=actionCell(row);
+    if(!cell||cell.querySelector('[data-cs-edit-assessment]'))return;
+    const wrap=cell.querySelector('.row-actions')||cell;
+
+    const edit=document.createElement('button');
+    edit.type='button';edit.className='btn btn-secondary btn-sm';edit.textContent='Edit';
+    edit.dataset.csEditAssessment=id;edit.onclick=()=>editAssessment(id);
+
+    const del=document.createElement('button');
+    del.type='button';del.className='btn btn-danger btn-sm';del.textContent='Delete';
+    del.dataset.csDeleteAssessment=id;del.onclick=()=>deleteAssessment(id);
+
+    wrap.appendChild(edit);wrap.appendChild(del);
+  });
+}
+
+function makeLeadershipReadOnly(tbody){
+  if(isTeacher())return;
+  tbody.querySelectorAll('[data-score]').forEach(button=>{
+    const id=button.dataset.score;if(!id)return;
+    const view=document.createElement('button');
+    view.type='button';view.className='btn btn-secondary btn-sm';
+    view.textContent='View performance';view.dataset.csViewPerformance=id;
+    button.replaceWith(view);view.onclick=()=>viewPerformance(id);
+  });
+  tbody.querySelectorAll('[data-submit],[data-close-assessment],[data-edit-assessment],[data-delete-assessment]').forEach(b=>b.remove());
+}
+
+function ensureReviewModal(){
+  let modal=document.getElementById('csAssessmentReviewModal');if(modal)return modal;
+  document.body.insertAdjacentHTML('beforeend',`
+  <div class="modal-backdrop" id="csAssessmentReviewModal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head"><div><h2 id="csReviewTitle">Assessment performance</h2><p id="csReviewMeta">Loading…</p></div><button class="close" id="csReviewClose" type="button">×</button></div>
+      <div class="modal-body" id="csReviewBody"></div>
+      <div class="modal-foot"><button class="btn btn-secondary" id="csReviewCloseBottom" type="button">Close</button></div>
+    </div>
+  </div>`);
+  modal=document.getElementById('csAssessmentReviewModal');
+  const close=()=>modal.classList.remove('open');
+  modal.querySelector('#csReviewClose').onclick=close;
+  modal.querySelector('#csReviewCloseBottom').onclick=close;
+  return modal;
+}
+
+async function viewPerformance(id){
+  try{
+    const a=await csApi('/api/assessments/assessments/'+encodeURIComponent(id));if(!a)return;
+    const modal=ensureReviewModal(),scores=Array.isArray(a.scores)?a.scores:[],max=Number(a.maxScore)||100;
+    const values=scores.map(x=>Number(x.score)).filter(Number.isFinite);
+    const avg=values.length?values.reduce((n,v)=>n+v,0)/values.length:0;
+    document.getElementById('csReviewTitle').textContent=a.title||'Assessment performance';
+    document.getElementById('csReviewMeta').textContent=`${a.schoolClass?.name||'Class'} · ${a.subject?.name||'Subject'} · ${a.status||'DRAFT'}`;
+    document.getElementById('csReviewBody').innerHTML=`
+      <div class="detail-grid">
+        <div class="detail"><small>Students scored</small><strong>${values.length}</strong></div>
+        <div class="detail"><small>Average</small><strong>${avg.toFixed(2)} / ${max}</strong></div>
+        <div class="detail"><small>Average %</small><strong>${max?(avg/max*100).toFixed(2):'0.00'}%</strong></div>
+        <div class="detail"><small>Highest</small><strong>${values.length?Math.max(...values):0} / ${max}</strong></div>
+        <div class="detail"><small>Lowest</small><strong>${values.length?Math.min(...values):0} / ${max}</strong></div>
+        <div class="detail"><small>Weight</small><strong>${Number(a.weight||0)}%</strong></div>
+      </div>
+      <div class="score-list">
+        <div class="score-row" style="background:#fbfcfe;font-size:10px;text-transform:uppercase;font-weight:900;color:#718096"><div>Student</div><div>Score</div><div class="score-max">Percent</div></div>
+        ${scores.length?scores.map(x=>{
+          const name=((x.student?.firstName||'')+' '+(x.student?.lastName||'')).trim()||'Student';
+          const pct=max?Number(x.score)/max*100:0;
+          return `<div class="score-row"><div class="score-name">${esc(name)}<span class="score-adm">${esc(x.student?.admissionNumber||'')}</span></div><div><strong>${esc(x.score)}</strong> / ${max}</div><div class="score-max muted">${pct.toFixed(2)}%</div></div>`;
+        }).join(''):'<div class="empty">No student scores have been recorded yet.</div>'}
+      </div>`;
+    modal.classList.add('open');
+  }catch(error){csToast(error.message);}
+}
+
+async function editAssessment(id){
+  if(!isTeacher())return;
+  try{
+    const a=await csApi('/api/assessments/assessments/'+encodeURIComponent(id));if(!a)return;
+    if(a.status!=='DRAFT'){csToast('Only draft assessments can be edited.');return;}
+    document.getElementById('csAssessmentEditModal')?.remove();
+    document.body.insertAdjacentHTML('beforeend',`
+    <div class="modal-backdrop open" id="csAssessmentEditModal">
+      <div class="modal" role="dialog" aria-modal="true">
+        <div class="modal-head"><div><h2>Edit assessment</h2><p>${esc(a.schoolClass?.name||'Class')} · ${esc(a.subject?.name||'Subject')}</p></div><button class="close" id="csEditClose" type="button">×</button></div>
+        <form id="csEditForm"><div class="modal-body"><div class="form-grid">
+          <div class="field full"><label>Title</label><input name="title" required value="${esc(a.title)}"></div>
+          <div class="field"><label>Assessment type</label><select name="assessmentType">${['CLASSWORK','HOMEWORK','QUIZ','TEST','MID_TERM','EXAM','OTHER'].map(v=>`<option value="${v}" ${v===a.assessmentType?'selected':''}>${v.replace('_',' ')}</option>`).join('')}</select></div>
+          <div class="field"><label>Maximum score</label><input name="maxScore" type="number" min=".01" step=".01" value="${esc(a.maxScore)}" required></div>
+          <div class="field"><label>Weight (%)</label><input name="weight" type="number" min="0" max="100" step=".01" value="${esc(a.weight||0)}" required></div>
+          <div class="field"><label>Assessment date</label><input name="assessmentDate" type="date" value="${a.assessmentDate?new Date(a.assessmentDate).toISOString().slice(0,10):''}"></div>
+        </div></div><div class="modal-foot"><button type="button" class="btn btn-secondary" id="csEditCancel">Cancel</button><button type="submit" class="btn btn-primary">Save changes</button></div></form>
+      </div>
+    </div>`);
+    const modal=document.getElementById('csAssessmentEditModal'),close=()=>modal.remove();
+    modal.querySelector('#csEditClose').onclick=close;modal.querySelector('#csEditCancel').onclick=close;
+    modal.querySelector('#csEditForm').onsubmit=async e=>{
+      e.preventDefault();const f=new FormData(e.currentTarget);
+      try{
+        await csApi('/api/assessments/assessments/'+encodeURIComponent(id),{
+          method:'PATCH',
+          body:JSON.stringify({title:String(f.get('title')||'').trim(),assessmentType:f.get('assessmentType'),maxScore:Number(f.get('maxScore')),weight:Number(f.get('weight')),assessmentDate:f.get('assessmentDate')||null})
+        });
+        close();csToast('Assessment updated.');document.getElementById('refreshBtn')?.click();
+      }catch(error){csToast(error.message);}
+    };
+  }catch(error){csToast(error.message);}
+}
+
+async function deleteAssessment(id){
+  if(!isTeacher())return;
+  if(!confirm('Delete this draft assessment? Its recorded scores will also be removed.'))return;
+  try{
+    await csApi('/api/assessments/assessments/'+encodeURIComponent(id),{method:'DELETE'});
+    csToast('Assessment deleted.');document.getElementById('refreshBtn')?.click();
+  }catch(error){csToast(error.message);}
+}
+
+function enforceRoleUI(){
+  const teacher=isTeacher(),button=document.getElementById('newAssessmentBtn');
+  if(button){
+    button.classList.remove('hidden');
+    button.style.setProperty('display',teacher?'inline-flex':'none','important');
+    button.setAttribute('aria-hidden',teacher?'false':'true');
+  }
+  if(!teacher){
+    document.getElementById('saveScoresBtn')?.classList.add('hidden');
+    document.getElementById('submitAssessmentBtn')?.classList.add('hidden');
+  }
+}
+
+function refreshRoleUI(){
+  enforceRoleUI();
+  const rows=document.getElementById('assessmentRows');if(!rows)return;
+  if(isTeacher())addTeacherActions(rows);else makeLeadershipReadOnly(rows);
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  refreshRoleUI();
+  const rows=document.getElementById('assessmentRows');
+  if(rows)new MutationObserver(refreshRoleUI).observe(rows,{childList:true,subtree:true});
+  const reports=document.getElementById('reportSubjects');
+  if(reports)new MutationObserver(enforceRoleUI).observe(reports,{childList:true,subtree:true});
+  [250,700,1400,2500].forEach(ms=>setTimeout(refreshRoleUI,ms));
+});
+})();
+</script>
+
+<!-- CONNECTSUKUU_ASSESSMENT_PERFORMANCE_ID_FINAL -->
+
+<!-- CONNECTSUKUU_FOCUSED_ASSESSMENTS_PROFILE_REPAIR -->
+
+<!-- CONNECTSUKUU_FINAL_ASSESSMENT_PROFILE_REPAIR -->
+
+<!-- CONNECTSUKUU_HOA_REPORT_REVIEW_CENTER_HTML -->
+<div class="cs-hoa-review-center" id="csHoaReviewCenter" hidden>
+  <div class="cs-hoa-review-inner">
+    <div class="cs-hoa-review-head"><div><div class="cs-hoa-review-kicker">Academic Quality Control</div><h3 class="cs-hoa-review-title">Head of Academics Review Center</h3><p class="cs-hoa-review-subtitle">Review submitted report cards, inspect subject coverage, record an academic remark, and either return the card for correction or endorse it for Head Teacher finalization.</p></div>
+      <select class="cs-hoa-review-filter" id="csHoaReviewFilter" aria-label="Filter report-card review queue"><option value="ALL">All report cards</option><option value="SUBMITTED">Awaiting review</option><option value="RETURNED">Returned</option><option value="ENDORSED">Endorsed</option><option value="FINALIZED">Finalized</option><option value="RELEASED">Released</option></select>
+    </div>
+    <div class="cs-hoa-review-stats"><div class="cs-hoa-review-stat cs-hoa-review-blue"><small>Awaiting review</small><strong id="csHoaReviewSubmitted">0</strong></div><div class="cs-hoa-review-stat cs-hoa-review-purple"><small>Endorsed</small><strong id="csHoaReviewEndorsed">0</strong></div><div class="cs-hoa-review-stat cs-hoa-review-amber"><small>Returned</small><strong id="csHoaReviewReturned">0</strong></div><div class="cs-hoa-review-stat cs-hoa-review-green"><small>Released</small><strong id="csHoaReviewReleased">0</strong></div></div>
+    <div class="cs-hoa-review-queue"><div class="cs-hoa-review-queue-head"><strong id="csHoaReviewQueueTitle">Report-card workflow queue</strong><span id="csHoaReviewQueueCount">0 records</span></div><div id="csHoaReviewQueue"><div class="cs-hoa-review-empty"><strong>No report cards match this filter</strong>Submitted report cards will appear here as they move through the academic review workflow.</div></div></div>
+  </div>
+</div>
+<!-- END_CONNECTSUKUU_HOA_REPORT_REVIEW_CENTER_HTML -->
+
+<!-- CONNECTSUKUU_TEACHER_REPORT_CARD_CREATION_HTML -->
+<div class="modal-backdrop" id="teacherReportCardCreateModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <h2>Create report card</h2>
+        <p>Create a draft report card for one enrolled student.</p>
+      </div>
+      <button class="close" type="button" data-close="teacherReportCardCreateModal">×</button>
+    </div>
+    <form id="teacherReportCardCreateForm">
+      <div class="modal-body">
+        <div class="notice cs-trc-note"><strong>Teacher workflow:</strong> create the draft, enter subject results and the teacher remark, then submit it for Head of Academics review.</div>
+        <div class="form-grid">
+          <div class="field"><label>Academic year</label><select id="trcAcademicYear" required></select></div>
+          <div class="field"><label>Term</label><select id="trcTerm" required></select></div>
+          <div class="field"><label>Class</label><select id="trcClass" required></select></div>
+          <div class="field full"><label>Student</label><select id="trcStudent" required><option value="">Select a student</option></select></div>
+        </div>
+        <div id="trcStudentStatus" class="cs-trc-loading" hidden></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-secondary" type="button" data-close="teacherReportCardCreateModal">Cancel</button>
+        <button class="btn btn-primary" type="submit" id="trcCreateSubmit">Create draft report card</button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- END_CONNECTSUKUU_TEACHER_REPORT_CARD_CREATION_HTML -->
+
+<script id="connectsukuu-teacher-report-card-creation-runtime">
+(function(){
+  'use strict';
+  const $ = id => document.getElementById(id);
+  let students = [];
+
+  function currentUser(){
+    try { return JSON.parse(localStorage.getItem('cs_user') || 'null') || {}; }
+    catch (_) { return {}; }
+  }
+
+  function isTeacher(){ return String(currentUser().role || '').toUpperCase() === 'TEACHER'; }
+
+  function esc(v){
+    return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function apiCall(path, options){
+    const requestOptions = {
+      ...(options || {}),
+      headers: {
+        'Content-Type':'application/json',
+        ...((options && options.headers) || {})
+      }
+    };
+
+    if (typeof apiFetch === 'function') {
+      return apiFetch(path, requestOptions).then(async response => {
+        if (!response) throw new Error('ConnectSukuu API did not return a response.');
+        if (response.status === 401) throw new Error('Your session has expired. Please sign in again.');
+        const data = await response.json().catch(()=>({}));
+        if (!response.ok) throw new Error(data.error || data.message || `Request failed (${response.status})`);
+        return data;
+      });
+    }
+
+    const rawBase = String(
+      (typeof API_BASE !== 'undefined' && API_BASE) ||
+      window.API_BASE ||
+      'http://localhost:4000'
+    ).replace(/\/$/, '');
+    const base = rawBase.endsWith('/api') ? rawBase : rawBase + '/api';
+    const authToken =
+      (typeof AUTH !== 'undefined' && AUTH && typeof AUTH.getToken === 'function')
+        ? AUTH.getToken()
+        : (localStorage.getItem('cs_token') || localStorage.getItem('token') || localStorage.getItem('accessToken') || '');
+
+    if (!authToken) return Promise.reject(new Error('ConnectSukuu authentication is unavailable. Please sign in again.'));
+
+    return fetch(base + path.replace(/^\/api/, ''), {
+      ...requestOptions,
+      headers: { ...requestOptions.headers, Authorization: 'Bearer ' + authToken }
+    }).then(async response => {
+      if (response.status === 401) throw new Error('Your session has expired. Please sign in again.');
+      const data = await response.json().catch(()=>({}));
+      if (!response.ok) throw new Error(data.error || data.message || `Request failed (${response.status})`);
+      return data;
+    });
+  }
+
+  function selectedContext(){
+    return {
+      academicYearId: $('year')?.value || '',
+      termId: $('term')?.value || '',
+      classId: $('class')?.value || ''
+    };
+  }
+
+  function copyOptions(sourceId, targetId, placeholder){
+    const source = $(sourceId), target = $(targetId);
+    if (!source || !target) return;
+    const current = source.value;
+    target.innerHTML = '';
+    const first = document.createElement('option');
+    first.value = '';
+    first.textContent = placeholder;
+    target.appendChild(first);
+    [...source.options].forEach(o => {
+      if (!o.value) return;
+      const n = document.createElement('option');
+      n.value = o.value;
+      n.textContent = o.textContent;
+      target.appendChild(n);
+    });
+    if ([...target.options].some(o => o.value === current)) target.value = current;
+  }
+
+  async function loadStudents(){
+    const ctx = {
+      academicYearId: $('trcAcademicYear')?.value || '',
+      classId: $('trcClass')?.value || ''
+    };
+    const select = $('trcStudent');
+    const status = $('trcStudentStatus');
+    if (!select) return;
+
+    select.innerHTML = '<option value="">Loading students…</option>';
+    select.disabled = true;
+
+    if (!ctx.academicYearId || !ctx.classId) {
+      select.innerHTML = '<option value="">Select academic year and class first</option>';
+      if (status) status.hidden = true;
+      return;
+    }
+
+    try {
+      const q = new URLSearchParams({
+        academicYearId: ctx.academicYearId,
+        classId: ctx.classId
+      });
+
+      const data = await apiCall('/api/assessments/report-card-students?' + q.toString());
+      const list = Array.isArray(data)
+        ? data
+        : (Array.isArray(data?.students) ? data.students
+        : (Array.isArray(data?.data) ? data.data : []));
+
+      students = list;
+
+      select.innerHTML = '<option value="">Select a student</option>' + students.map(s => {
+        const name = [s.firstName,s.lastName].filter(Boolean).join(' ') || s.name || 'Student';
+        const admission = s.admissionNumber ? ' · ' + s.admissionNumber : '';
+        return `<option value="${esc(s.id)}">${esc(name + admission)}</option>`;
+      }).join('');
+
+      select.disabled = false;
+
+      if (status) {
+        status.hidden = false;
+        status.textContent = students.length
+          ? `${students.length} enrolled student${students.length === 1 ? '' : 's'} available.`
+          : 'No enrolled students were found for this class.';
+      }
+    } catch (error) {
+      console.error('Teacher report-card student load:', error);
+      students = [];
+      select.innerHTML = '<option value="">Unable to load students</option>';
+      select.disabled = true;
+      if (status) {
+        status.hidden = false;
+        status.textContent = error?.message || 'Unable to load students.';
+      }
+    }
+  }
+
+  async function openCreate(){
+    if (!isTeacher()) return;
+    copyOptions('year','trcAcademicYear','Select academic year');
+    copyOptions('term','trcTerm','Select term');
+    copyOptions('class','trcClass','Select class');
+    const ctx = selectedContext();
+    if ($('trcAcademicYear')) $('trcAcademicYear').value = ctx.academicYearId;
+    if ($('trcTerm')) $('trcTerm').value = ctx.termId;
+    if ($('trcClass')) $('trcClass').value = ctx.classId;
+    $('trcStudent').innerHTML = '<option value="">Select a student</option>';
+    $('trcStudent').disabled = true;
+    $('trcStudentStatus').hidden = true;
+    $('teacherReportCardCreateModal').classList.add('open');
+    await loadStudents();
+  }
+
+  async function createReportCard(event){
+    event.preventDefault();
+    if (!isTeacher()) return;
+    const button = $('trcCreateSubmit');
+    const body = {
+      academicYearId: $('trcAcademicYear').value,
+      termId: $('trcTerm').value,
+      classId: $('trcClass').value,
+      studentId: $('trcStudent').value
+    };
+    if (!body.academicYearId || !body.termId || !body.classId || !body.studentId) {
+      if (typeof toast === 'function') toast('Select the academic year, term, class and student first.');
+      return;
+    }
+    button.disabled = true;
+    button.textContent = 'Creating…';
+    try {
+      const created = await apiCall('/api/assessments/report-cards', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(body)
+      });
+      if (typeof closeModal === 'function') closeModal('teacherReportCardCreateModal');
+      else $('teacherReportCardCreateModal').classList.remove('open');
+      if (typeof toast === 'function') toast('Draft report card created.');
+      if (typeof refreshAll === 'function') await refreshAll();
+      if (created?.id && typeof openReportModal === 'function') await openReportModal(created.id);
+    } catch (error) {
+      console.error('Teacher report-card creation:', error);
+      if (typeof toast === 'function') toast(error?.message || 'Failed to create report card.');
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Create draft report card';
+    }
+  }
+
+  function installButton(){
+    if (!isTeacher()) return;
+    const panel = $('reportPanel');
+    if (!panel || document.getElementById('teacherReportCardCreateBtn')) return;
+    const head = panel.querySelector('.panel-head');
+    if (!head) return;
+    const actions = document.createElement('div');
+    actions.style.display = 'flex';
+    actions.style.alignItems = 'center';
+    actions.style.gap = '8px';
+    const refresh = $('loadReportsBtn');
+    if (refresh) actions.appendChild(refresh);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.id = 'teacherReportCardCreateBtn';
+    button.className = 'btn btn-primary btn-sm';
+    button.textContent = '＋ Create report card';
+    button.addEventListener('click', openCreate);
+    actions.appendChild(button);
+    head.appendChild(actions);
+  }
+
+  function bind(){
+    if (!isTeacher()) return;
+    installButton();
+    $('teacherReportCardCreateForm')?.addEventListener('submit', createReportCard);
+    ['trcAcademicYear','trcTerm','trcClass'].forEach(id => $(id)?.addEventListener('change', loadStudents));
+    document.addEventListener('click', e => {
+      const close = e.target.closest?.('[data-close="teacherReportCardCreateModal"]');
+      if (close) $('teacherReportCardCreateModal')?.classList.remove('open');
+    });
+    setTimeout(installButton,300);
+    setTimeout(installButton,1000);
+  }
+
+  document.addEventListener('DOMContentLoaded', bind, {once:true});
+})();
+</script>
+
+
+<script id="connectsukuu-hoa-shell-final-runtime">
+(function(){
+'use strict';
+var EXPECTED_ROLE='HEAD_OF_ACADEMICS';
+var PAGE_KEY='assessments';
+var TITLES={dashboard:'Dashboard',academic:'Academic Setup',students:'Students',attendance:'Attendance',teaching:'Teaching Assignments',timetable:'Timetable',assessments:'Assessments & Report Cards'};
+
+function getUser(){
+  try{
+    if(window.AUTH&&typeof AUTH.getUser==='function'){
+      var u=AUTH.getUser();
+      if(u) return u;
+    }
+  }catch(_){}
+  try{
+    return JSON.parse(localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user')||'null')||{};
+  }catch(_){return {};}
+}
+
+var user=getUser();
+
+// Role guard
+try{
+  if(user&&user.role&&String(user.role).toUpperCase()!==EXPECTED_ROLE){
+    location.replace('/auth/signin.html');
+    return;
+  }
+}catch(_){}
+
+// Active nav state
+try{
+  document.querySelectorAll('.cs-hoa-final-nav a[data-cs-hoa-nav]').forEach(function(a){
+    if(a.getAttribute('data-cs-hoa-nav')===PAGE_KEY){ a.classList.add('active'); }
+    else { a.classList.remove('active'); }
+  });
+}catch(_){}
+
+// Header title (authoritative, independent of static markup)
+try{
+  var titleEl=document.querySelector('.cs-hoa-final-title');
+  if(titleEl&&TITLES[PAGE_KEY]) titleEl.textContent=TITLES[PAGE_KEY];
+  if(TITLES[PAGE_KEY]) document.title=TITLES[PAGE_KEY];
+}catch(_){}
+
+// Profile
+try{
+  var email=(user&&user.email)||'';
+  var whoEl=document.getElementById('cskHoaWho');
+  if(whoEl) whoEl.textContent=email||'User';
+  var avatarEl=document.getElementById('cskHoaAvatar');
+  if(avatarEl) avatarEl.textContent=(email||'H').trim().charAt(0).toUpperCase()||'H';
+}catch(_){}
+
+// Logout
+try{
+  var logoutBtn=document.getElementById('cskHoaFinalLogout');
+  if(logoutBtn){
+    logoutBtn.addEventListener('click',function(){
+      try{
+        if(window.AUTH&&typeof AUTH.logout==='function'){ AUTH.logout(); return; }
+      }catch(_){}
+      try{
+        localStorage.removeItem('cs_user');
+        localStorage.removeItem('cs_token');
+        localStorage.removeItem('connectsukuu_user');
+      }catch(_){}
+      location.href='/auth/signin.html';
+    });
+  }
+}catch(_){}
+})();
+</script>
+<script id="connectsukuu-hoa-stabilization-runtime">
+(function(){
+  'use strict';
+  function activateCurrentMenu(){
+    var file=(location.pathname.split('/').pop()||'hoa-dashboard').toLowerCase();
+    file=file.replace(/\.html$/,'');
+    var map={'hoa-dashboard':'dashboard','hoa-academic':'academic','hoa-students':'students','hoa-attendance':'attendance','hoa-teaching-assignments':'teaching','hoa-timetable':'timetable','hoa-assessments':'assessments'};
+    var key=map[file];
+    document.querySelectorAll('[data-cs-hoa-nav]').forEach(function(a){
+      var active=!!key&&a.getAttribute('data-cs-hoa-nav')===key;
+      a.classList.toggle('active',active);
+      if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
+    });
+  }
+  function enforceStudentViewOnly(){
+    if(!document.body.classList.contains('cs-student-hoa-ht-view-only'))return;
+    var selectors=['[data-student-action="enrollment"]','[data-student-action="parents"]','[data-student-action="status"]','[data-student-action="delete"]','#add-student-btn','#import-student-btn','.student-bulk-actions','.cs-manage-trigger','.cs-manage-wrap'];
+    selectors.forEach(function(sel){document.querySelectorAll(sel).forEach(function(el){el.remove();});});
+    document.querySelectorAll('.student-actions').forEach(function(box){
+      box.querySelectorAll('button,a').forEach(function(btn){if(btn.getAttribute('data-student-action')!=='view')btn.remove();});
+      box.style.setProperty('display','flex','important');box.style.setProperty('justify-content','flex-end','important');box.style.setProperty('gap','0','important');
+    });
+    document.querySelectorAll('#students-table [data-student-management-actions]').forEach(function(cell){cell.style.setProperty('width','92px','important');cell.style.setProperty('text-align','right','important');});
+  }
+  function run(){activateCurrentMenu();enforceStudentViewOnly();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
+  var observer=new MutationObserver(function(){activateCurrentMenu();enforceStudentViewOnly();});
+  observer.observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+
+<script id="connectsukuu-hoa-assessment-data-loader">
+(function(){
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const list = (v,...keys) => {
+    if (Array.isArray(v)) return v;
+    if (v && typeof v === 'object') {
+      for (const k of keys) if (Array.isArray(v[k])) return v[k];
+      for (const k of ['data','items','results','records']) if (Array.isArray(v[k])) return v[k];
+    }
+    return [];
+  };
+  const state = {years:[],terms:[],classes:[],subjects:[],assessments:[],reports:[]};
+  function toast(message){const el=$('toast');if(!el)return;el.textContent=message;el.classList.add('show');clearTimeout(window.__hoaAssessmentLoaderToast);window.__hoaAssessmentLoaderToast=setTimeout(()=>el.classList.remove('show'),4000);}
+  async function get(path){
+    if(typeof apiFetch!=='function') throw new Error('Shared API helper is unavailable. Check that /assets/js/app.js is loaded.');
+    const response=await apiFetch(path,{cache:'no-store'});
+    if(!response) throw new Error('Authentication expired. Sign in again.');
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok) throw new Error(data.error||data.message||`Request failed (${response.status})`);
+    return data;
+  }
+  function fill(id,items,placeholder,label,preferred=''){
+    const el=$(id);if(!el)return;
+    el.innerHTML='';const first=document.createElement('option');first.value='';first.textContent=placeholder;el.appendChild(first);
+    items.forEach(item=>{if(!item||!item.id)return;const opt=document.createElement('option');opt.value=item.id;opt.textContent=label(item);el.appendChild(opt)});
+    if(preferred && [...el.options].some(o=>o.value===preferred))el.value=preferred;
+    else if(items.length)el.value=items.find(x=>x.isCurrent)?.id||items[0].id;
+  }
+  function ctx(){return {year:$('year')?.value||'',term:$('term')?.value||'',cls:$('class')?.value||'',subject:$('subject')?.value||''}}
+  function qs(values){const p=new URLSearchParams();Object.entries(values).forEach(([k,v])=>{if(v)p.set(k,v)});const text=p.toString();return text?'?'+text:''}
+  function showErrorRows(id,message){const el=$(id);if(el)el.innerHTML=`<tr><td colspan="7"><div class="empty"><strong>Unable to load records</strong>${esc(message)}</div></td></tr>`}
+  function showEmptyRows(id,message){const el=$(id);if(el)el.innerHTML=`<tr><td colspan="7"><div class="empty">${esc(message)}</div></td></tr>`}
+  function person(x){return [x?.firstName,x?.lastName].filter(Boolean).join(' ')||x?.email||'—'}
+  function statusBadge(status){const s=String(status||'DRAFT').toUpperCase();return `<span class="badge ${esc(s)}">${esc(s.replaceAll('_',' '))}</span>`}
+  async function loadTermsAndClasses(){
+    const c=ctx(),year=$('year');
+    state.terms=c.year?list(await get('/api/academic-years/'+encodeURIComponent(c.year)+'/terms'),'terms'):[];
+    fill('term',state.terms,'Select term',x=>x.name+(x.isCurrent?' — Current':''),c.term);
+    state.classes=c.year?list(await get('/api/classes?academicYearId='+encodeURIComponent(c.year)),'classes'):[];
+    fill('class',state.classes,'All classes',x=>x.name+(x.section?' — '+x.section:''),c.cls);
+    await loadSubjects();
+  }
+  async function loadSubjects(){
+    const c=ctx();
+    const raw=c.cls?await get('/api/subjects/class/'+encodeURIComponent(c.cls)):await get('/api/subjects');
+    const rows=list(raw,'subjects','classSubjects');
+    state.subjects=rows.map(x=>x.subject||x).filter(x=>x&&x.id);
+    const old=c.subject;
+    fill('subject',state.subjects,'All subjects',x=>x.name+(x.code?' ('+x.code+')':''),old);
+  }
+  async function loadSummary(){
+    const c=ctx();
+    const d=await get('/api/assessments/dashboard-summary'+qs({academicYearId:c.year,termId:c.term}));
+    const vals={statAssessments:d.assessments??0,statSubmitted:d.submittedAssessments??0,statClosed:d.closedAssessments??0,statReports:d.reportCards??0,statReleased:d.releasedReportCards??0};
+    Object.entries(vals).forEach(([id,v])=>{if($(id))$(id).textContent=String(v)});
+  }
+  async function loadAssessments(){
+    const c=ctx();const params={academicYearId:c.year,termId:c.term,classId:c.cls,subjectId:c.subject};
+    const body=$('assessmentRows');if(body)body.innerHTML='<tr><td colspan="7"><div class="loading">Loading assessments…</div></td></tr>';
+    try{
+      state.assessments=list(await get('/api/assessments/assessments'+qs(params)),'assessments');
+      if(!state.assessments.length){showEmptyRows('assessmentRows','No assessments match the selected academic context.');return}
+      $('assessmentRows').innerHTML=state.assessments.map(a=>`<tr><td><strong>${esc(a.title||'Untitled assessment')}</strong><span class="muted" style="display:block;font-size:11px">${esc(a.assessmentType||'ASSESSMENT')} · max ${esc(a.maxScore??100)}</span></td><td>${esc(a.schoolClass?.name||'—')}</td><td>${esc(a.subject?.name||'—')}</td><td>${esc(person(a.teacher))}</td><td>${esc(a._count?.scores??a.scores?.length??0)}</td><td>${statusBadge(a.status)}</td><td><div class="row-actions"><button type="button" class="btn btn-secondary btn-sm" data-hoa-view-assessment="${esc(a.id)}">View performance</button></div></td></tr>`).join('');
+    }catch(e){showErrorRows('assessmentRows',e.message);throw e}
+  }
+  async function loadReports(){
+    const c=ctx();const params={academicYearId:c.year,termId:c.term,classId:c.cls};
+    const body=$('reportRows');if(body)body.innerHTML='<tr><td colspan="7"><div class="loading">Loading report cards…</div></td></tr>';
+    try{
+      state.reports=list(await get('/api/assessments/report-cards'+qs(params)),'reportCards','reports');
+      if(!state.reports.length){showEmptyRows('reportRows','No report cards match the selected academic context.');renderReviewQueue();return}
+      $('reportRows').innerHTML=state.reports.map(r=>`<tr><td><strong>${esc(person(r.student))}</strong><span class="muted" style="display:block;font-size:11px">${esc(r.student?.admissionNumber||'')}</span></td><td>${esc(r.schoolClass?.name||'—')}</td><td>${esc(r.term?.name||'—')}</td><td>${esc(person(r.teacher))}</td><td>${esc(r._count?.subjects??r.subjects?.length??0)}</td><td>${statusBadge(r.status)}</td><td><button type="button" class="btn btn-secondary btn-sm" data-hoa-view-report="${esc(r.id)}">View report card</button></td></tr>`).join('');
+      renderReviewQueue();
+    }catch(e){showErrorRows('reportRows',e.message);throw e}
+  }
+  function renderReviewQueue(){
+    const center=$('csHoaReviewCenter'),queue=$('csHoaReviewQueue');
+    if(!center||!queue)return;
+    center.hidden=false;
+    const review=state.reports.filter(r=>['SUBMITTED','RETURNED','ENDORSED','FINALIZED','RELEASED'].includes(String(r.status||'').toUpperCase()));
+    const count=$('csHoaReviewQueueCount');if(count)count.textContent=`${review.length} record${review.length===1?'':'s'}`;
+    const submitted=review.filter(r=>String(r.status).toUpperCase()==='SUBMITTED').length;
+    const endorsed=review.filter(r=>String(r.status).toUpperCase()==='ENDORSED').length;
+    const returned=review.filter(r=>String(r.status).toUpperCase()==='RETURNED').length;
+    const released=review.filter(r=>['FINALIZED','RELEASED'].includes(String(r.status).toUpperCase())).length;
+    [['csHoaReviewSubmitted',submitted],['csHoaReviewEndorsed',endorsed],['csHoaReviewReturned',returned],['csHoaReviewReleased',released]].forEach(([id,v])=>{if($(id))$(id).textContent=String(v)});
+    queue.innerHTML=review.length?review.map(r=>`<div class="cs-hoa-review-item"><div><strong>${esc(person(r.student))}</strong><div class="muted" style="font-size:12px">${esc(r.schoolClass?.name||'Class')} · ${esc(r.term?.name||'Term')}</div></div><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">${statusBadge(r.status)}<button type="button" class="btn btn-secondary btn-sm" data-hoa-view-report="${esc(r.id)}">Review</button></div></div>`).join(''):'<div class="cs-hoa-review-empty"><strong>No report cards match this context</strong>Submitted report cards will appear here as teachers send them for academic review.</div>';
+  }
+  function openDetail(title,body){
+    let modal=$('hoaAssessmentDetailModal');
+    if(!modal){document.body.insertAdjacentHTML('beforeend','<div class="modal-backdrop open" id="hoaAssessmentDetailModal"><div class="modal"><div class="modal-head"><div><h2 id="hoaAssessmentDetailTitle"></h2><p id="hoaAssessmentDetailMeta"></p></div><button type="button" class="close" id="hoaAssessmentDetailClose">×</button></div><div class="modal-body" id="hoaAssessmentDetailBody"></div><div class="modal-foot"><button type="button" class="btn btn-secondary" id="hoaAssessmentDetailCloseBottom">Close</button></div></div></div>');modal=$('hoaAssessmentDetailModal');const close=()=>modal.classList.remove('open');$('hoaAssessmentDetailClose').onclick=close;$('hoaAssessmentDetailCloseBottom').onclick=close;modal.addEventListener('click',e=>{if(e.target===modal)close()})}
+    $('hoaAssessmentDetailTitle').textContent=title;$('hoaAssessmentDetailMeta').textContent='Read-only academic review';$('hoaAssessmentDetailBody').innerHTML=body;modal.classList.add('open');
+  }
+  async function viewAssessment(id){
+    try{const a=await get('/api/assessments/assessments/'+encodeURIComponent(id)+'/performance');const scores=list(a.scores,'scores');const rows=scores.length?scores.map(x=>`<tr><td>${esc(person(x.student))}<span class="muted" style="display:block;font-size:11px">${esc(x.student?.admissionNumber||'')}</span></td><td>${esc(x.score)}</td><td>${esc(Number(x.percentage||0).toFixed(1))}%</td></tr>`).join(''):'<tr><td colspan="3">No student scores have been submitted for this assessment yet.</td></tr>';openDetail(a.title||'Assessment performance',`<div class="detail-grid"><div class="detail"><small>Class</small><strong>${esc(a.schoolClass?.name||'—')}</strong></div><div class="detail"><small>Subject</small><strong>${esc(a.subject?.name||'—')}</strong></div><div class="detail"><small>Students scored</small><strong>${esc(a.summary?.studentsScored??scores.length)}</strong></div><div class="detail"><small>Average</small><strong>${esc(Number(a.summary?.averagePercentage||0).toFixed(1))}%</strong></div><div class="detail"><small>Highest</small><strong>${esc(a.summary?.highest??'—')}</strong></div><div class="detail"><small>Lowest</small><strong>${esc(a.summary?.lowest??'—')}</strong></div></div><div class="table-wrap"><table><thead><tr><th>Student</th><th>Score</th><th>Percentage</th></tr></thead><tbody>${rows}</tbody></table></div>`)}catch(e){toast(e.message)}
+  }
+  async function viewReport(id){
+    try{const r=await get('/api/assessments/report-cards/'+encodeURIComponent(id));const subjects=list(r.subjects,'subjects');const rows=subjects.length?subjects.map(x=>`<tr><td>${esc(x.subject?.name||x.subjectName||'Subject')}</td><td>${esc(x.totalScore??'—')}</td><td>${esc(x.maxScore??'—')}</td><td>${esc(x.grade??'—')}</td></tr>`).join(''):'<tr><td colspan="4">Subject results have not been entered yet.</td></tr>';openDetail(`Report card — ${person(r.student)}`,`<div class="detail-grid"><div class="detail"><small>Student</small><strong>${esc(person(r.student))}</strong></div><div class="detail"><small>Class</small><strong>${esc(r.schoolClass?.name||'—')}</strong></div><div class="detail"><small>Term</small><strong>${esc(r.term?.name||'—')}</strong></div><div class="detail"><small>Status</small><strong>${esc(String(r.status||'DRAFT').replaceAll('_',' '))}</strong></div></div><div class="table-wrap"><table><thead><tr><th>Subject</th><th>Score</th><th>Maximum</th><th>Grade</th></tr></thead><tbody>${rows}</tbody></table></div><p class="muted">Academic remarks: ${esc(r.academicRemark||r.teacherRemark||'No remarks recorded.')}</p>`)}catch(e){toast(e.message)}
+  }
+  async function refreshAll(){
+    try{await Promise.all([loadSummary(),loadAssessments(),loadReports()]);}
+    catch(e){console.error('HoA assessment data loading:',e);toast(e.message)}
+  }
+  async function init(){
+    try{
+      const user=typeof AUTH!=='undefined'&&AUTH.getUser?AUTH.getUser():null;
+      const who=$('cskHoaWho');if(who&&user)who.textContent=user.email||person(user);
+      const avatar=$('cskHoaAvatar');if(avatar&&user)avatar.textContent=(user.firstName?.[0]||user.email?.[0]||'H').toUpperCase();
+      state.years=list(await get('/api/academic-years'),'academicYears','years');
+      fill('year',state.years,'Select academic year',x=>x.name+(x.isCurrent?' — Current':''));
+      if(!$('year')?.value){['term','class','subject'].forEach(id=>fill(id,[],'Select academic year first',x=>x.name));showEmptyRows('assessmentRows','Create or select an academic year to view assessments.');showEmptyRows('reportRows','Create or select an academic year to view report cards.');return}
+      await loadTermsAndClasses();
+      await refreshAll();
+    }catch(e){console.error('HoA assessment initialization:',e);toast(e.message);showErrorRows('assessmentRows',e.message);showErrorRows('reportRows',e.message)}
+  }
+  document.addEventListener('DOMContentLoaded',()=>{
+    $('year')?.addEventListener('change',async()=>{try{await loadTermsAndClasses();await refreshAll()}catch(e){toast(e.message)}});
+    $('term')?.addEventListener('change',refreshAll);
+    $('class')?.addEventListener('change',async()=>{try{await loadSubjects();await refreshAll()}catch(e){toast(e.message)}});
+    $('subject')?.addEventListener('change',refreshAll);
+    $('refreshBtn')?.addEventListener('click',refreshAll);
+    $('loadAssessmentsBtn')?.addEventListener('click',loadAssessments);
+    $('loadReportsBtn')?.addEventListener('click',loadReports);
+    document.querySelectorAll('[data-tab]').forEach(tab=>tab.addEventListener('click',()=>{const reports=tab.dataset.tab==='reports';document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===tab));$('assessmentPanel')?.classList.toggle('hidden',reports);$('reportPanel')?.classList.toggle('hidden',!reports);if(reports)loadReports().catch(e=>toast(e.message));else loadAssessments().catch(e=>toast(e.message))}));
+    document.addEventListener('click',e=>{const a=e.target.closest('[data-hoa-view-assessment]');if(a)viewAssessment(a.dataset.hoaViewAssessment);const r=e.target.closest('[data-hoa-view-report]');if(r)viewReport(r.dataset.hoaViewReport)});
+    init();
+  },{once:true});
+})();
+</script>
+
+<!-- CONNECTSUKUU_ASSESSMENT_PERFORMANCE_ID_FINAL -->
+<script>
+(function(){
+  'use strict';
+
+  var performanceCache=null;
+  var performanceLoading=null;
+
+  function esc(v){
+    return String(v ?? '').replace(/[&<>"']/g,function(ch){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+    });
+  }
+
+  function closeModal(){
+    var old=document.getElementById('cs-final-performance-modal');
+    if(old) old.remove();
+    document.body.style.overflow='';
+  }
+
+  function norm(v){
+    return String(v||'').replace(/\s+/g,' ').trim().toLowerCase();
+  }
+
+  function rowDetails(button){
+    var row=button.closest('tr');
+    if(!row) return null;
+    var cells=Array.prototype.slice.call(row.querySelectorAll('td'));
+    if(cells.length<6) return null;
+
+    return {
+      title:(cells[0].innerText||'').split(/\n/)[0].trim(),
+      className:(cells[1].innerText||'').trim(),
+      subject:(cells[2].innerText||'').trim(),
+      teacher:(cells[3].innerText||'').trim(),
+      scoreText:(cells[4].innerText||'').trim(),
+      status:(cells[5].innerText||'').trim()
+    };
+  }
+
+  async function loadAssessmentIndex(){
+    if(Array.isArray(performanceCache)) return performanceCache;
+    if(performanceLoading) return performanceLoading;
+    if(typeof apiFetch!=='function')
+      throw new Error('ConnectSukuu authentication is not ready. Please refresh the page.');
+
+    performanceLoading=apiFetch('/api/assessments/assessments')
+      .then(async function(response){
+        var data=await response.json().catch(function(){return [];});
+        if(!response.ok)
+          throw new Error(data.error||data.message||('Unable to load assessments ('+response.status+').'));
+        var list=Array.isArray(data)?data:(Array.isArray(data.assessments)?data.assessments:[]);
+        performanceCache=list;
+        return list;
+      })
+      .finally(function(){performanceLoading=null;});
+
+    return performanceLoading;
+  }
+
+  function assessmentIdFromRow(button,list){
+    var d=rowDetails(button);
+    if(!d) return '';
+
+    var title=norm(d.title);
+    var className=norm(d.className);
+    var subject=norm(d.subject);
+    var teacher=norm(d.teacher);
+    var status=norm(d.status);
+    var scoreCount=norm(d.scoreText);
+
+    var candidates=list.filter(function(a){
+      var aTitle=norm(a.title);
+      var aClass=norm(a.schoolClass&&a.schoolClass.name);
+      var aSubject=norm(a.subject&&a.subject.name);
+      var aTeacher=norm([a.teacher&&a.teacher.firstName,a.teacher&&a.teacher.lastName].filter(Boolean).join(' '));
+      var aStatus=norm(a.status);
+
+      return aTitle===title &&
+        aClass===className &&
+        aSubject===subject &&
+        aTeacher===teacher &&
+        aStatus===status;
+    });
+
+    if(candidates.length===1) return candidates[0].id;
+
+    if(candidates.length>1){
+      var scored=candidates.find(function(a){
+        var count=a._count&&typeof a._count.scores==='number'?String(a._count.scores):'';
+        return count&&count===scoreCount;
+      });
+      if(scored) return scored.id;
+    }
+
+    var relaxed=list.filter(function(a){
+      return norm(a.title)===title &&
+        norm(a.schoolClass&&a.schoolClass.name)===className &&
+        norm(a.subject&&a.subject.name)===subject;
+    });
+
+    return relaxed.length===1?relaxed[0].id:'';
+  }
+
+  async function attachPerformanceIds(){
+    var buttons=Array.prototype.slice.call(document.querySelectorAll('button,a')).filter(function(button){
+      return norm(button.textContent)==='view performance';
+    });
+    if(!buttons.length) return;
+
+    try{
+      var list=await loadAssessmentIndex();
+      buttons.forEach(function(button){
+        var id=assessmentIdFromRow(button,list);
+        if(id) button.setAttribute('data-assessment-id',id);
+      });
+    }catch(error){
+      console.error('ConnectSukuu performance index:',error);
+    }
+  }
+
+  function extractId(button){
+    return button.getAttribute('data-assessment-id') ||
+      button.getAttribute('data-id') ||
+      (button.dataset&&button.dataset.assessmentId) ||
+      '';
+  }
+
+  async function openPerformance(button){
+    try{
+      var id=extractId(button);
+
+      if(!id){
+        var list=await loadAssessmentIndex();
+        id=assessmentIdFromRow(button,list);
+        if(id) button.setAttribute('data-assessment-id',id);
+      }
+
+      if(!id){
+        window.alert('ConnectSukuu could not match this assessment to its record. Please use Refresh list once and try again.');
+        return;
+      }
+
+      var response=await apiFetch('/api/assessments/assessments/'+encodeURIComponent(id)+'/performance');
+      var data=await response.json().catch(function(){return {};});
+      if(!response.ok)
+        throw new Error(data.error||data.message||('Unable to load performance ('+response.status+').'));
+
+      closeModal();
+
+      var summary=data.summary||{};
+      var scores=Array.isArray(data.scores)?data.scores:[];
+      var max=Number(data.maxScore||100);
+
+      var rows=scores.length?scores.map(function(item,index){
+        var st=item.student||{};
+        var student=[st.firstName,st.lastName].filter(Boolean).join(' ')||'Student';
+        return '<tr>'+
+          '<td style="padding:11px 12px;border-top:1px solid #eef2f7">'+(index+1)+'</td>'+
+          '<td style="padding:11px 12px;border-top:1px solid #eef2f7"><strong>'+esc(student)+'</strong><small style="display:block;color:#64748b">'+esc(st.admissionNumber||'')+'</small></td>'+
+          '<td style="padding:11px 12px;border-top:1px solid #eef2f7">'+Number(item.score||0).toFixed(2)+'</td>'+
+          '<td style="padding:11px 12px;border-top:1px solid #eef2f7">'+Number(item.percentage||0).toFixed(1)+'%</td>'+
+        '</tr>';
+      }).join(''):'<tr><td colspan="4" style="padding:24px;text-align:center;color:#64748b">No student scores have been recorded yet.</td></tr>';
+
+      var teacher=data.teacher?[data.teacher.firstName,data.teacher.lastName].filter(Boolean).join(' '):'—';
+
+      var modal=document.createElement('div');
+      modal.id='cs-final-performance-modal';
+      modal.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(15,23,42,.58);display:flex;align-items:center;justify-content:center;padding:22px;';
+      modal.innerHTML=
+        '<div style="width:min(980px,96vw);max-height:90vh;overflow:auto;background:#fff;border-radius:18px;box-shadow:0 28px 80px rgba(15,23,42,.28)">'+
+          '<div style="display:flex;justify-content:space-between;gap:16px;padding:20px 22px;border-bottom:1px solid #e5e7eb">'+
+            '<div><div style="font-size:11px;font-weight:800;letter-spacing:.08em;color:#2563eb">ASSESSMENT PERFORMANCE</div>'+
+            '<h2 style="margin:5px 0;font-size:23px;color:#172033">'+esc(data.title||'Assessment')+'</h2>'+
+            '<div style="color:#64748b;font-size:13px">'+esc(data.schoolClass?.name||'Class')+' · '+esc(data.subject?.name||'Subject')+' · '+esc(teacher)+' · '+esc(data.status||'')+'</div></div>'+
+            '<button type="button" id="cs-final-performance-close" style="border:0;background:#f1f5f9;border-radius:10px;width:36px;height:36px;font-size:20px;cursor:pointer">×</button>'+
+          '</div>'+
+          '<div style="padding:18px 22px">'+
+            '<div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:18px">'+
+              '<div style="padding:13px;border-radius:12px;background:#eff6ff"><small>Students scored</small><strong style="display:block;font-size:20px;color:#2563eb">'+Number(summary.studentsScored||0)+'</strong></div>'+
+              '<div style="padding:13px;border-radius:12px;background:#f5f3ff"><small>Average</small><strong style="display:block;font-size:20px;color:#7c3aed">'+Number(summary.average||0).toFixed(2)+'</strong></div>'+
+              '<div style="padding:13px;border-radius:12px;background:#ecfdf5"><small>Average %</small><strong style="display:block;font-size:20px;color:#059669">'+Number(summary.averagePercentage||0).toFixed(1)+'%</strong></div>'+
+              '<div style="padding:13px;border-radius:12px;background:#fff7ed"><small>Highest</small><strong style="display:block;font-size:20px;color:#ea580c">'+Number(summary.highest||0).toFixed(2)+'</strong></div>'+
+              '<div style="padding:13px;border-radius:12px;background:#fef2f2"><small>Lowest</small><strong style="display:block;font-size:20px;color:#dc2626">'+Number(summary.lowest||0).toFixed(2)+'</strong></div>'+
+            '</div>'+
+            '<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;color:#475569;font-size:13px">'+
+              '<span><strong>Maximum:</strong> '+max.toFixed(2)+'</span>'+
+              '<span><strong>Weight:</strong> '+Number(data.weight||0).toFixed(2)+'%</span>'+
+              '<span><strong>Type:</strong> '+esc(data.assessmentType||'—')+'</span>'+
+            '</div>'+
+            '<div style="overflow:auto;border:1px solid #e2e8f0;border-radius:14px">'+
+              '<table style="width:100%;border-collapse:collapse;font-size:13px">'+
+                '<thead><tr style="background:#f8fafc;text-align:left"><th style="padding:11px 12px">#</th><th style="padding:11px 12px">Student</th><th style="padding:11px 12px">Score</th><th style="padding:11px 12px">Percentage</th></tr></thead>'+
+                '<tbody>'+rows+'</tbody>'+
+              '</table>'+
+            '</div>'+
+          '</div>'+
+        '</div>';
+
+      document.body.appendChild(modal);
+      document.body.style.overflow='hidden';
+      document.getElementById('cs-final-performance-close').onclick=closeModal;
+      modal.addEventListener('click',function(e){if(e.target===modal)closeModal();});
+    }catch(error){
+      console.error('ConnectSukuu assessment performance:',error);
+      window.alert(error.message||'Unable to load assessment performance.');
+    }
+  }
+
+  attachPerformanceIds();
+
+  var observer=new MutationObserver(function(){
+    clearTimeout(window.__csPerformanceIdTimer);
+    window.__csPerformanceIdTimer=setTimeout(attachPerformanceIds,120);
+  });
+  observer.observe(document.body,{childList:true,subtree:true});
+
+  document.addEventListener('click',function(event){
+    var button=event.target&&event.target.closest?event.target.closest('button,a'):null;
+    if(!button||norm(button.textContent)!=='view performance')return;
+
+    var user=null;
+    try{user=typeof requireAuthOrRedirect==='function'?requireAuthOrRedirect():null;}catch(e){}
+    if(!user||(user.role!=='HEAD_TEACHER'&&user.role!=='HEAD_OF_ACADEMICS'))return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    openPerformance(button);
+  },true);
+})();
+</script>
+
+
+
+<script id="cs-hoa-report-review-workflow-parity">
+(function(){
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fullName=p=>[p&&p.firstName,p&&p.lastName].filter(Boolean).join(' ')||(p&&p.name)||'—';
+  async function request(path,opts){
+    if(typeof apiFetch!=='function')throw new Error('ConnectSukuu API helper is unavailable. Refresh and sign in again.');
+    const response=await apiFetch(path,opts||{});if(!response)throw new Error('Session expired. Sign in again.');
+    const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||data.message||('Request failed ('+response.status+')'));return data;
+  }
+  function notice(msg){const el=$('toast');if(el){el.textContent=msg;el.classList.add('show');clearTimeout(window.__csHoaReviewToast);window.__csHoaReviewToast=setTimeout(()=>el.classList.remove('show'),4000)}else window.alert(msg)}
+  function statusBadge(s){return '<span class="badge '+esc(s||'DRAFT')+'">'+esc(String(s||'DRAFT').replaceAll('_',' '))+'</span>'}
+  function metrics(r){const m=r.calculatedMetrics||{};return '<div class="detail-grid">'+[
+    ['Admission',r.student&&r.student.admissionNumber||'—'],['Status',statusBadge(r.status)],['Total score',(m.totalScore==null?'—':Number(m.totalScore).toFixed(2))+' / '+(m.totalMaximum==null?'—':Number(m.totalMaximum).toFixed(2))],['Overall average',m.average==null?'—':Number(m.average).toFixed(2)+'%'],['Position',m.position==null?'—':String(m.position)+(m.totalStudents?' / '+m.totalStudents:'')],['Subjects completed',(m.subjectsCompleted||0)+' / '+(m.subjectsTotal||0)]
+  ].map(x=>'<div class="detail"><small>'+x[0]+'</small><strong>'+x[1]+'</strong></div>').join('')+'</div>'}
+  function renderSubjects(r){const subjects=Array.isArray(r.subjects)?r.subjects:[];return '<div class="report-mt-summary"><div class="report-mt-chip report-mt-blue"><small>Report structure</small><strong>One consolidated report</strong></div><div class="report-mt-chip report-mt-purple"><small>Subjects</small><strong>'+subjects.length+' subject'+(subjects.length===1?'':'s')+'</strong></div><div class="report-mt-chip report-mt-amber"><small>Assessment detail</small><strong>Expandable by subject</strong></div></div><div class="report-mt-subjects">'+subjects.map((s,i)=>{
+    const breakdown=Array.isArray(s.assessmentBreakdown)?s.assessmentBreakdown:[];
+    const score=s.totalScore==null?'—':s.totalScore;const max=s.maxScore==null?100:s.maxScore;
+    const pct=s.percentage==null?(Number(max)?Number(s.totalScore||0)/Number(max)*100:null):Number(s.percentage);
+    const grade=s.grade||'—';const teacher=fullName(s.teacher);
+    const locked=breakdown.some(a=>['SUBMITTED','CLOSED'].includes(String(a.status||'').toUpperCase()));
+    const statusText=locked?'Generated & locked':(grade!=='—'?'Result recorded':'Result pending');
+    const statusClass=locked?'report-mt-pending':(grade!=='—'?'report-mt-owner':'report-mt-pending');
+    const remark=s.teacherRemark??s.remark??'';
+    return '<article class="report-mt-subject"><div class="report-mt-subject-head"><div class="report-mt-subject-title"><span class="report-mt-icon">'+(i+1)+'</span><div><strong>'+esc(s.subject&&s.subject.name||s.subjectName||'Subject')+'</strong><small>Responsible teacher: <strong>'+esc(teacher)+'</strong></small></div></div><span class="'+statusClass+'">'+statusText+'</span></div><div class="report-mt-score-grid">'+[['Total score',score],['Maximum',max],['Percentage',pct==null?'—':pct.toFixed(1)+'%'],['Grade',grade]].map(x=>'<div class="report-mt-score-card"><small>'+x[0]+'</small><strong>'+esc(x[1])+'</strong></div>').join('')+'</div>'+(remark?'<div class="report-mt-remark"><label>Subject teacher remark</label><div class="notice">'+esc(remark)+'</div></div>':'')+'<details class="report-mt-breakdown"><summary>Assessment breakdown · '+breakdown.length+' item'+(breakdown.length===1?'':'s')+'</summary><div class="report-mt-breakdown-body">'+(breakdown.length?breakdown.map(a=>'<div class="report-mt-assessment"><div><strong>'+esc(a.title||'Assessment')+'</strong><small>'+esc(a.type||a.assessmentType||'Assessment')+'</small></div><div>'+esc(a.score==null?'—':a.score)+' / '+esc(a.maxScore==null?'—':a.maxScore)+'</div><div>'+esc(a.percentage==null?'—':Number(a.percentage).toFixed(1)+'%')+'</div><div>'+esc(a.status||'')+'</div></div>').join(''):'<div class="report-mt-empty">No submitted or closed assessment scores are available for this subject yet.</div>')+'</div></details></article>';
+  }).join('')+'</div>'+(subjects.length?'':'<div class="empty"><strong>No subject results found</strong>Check that subject results have been recorded.</div>')}
+  function actionButtons(r){const actions=[];const status=String(r.status||'').toUpperCase();
+    if(status==='SUBMITTED')actions.push('<button type="button" class="btn btn-secondary" id="csHoaSaveAcademicRemark">Save academic remark</button>','<button type="button" class="btn btn-danger" id="csHoaReturnReport">Return for correction</button>','<button type="button" class="btn btn-success" id="csHoaEndorseReport">Endorse for Head Teacher</button>');
+    return actions.join('');
+  }
+  async function openReport(id){
+    try{
+      const r=await request('/api/assessments/report-cards/'+encodeURIComponent(id));
+      $('reportTitle').textContent='Report card — '+fullName(r.student);
+      $('reportMeta').textContent=[r.schoolClass&&r.schoolClass.name,r.term&&r.term.name,r.status].filter(Boolean).join(' · ');
+      $('reportDetails').innerHTML=metrics(r);
+      $('reportSubjects').innerHTML=renderSubjects(r);
+      $('teacherRemark').value=r.teacherRemark||'';$('academicRemark').value=r.academicRemark||'';$('finalRemark').value=r.finalRemark||'';$('returnReason').value=r.returnReason||'';
+      $('teacherRemark').readOnly=true;$('finalRemark').readOnly=true;$('academicRemark').readOnly=String(r.status).toUpperCase()!=='SUBMITTED';
+      $('returnReasonWrap').classList.toggle('hidden',String(r.status).toUpperCase()!=='SUBMITTED');
+      $('reportActions').innerHTML=actionButtons(r)+'<button type="button" class="btn btn-secondary" data-close="reportModal">Close</button>';
+      $('reportModal').classList.add('open');
+      $('reportActions').querySelector('[data-close="reportModal"]')?.addEventListener('click',()=>$('reportModal').classList.remove('open'));
+      $('csHoaSaveAcademicRemark')?.addEventListener('click',async()=>{try{await request('/api/assessments/report-cards/'+encodeURIComponent(id),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({academicRemark:$('academicRemark').value})});notice('Academic remark saved.');await openReport(id)}catch(e){notice(e.message)}});
+      $('csHoaReturnReport')?.addEventListener('click',async()=>{const reason=$('returnReason').value.trim();if(!reason){notice('Enter a return reason before returning this report.');return}if(!confirm('Return this report card to the teacher for correction?'))return;try{await request('/api/assessments/report-cards/'+encodeURIComponent(id)+'/decision',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'RETURN',reason})});$('reportModal').classList.remove('open');notice('Report returned to the teacher for correction.');$('refreshBtn')?.click()}catch(e){notice(e.message)}});
+      $('csHoaEndorseReport')?.addEventListener('click',async()=>{if(!confirm('Endorse this report card for Head Teacher review?'))return;try{await request('/api/assessments/report-cards/'+encodeURIComponent(id),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({academicRemark:$('academicRemark').value})});await request('/api/assessments/report-cards/'+encodeURIComponent(id)+'/decision',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'ENDORSE'})});$('reportModal').classList.remove('open');notice('Report endorsed for Head Teacher review.');$('refreshBtn')?.click()}catch(e){notice(e.message)}});
+    }catch(e){notice(e.message)}
+  }
+  document.addEventListener('click',e=>{const b=e.target.closest('[data-hoa-view-report]');if(b){e.preventDefault();e.stopImmediatePropagation();openReport(b.getAttribute('data-hoa-view-report'))}},true);
+})();
+</script>
+
+
+<style id="connectsukuu-report-card-modal-parity-final">
+#reportModal{align-items:center!important;justify-content:center!important;padding:16px!important;box-sizing:border-box!important}
+#reportModal>.modal{width:min(760px,96vw)!important;max-width:760px!important;max-height:calc(100vh - 32px)!important;height:auto!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;box-sizing:border-box!important}
+#reportModal>.modal>.modal-head{position:relative!important;top:auto!important;z-index:2!important;flex:0 0 auto!important;display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:14px!important;padding:18px 20px!important;background:#fff!important;border-bottom:1px solid #e5eaf2!important}
+#reportModal .modal-head>div{min-width:0!important;flex:1 1 auto!important}
+#reportModal #reportTitle{overflow-wrap:anywhere!important;line-height:1.25!important}
+#reportModal #reportMeta{line-height:1.45!important;overflow-wrap:anywhere!important}
+#reportModal .modal-head .close{flex:0 0 32px!important;cursor:pointer!important;position:relative!important;z-index:3!important}
+#reportModal>.modal>.modal-body{min-height:0!important;flex:1 1 auto!important;overflow-y:auto!important;overflow-x:hidden!important;padding:18px 20px!important;overscroll-behavior:contain!important}
+#reportModal>.modal>.modal-foot{flex:0 0 auto!important;display:flex!important;flex-wrap:wrap!important;gap:8px!important;justify-content:flex-end!important;background:#fff!important}
+#reportModal #reportDetails .detail-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+#reportModal #reportDetails .detail{min-width:0!important;overflow-wrap:anywhere!important}
+#reportModal #reportSubjects .report-mt-summary{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+#reportModal #reportSubjects .report-mt-subject-head{align-items:center!important}
+#reportModal .report-mt-subject-head>span{flex:0 0 auto!important}
+#reportModal textarea{width:100%!important;box-sizing:border-box!important;min-height:72px!important}
+/* HoA may see teacher and academic feedback, never the Head Teacher's final remark. */
+#reportModal #finalRemark{display:none!important}
+@media(max-width:650px){#reportModal{padding:8px!important}#reportModal>.modal{width:96vw!important;max-height:calc(100vh - 16px)!important}#reportModal #reportDetails .detail-grid,#reportModal #reportSubjects .report-mt-summary{grid-template-columns:repeat(2,minmax(0,1fr))!important}#reportModal>.modal>.modal-body{padding:14px!important}}
+@media(max-width:420px){#reportModal #reportDetails .detail-grid,#reportModal #reportSubjects .report-mt-summary{grid-template-columns:1fr!important}
+</style>
+<script id="connectsukuu-report-card-modal-close-permissions">
+(function(){
+ const modal=document.getElementById('reportModal');if(!modal)return;
+ const close=()=>{modal.classList.remove('open');document.body.style.overflow='';};
+ modal.querySelectorAll('[data-close="reportModal"]').forEach(b=>{b.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();close();},true);});
+ modal.addEventListener('click',function(e){if(e.target===modal)close();});
+ const observer=new MutationObserver(()=>{if(modal.classList.contains('open')){const f=document.getElementById('finalRemark');if(f){f.value='';const field=f.closest('.field');if(field)field.hidden=true;}const head=modal.querySelector('.modal-head');if(head)head.style.display='flex';}});
+ observer.observe(modal,{attributes:true,attributeFilter:['class']});
+})();
+</script>
+</body>
+</html>
+
+
+<style id="connectsukuu-report-card-header-outside-close-fix">
+/* Report-card modal: keep student identity and close control visible above the scrollable body. */
+#reportModal{position:fixed!important;inset:0!important;z-index:100000!important;display:none;align-items:center!important;justify-content:center!important;padding:16px!important;overflow:auto!important;box-sizing:border-box!important}
+#reportModal.open{display:flex!important}
+#reportModal>.modal{position:relative!important;margin:auto!important;max-height:calc(100vh - 32px)!important;min-height:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}
+#reportModal>.modal>.modal-head{display:flex!important;visibility:visible!important;opacity:1!important;position:relative!important;inset:auto!important;transform:none!important;flex:0 0 auto!important;min-height:72px!important;align-items:center!important;justify-content:space-between!important;gap:14px!important;overflow:visible!important;padding:16px 20px!important;background:#fff!important;border-bottom:1px solid #e5eaf2!important}
+#reportModal .modal-head>div{display:block!important;visibility:visible!important;opacity:1!important;min-width:0!important;flex:1 1 auto!important}
+#reportModal #reportTitle{display:block!important;visibility:visible!important;opacity:1!important;margin:0 0 4px!important;color:#172033!important;font-size:18px!important;line-height:1.3!important;overflow-wrap:anywhere!important}
+#reportModal #reportMeta{display:block!important;visibility:visible!important;opacity:1!important;margin:0!important;color:#64748b!important;font-size:12px!important;line-height:1.45!important;overflow-wrap:anywhere!important}
+#reportModal .modal-head button.close{display:inline-flex!important;visibility:visible!important;opacity:1!important;align-items:center!important;justify-content:center!important;flex:0 0 36px!important;width:36px!important;height:36px!important;min-width:36px!important;padding:0!important;border:1px solid #e2e8f0!important;border-radius:10px!important;background:#f8fafc!important;color:#172033!important;font-size:24px!important;line-height:1!important;cursor:pointer!important;position:relative!important;z-index:10!important}
+#reportModal>.modal>.modal-body{min-height:0!important;flex:1 1 auto!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important}
+#reportModal>.modal>.modal-foot{flex:0 0 auto!important}
+@media(max-width:650px){#reportModal{padding:8px!important}#reportModal>.modal{max-height:calc(100vh - 16px)!important}#reportModal>.modal>.modal-head{padding:13px 14px!important}}
+</style>
+<script id="connectsukuu-report-card-outside-close-runtime">
+(function(){
+  'use strict';
+  function bindReportModal(){
+    var modal=document.getElementById('reportModal'); if(!modal || modal.dataset.outsideCloseBound==='1') return;
+    modal.dataset.outsideCloseBound='1';
+    function close(){modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');}
+    modal.addEventListener('click',function(e){if(e.target===modal) close();});
+    modal.querySelectorAll('[data-close="reportModal"]').forEach(function(btn){btn.addEventListener('click',function(e){e.preventDefault();close();});});
+    modal.setAttribute('aria-label','Student report card dialog');
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bindReportModal); else bindReportModal();
+  new MutationObserver(bindReportModal).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+

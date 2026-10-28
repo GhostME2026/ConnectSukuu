@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activities</title>
+<link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f7fb;color:#172033}
+button,input,select{font:inherit}button{cursor:pointer}
+.app{min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:255px;background:#0f172a;color:#cbd5e1;border-right:1px solid #1e293b;padding:20px 12px;display:flex;flex-direction:column;z-index:30}
+.brand{display:flex;align-items:center;gap:10px;padding:8px 10px 25px;color:#fff;font-size:20px;font-weight:850;letter-spacing:-.02em}
+.brand-mark{width:32px;height:32px;border-radius:9px;background:#2563eb;display:grid;place-items:center;color:#fff;font-size:15px;box-shadow:0 7px 16px #2563eb33}
+.nav-section{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#64748b;font-weight:850;padding:14px 10px 7px}
+.nav{display:flex;flex-direction:column;gap:4px}.nav a{display:flex;align-items:center;gap:10px;color:#aeb9cb;text-decoration:none;font-size:13px;font-weight:700;padding:10px 11px;border-radius:9px;transition:.16s}
+.nav a:hover{background:#17233a;color:#fff}.nav a.active{background:#2563eb;color:#fff;box-shadow:0 7px 18px #2563eb33}.nav a svg{width:16px;height:16px;flex:none;opacity:.9}.nav-hidden{display:none!important}
+.sidebar-bottom{margin-top:auto;padding-top:15px;border-top:1px solid #1e293b}.logout{width:100%;border:0;background:#1b2940;color:#f8fafc;padding:12px;border-radius:10px;font-weight:800;transition:.16s}.logout:hover{background:#263754;transform:translateY(-1px)}
+.main{margin-left:255px;width:calc(100% - 250px);min-width:0}
+.topbar{height:54px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:10}
+.topbar-title{font-size:15px;font-weight:750}
+.user{display:flex;align-items:center;gap:9px;color:#667085;font-size:13px}
+.avatar{width:32px;height:32px;border-radius:50%;background:#dbeafe;color:#1d4ed8;display:grid;place-items:center;font-weight:800}
+.content{padding:32px;max-width:1450px;margin:0 auto}
+.heading{display:flex;align-items:flex-start;justify-content:space-between;gap:25px;margin-bottom:24px}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);margin-bottom:7px}
+
+.hero-actions{display:flex;gap:8px;align-items:center}.btn{border:1px solid #d8dee9;background:#fff;color:#344054;padding:10px 13px;border-radius:9px;font-weight:800;font-size:12px;transition:.16s}.btn:hover{transform:translateY(-1px);box-shadow:0 5px 13px #1018280d}.btn-primary{background:#2563eb;color:#fff;border-color:#2563eb}.btn-primary:hover{background:#1d4ed8}.btn-danger{color:#b42318;border-color:#fecdca;background:#fff}.hidden{display:none!important}
+.card{background:#fff;border:1px solid #e3e8f0;border-radius:14px;box-shadow:0 2px 7px #10182806;overflow:hidden}
+.filters{display:grid;grid-template-columns:1.05fr 1.05fr 1fr 1fr;gap:12px;padding:16px 18px;border-bottom:1px solid #edf0f5}.field label{display:block;font-size:11px;color:#475467;font-weight:850;margin-bottom:6px}.field select,.field input{width:100%;height:42px;border:1px solid #d6ddea;border-radius:9px;background:#fff;padding:0 11px;color:#172033;outline:none}.field select:focus,.field input:focus,.search:focus{border-color:#2563eb;box-shadow:0 0 0 3px #2563eb14}
+.info-bar{margin:14px 0;background:#eff6ff;border:1px solid #bfdbfe;border-radius:11px;padding:12px 14px;display:flex;justify-content:space-between;gap:15px;align-items:center;color:#344054;font-size:12px;line-height:1.5}.info-bar strong{color:#1d4ed8}
+.content-grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:start}.board-card{min-width:0}.board-head{padding:16px 18px 12px;border-bottom:1px solid #edf0f5;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.board-head h2{margin:0;font-size:17px}.board-head p{margin:4px 0 0;color:#667085;font-size:11px;line-height:1.5}.count{font-size:11px;color:#667085;font-weight:750;white-space:nowrap}
+.toolbar{padding:11px 18px;border-bottom:1px solid #edf0f5;display:flex;align-items:center;justify-content:space-between;gap:12px}.search{width:min(380px,100%);height:38px;border:1px solid #d6ddea;border-radius:9px;padding:0 11px;outline:none;font-size:12px}.hint{font-size:10px;color:#667085}
+.legend{display:flex;flex-wrap:wrap;gap:8px;padding:10px 18px;border-bottom:1px solid #edf0f5;background:#fff}.legend-item{display:inline-flex;align-items:center;gap:6px;font-size:10px;color:#475467;font-weight:800}.legend-dot{width:9px;height:9px;border-radius:3px}
+.canvas-tools{padding:11px 18px;border-bottom:1px solid #edf0f5;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:#fbfcfe}.canvas-controls{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.mini{display:flex;align-items:center;gap:6px;font-size:10px;color:#667085;font-weight:850}.mini select,.mini input{height:36px;width:auto;padding:0 9px;font-size:11px}.canvas-note{font-size:10px;color:#667085}
+.week-wrap{overflow:auto;max-height:none}.week{min-width:1370px;position:relative;display:grid;grid-template-columns:72px repeat(7,minmax(180px,1fr));background:#fff}
+.time-ruler{position:relative;background:#fafbfc;border-right:1px solid #dfe5ee}.time-ruler .ruler-head{height:58px;border-bottom:1px solid #dfe5ee;background:#f8fafc}.time-label{position:absolute;right:8px;transform:translateY(-50%);font-size:11px;color:#667085;font-weight:850;white-space:nowrap}
+.day-column{position:relative;border-right:1px solid #dfe5ee;background:#fff}.day-head{height:58px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;background:#f8fafc;border-bottom:1px solid #dfe5ee;position:sticky;top:0;z-index:5;font-size:13px;font-weight:900}.day-head small{font-size:9px;color:#98a2b3}.day-body{position:relative;cursor:crosshair;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(50% - 1px),#eef1f5 50%,transparent calc(50% + 1px))}
+.hour-line{position:absolute;left:0;right:0;border-top:1px solid #e1e6ee;pointer-events:none}.minor-line{position:absolute;left:0;right:0;border-top:1px dashed #f0f2f6;pointer-events:none}.day-body:hover{background-color:#fbfdff}
+.lesson{position:absolute;left:7px;right:7px;border:1px solid var(--c-border);border-left:5px solid var(--c-accent);background:var(--c-bg);border-radius:10px;padding:9px 10px 8px;text-align:left;overflow:hidden;z-index:3;box-shadow:0 4px 10px #0f172a0c;transition:.16s}.lesson:hover{z-index:8;box-shadow:0 10px 24px #0f172a18;transform:translateY(-1px)}.lesson strong{display:block;font-size:13px;color:var(--c-text);font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lesson span{display:block;margin-top:4px;font-size:10px;line-height:1.4;color:#475467;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.period{position:absolute;left:7px;right:7px;border:1px dashed #94a3b8;background:#f8fafc;border-radius:10px;padding:9px 10px;text-align:left;overflow:hidden;z-index:2;box-shadow:0 2px 7px #0f172a08;transition:.16s}.period:hover{background:#f1f5f9;border-color:#64748b;transform:translateY(-1px);z-index:7}.period strong{display:block;font-size:12px;color:#475467;font-weight:900}.period span{display:block;margin-top:4px;font-size:10px;color:#64748b}
+.empty-board{min-height:720px;display:flex;align-items:center;justify-content:center;text-align:center;padding:40px}.empty-board-inner{max-width:520px}.empty-icon{width:50px;height:50px;border-radius:14px;background:#eff6ff;color:#2563eb;display:grid;place-items:center;margin:0 auto 13px;font-size:23px}.empty-board h3{margin:0;font-size:17px}.empty-board p{margin:7px 0 0;color:#667085;font-size:12px;line-height:1.6}
+.side{overflow:hidden}.side-section{padding:16px}.side-section+.side-section{border-top:1px solid #edf0f5}.side-title{font-size:15px;font-weight:900;margin:0}.side-copy{font-size:11px;color:#667085;line-height:1.55;margin:5px 0 12px}.subject-list{display:flex;flex-direction:column;gap:8px;max-height:180px;overflow:auto;padding-right:2px}.subject-item{border:1px solid #e7ebf2;border-radius:10px;padding:10px;background:#fbfcfe;display:flex;align-items:center;justify-content:space-between;gap:8px}.subject-main{min-width:0}.subject-name{font-size:12px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.subject-code{font-size:9px;color:#98a2b3;margin-top:2px}.subject-status{font-size:8px;font-weight:900;border-radius:999px;padding:4px 7px;background:#ecfdf3;color:#067647;white-space:nowrap}.subject-status.pending{background:#fff7e6;color:#b54708}
+.quick-note{font-size:11px;color:#667085;line-height:1.55;margin:5px 0 12px}.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.day-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.day-chip input{position:absolute;opacity:0;pointer-events:none}.day-chip label{display:grid;place-items:center;height:34px;border:1px solid #d6ddea;border-radius:8px;background:#fff;font-size:10px;font-weight:900;color:#475467;cursor:pointer;transition:.14s}.day-chip input:checked+label{border-color:#2563eb;background:#eff6ff;color:#1d4ed8;box-shadow:0 0 0 2px #2563eb10 inset}.day-presets{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}.day-presets button{border:1px solid #d6ddea;background:#fff;border-radius:7px;padding:6px 8px;font-size:9px;font-weight:850;color:#475467}.day-presets button:hover{border-color:#2563eb;color:#1d4ed8}.selected-days-note{font-size:9px;color:#667085;margin-top:6px}
+.toast{position:fixed;right:24px;bottom:24px;z-index:200;max-width:440px;padding:13px 16px;border-radius:10px;background:#172033;color:#fff;font-size:12px;font-weight:800;line-height:1.45;box-shadow:0 14px 35px #0f172a33;opacity:0;transform:translateY(10px);pointer-events:none;transition:.18s}.toast.show{opacity:1;transform:translateY(0)}
+.message{display:none;margin-top:10px;border-radius:8px;padding:9px;font-size:10px;line-height:1.45}.message.show{display:block}.message.success{background:#ecfdf3;color:#067647}.message.error{background:#fef3f2;color:#b42318}
+.modal{position:fixed;inset:0;background:#0f172a88;display:none;align-items:center;justify-content:center;padding:20px;z-index:80;backdrop-filter:blur(2px)}.modal.show{display:flex}.modal-box{width:min(760px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:15px;box-shadow:0 25px 70px #0f172a44}.modal-head{display:flex;justify-content:space-between;gap:12px;padding:18px 20px;border-bottom:1px solid #edf0f5}.modal-head h3{margin:3px 0 0;font-size:18px}.modal-head p{margin:5px 0 0;color:#667085;font-size:11px}.kicker{font-size:9px;color:#2563eb;text-transform:uppercase;letter-spacing:.1em;font-weight:900}.close{border:0;background:#f2f4f7;border-radius:50%;width:30px;height:30px;font-size:20px;color:#475467}.modal-body{padding:18px 20px}.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.full{grid-column:1/-1}.modal-actions{padding:13px 20px;border-top:1px solid #edf0f5;display:flex;justify-content:flex-end;gap:8px}.split-actions{justify-content:space-between}.right{display:flex;gap:8px}.preview{margin-top:14px;border:1px solid #e4e7ec;border-radius:10px;overflow:hidden}.preview-summary{padding:10px 12px;background:#f8fafc;display:flex;justify-content:space-between;gap:10px;font-size:11px}.preview-row{display:flex;justify-content:space-between;gap:10px;padding:9px 12px;border-top:1px solid #edf0f5;font-size:10px}.preview-row strong{display:block}.preview-row span{display:block;margin-top:2px;color:#667085}.ready{color:#067647!important;font-weight:850}.unmatched{color:#b54708!important;font-weight:850}
+.copy-modal-box{width:min(900px,100%)}
+.copy-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.copy-side{border:1px solid #e4e7ec;border-radius:12px;background:#fbfcfe;padding:14px}
+.copy-side-head{display:flex;align-items:center;gap:9px;margin-bottom:13px;padding-bottom:10px;border-bottom:1px solid #edf0f5}
+.copy-side-head strong{display:block;font-size:13px;color:#172033}
+.copy-side-head small{display:block;margin-top:2px;font-size:10px;color:#667085}
+.copy-step{width:25px;height:25px;border-radius:8px;background:#eff6ff;color:#2563eb;display:grid;place-items:center;font-size:11px;font-weight:900;flex:none}
+.overwrite-option{display:flex;gap:9px;align-items:flex-start;margin-top:14px;padding:11px 12px;border:1px solid #f3d4a8;border-radius:10px;background:#fffbeb;font-size:11px;color:#475467}
+.overwrite-option input{width:auto;margin-top:2px;flex:none}
+.overwrite-option strong{display:block;color:#92400e}
+.overwrite-option small{display:block;margin-top:3px;line-height:1.45;color:#667085}
+@media(max-width:650px){.copy-columns{grid-template-columns:1fr}}
+@media(max-width:1100px){.content-grid{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr}.side-section{min-width:0}.side-section+.side-section{border-top:0;border-left:1px solid #edf0f5}}
+@media(max-width:800px){.sidebar{width:190px}.main{margin-left:190px;padding:20px 16px}.filters{grid-template-columns:1fr 1fr}.side{grid-template-columns:1fr}.side-section+.side-section{border-left:0;border-top:1px solid #edf0f5}.hero-actions{display:none}}
+@media(max-width:560px){.sidebar{position:static;width:100%;min-height:auto}.nav{display:none}.sidebar-bottom{margin-top:8px}.main{margin-left:0}.filters{grid-template-columns:1fr}.modal-grid{grid-template-columns:1fr}.full{grid-column:auto}.day-picker{grid-template-columns:repeat(4,1fr)}}
+@media print{body{background:#fff}.sidebar,.hero-actions,.filters,.info-bar,.side,.toolbar,.canvas-tools{display:none!important}.main{margin:0;padding:0}.card{border:0;box-shadow:none}.week-wrap{overflow:visible}.week{min-width:0}.lesson strong{font-size:12px}.lesson span{font-size:9px}}
+</style>
+
+
+
+<style id="connectsukuu-hoa-shell-final">
+:root{--hoa-sidebar:255px;--hoa-header:58px}
+html,body{margin:0!important;width:100%!important;min-width:0!important;background:#f6f8fc!important;color:#172033!important}
+body{overflow:hidden!important}
+.cs-hoa-final-sidebar{position:fixed!important;left:0!important;top:0!important;bottom:0!important;width:var(--hoa-sidebar)!important;height:100vh!important;z-index:5000!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;padding:16px 12px!important;background:#0f172a!important;box-sizing:border-box!important;overflow:hidden!important}
+.cs-hoa-final-brand{height:40px!important;display:flex!important;align-items:center!important;gap:10px!important;padding:0 10px!important;margin:0 0 22px!important;color:#fff!important;text-decoration:none!important}
+.cs-hoa-final-brand img{width:34px!important;height:34px!important}
+.cs-hoa-final-brand>span{font-size:20px!important;font-weight:800!important}
+.cs-hoa-final-brand>span>span{color:#60a5fa!important}
+.cs-hoa-final-nav{display:flex!important;flex-direction:column!important;gap:3px!important;overflow-y:auto!important}
+.cs-hoa-final-section{margin:12px 8px 6px!important;color:#64748b!important;font-size:10px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+.cs-hoa-final-nav a{display:flex!important;align-items:center!important;gap:10px!important;width:100%!important;min-height:38px!important;padding:9px 12px!important;border-radius:8px!important;color:#94a3b8!important;text-decoration:none!important;font-size:13px!important;font-weight:650!important;box-sizing:border-box!important}
+.cs-hoa-final-nav a:hover{color:#fff!important;background:#17233a!important}.cs-hoa-final-nav a.active{
+  background: rgba(37, 99, 235, .22) !important;
+  color: #fff !important;
+  box-shadow: inset 3px 0 0 #3b82f6 !important;
+}
+.cs-hoa-final-icon{width:17px!important;height:17px!important;display:grid!important;place-items:center!important;flex:0 0 17px!important}
+.cs-hoa-final-icon svg{width:17px!important;height:17px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+.cs-hoa-final-logout button{width:100%!important;min-height:38px!important;border:1px solid #263754!important;background:#16243b!important;color:#f8fafc!important;border-radius:8px!important;font-weight:700!important;cursor:pointer!important}
+.cs-hoa-final-topbar{position:sticky!important;top:0!important;left:auto!important;right:auto!important;z-index:4000!important;height:var(--hoa-header)!important;width:100%!important;margin-left:0!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:0 18px!important;background:#fff!important;border-bottom:1px solid #e5e7eb!important;box-sizing:border-box!important}
+.cs-hoa-final-title{font-size:15px!important;font-weight:750!important}
+.cs-hoa-final-profile{display:flex!important;align-items:center!important;gap:9px!important;margin-left:auto!important}
+.cs-hoa-final-avatar{width:34px!important;height:34px!important;border-radius:9px!important;background:#172033!important;color:#fff!important;display:grid!important;place-items:center!important;font-weight:800!important}
+.cs-hoa-final-profile-copy{display:flex!important;flex-direction:column!important;line-height:1.15!important}
+.cs-hoa-final-profile-copy span:first-child{font-size:12px!important;font-weight:750!important;color:#172033!important}
+.cs-hoa-final-profile-copy span:last-child{font-size:10px!important;color:#64748b!important}
+.layout,.app-shell,.app{display:block!important}
+.app-main,.main,.layout>.main,.app>.main,.app-shell>.app-main,.app-shell>.app-content{margin-left:var(--hoa-sidebar)!important;width:calc(100% - var(--hoa-sidebar))!important;min-width:0!important;max-width:none!important;box-sizing:border-box!important;height:calc(100vh - var(--hoa-header))!important;overflow:auto!important}
+.app-main>.app-content,.main>.content,.main>section.content,.app-content,.content,.main-content,section.content{width:100%!important;max-width:none!important;box-sizing:border-box!important}
+@media(max-width:820px){
+body{overflow:auto!important}
+.cs-hoa-final-sidebar{position:relative!important;width:100%!important;height:auto!important}
+.cs-hoa-final-topbar{width:100%!important;margin-left:0!important}
+.app-main,.main,.layout>.main,.app>.main,.app-shell>.app-main,.app-shell>.app-content{margin-left:0!important;width:100%!important;height:auto!important;overflow:visible!important}
+}
+</style>
+
+<style id="connectsukuu-hoa-prebaseline-visual-lock">
+/* HoA pre-baseline visual lock: do not rebuild the shell; only restore the agreed dimensions/state. */
+@media (min-width:821px){
+  :root{--hoa-sidebar:255px!important;--hoa-side:255px!important;}
+  body .cs-hoa-final-sidebar{width:255px!important;min-width:255px!important;}
+  body .app-main,body .main,body .layout>.main,body .app>.main,body .app-shell>.app-main,body .app-shell>.app-content{margin-left:255px!important;width:calc(100% - 255px)!important;}
+</style>
+
+
+<style id="connectsukuu-hoa-freeze-visual-polish">
+/* HoA freeze visual polish — shared shell only; page functionality untouched. */
+.cs-hoa-final-profile{padding:5px 9px 5px 7px!important;border:1px solid #e4e9f1!important;border-radius:12px!important;background:#fff!important;box-shadow:0 4px 14px rgba(15,23,42,.04)!important;box-sizing:border-box!important;}
+.cs-hoa-final-profile-copy{align-items:flex-start!important;min-width:0!important;}
+.cs-hoa-final-profile-copy span:first-child{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:220px!important;}
+.cs-hoa-final-profile-copy span:last-child{margin-top:3px!important;font-weight:650!important;}
+.app-main>.app-content,.main>.content,.main>section.content,.app-content,.content,.main-content,section.content{padding:28px 28px 44px!important;}
+body.hoa-dashboard .app-content{padding:28px 26px 44px!important;}
+@media(max-width:820px){.app-main>.app-content,.main>.content,.main>section.content,.app-content,.content,.main-content,section.content{padding:22px 18px 36px!important;}}
+</style>
+
+<style id="connectsukuu-hoa-stabilization-polish">
+/* Shared HoA presentation lock: the body scope class is required by the existing HoA styles. */
+html,body{width:100%;max-width:100%;min-width:0;overflow-x:hidden;box-sizing:border-box}
+*,*:before,*:after{box-sizing:border-box}
+body.hoa-dashboard{background:#f4f7fb!important;color:#172033!important}
+body.hoa-dashboard .cs-hoa-final-sidebar{position:fixed!important;inset:0 auto 0 0!important;height:100vh!important;z-index:5000!important}
+body.hoa-dashboard .app-main{min-width:0!important;width:auto!important;max-width:none!important;margin-left:255px!important;height:100vh!important;min-height:100vh!important;overflow:hidden!important}
+body.hoa-dashboard .cs-hoa-final-topbar{position:sticky!important;top:0!important;z-index:4000!important;min-height:58px!important}
+body.hoa-dashboard .app-content,body.hoa-dashboard .main>.content,body.hoa-dashboard .page{min-width:0!important;max-width:none!important}
+/* Dashboard metric cards */
+body.hoa-dashboard .cs-hoa-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:15px!important}
+body.hoa-dashboard .cs-hoa-card{min-height:118px!important;border-radius:16px!important;box-shadow:0 7px 20px rgba(15,23,42,.045)!important;transition:transform .18s ease,box-shadow .18s ease}
+body.hoa-dashboard .cs-hoa-card:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(15,23,42,.08)!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(1){background:linear-gradient(145deg,#eaf2ff,#fff 82%)!important;border-color:#cfe0ff!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(2){background:linear-gradient(145deg,#e9fbf1,#fff 82%)!important;border-color:#c9eed9!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(3){background:linear-gradient(145deg,#f3eaff,#fff 82%)!important;border-color:#e2d2ff!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(4){background:linear-gradient(145deg,#fff2dc,#fff 82%)!important;border-color:#f4dfb5!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(5){background:linear-gradient(145deg,#e7f8ff,#fff 82%)!important;border-color:#c9edf8!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(6){background:linear-gradient(145deg,#ffedf3,#fff 82%)!important;border-color:#f4d2df!important}
+/* Statistics and academic-context controls on all HoA menus */
+body.hoa-dashboard .stats{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:13px!important}
+body.hoa-dashboard .stat{min-width:0!important;border-radius:14px!important;border:1px solid #e1e8f2!important;box-shadow:0 5px 16px rgba(15,23,42,.035)!important}
+body.hoa-dashboard .stat:nth-child(1){background:linear-gradient(145deg,#edf4ff,#fff)!important;border-top:3px solid #2563eb!important}
+body.hoa-dashboard .stat:nth-child(2){background:linear-gradient(145deg,#edfbf3,#fff)!important;border-top:3px solid #16a34a!important}
+body.hoa-dashboard .stat:nth-child(3){background:linear-gradient(145deg,#f4edff,#fff)!important;border-top:3px solid #8b5cf6!important}
+body.hoa-dashboard .stat:nth-child(4){background:linear-gradient(145deg,#fff6e8,#fff)!important;border-top:3px solid #f59e0b!important}
+body.hoa-dashboard .stat:nth-child(5){background:linear-gradient(145deg,#eafaff,#fff)!important;border-top:3px solid #0891b2!important}
+body.hoa-dashboard .context{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important}
+body.hoa-dashboard .context select,body.hoa-dashboard select,body.hoa-dashboard input{max-width:100%}
+body.hoa-dashboard .hero{gap:20px;align-items:flex-start}
+body.hoa-dashboard .hero>div:first-child{min-width:0}
+body.hoa-dashboard .hero h1{line-height:1.15;letter-spacing:-.025em}
+/* Student view-only: one View button only; remove all administrator-only controls and keep the action cell compact. */
+body.cs-student-hoa-ht-view-only #add-student-btn,body.cs-student-hoa-ht-view-only #import-student-btn,
+body.cs-student-hoa-ht-view-only .student-bulk-actions,body.cs-student-hoa-ht-view-only .student-select-cell,
+body.cs-student-hoa-ht-view-only #enrollment-modal,body.cs-student-hoa-ht-view-only #import-modal,
+body.cs-student-hoa-ht-view-only .cs-add-student-modal,body.cs-student-hoa-ht-view-only [data-student-action="enrollment"],
+body.cs-student-hoa-ht-view-only [data-student-action="parents"],body.cs-student-hoa-ht-view-only [data-student-action="status"],
+body.cs-student-hoa-ht-view-only [data-student-action="delete"],body.cs-student-hoa-ht-view-only .cs-manage-wrap,
+body.cs-student-hoa-ht-view-only .cs-manage-trigger{display:none!important}
+body.cs-student-hoa-ht-view-only .student-actions{display:flex!important;justify-content:flex-end!important;align-items:center!important;gap:0!important;flex-wrap:nowrap!important;min-width:70px!important}
+body.cs-student-hoa-ht-view-only .student-actions [data-student-action="view"]{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-width:64px!important;margin:0!important;white-space:nowrap!important}
+body.cs-student-hoa-ht-view-only [data-student-management-actions]{width:92px!important;min-width:92px!important;text-align:right!important}
+body.cs-student-hoa-ht-view-only .data-table td,body.cs-student-hoa-ht-view-only .data-table th{vertical-align:middle!important}
+body.cs-student-hoa-ht-view-only .data-table{width:100%!important;table-layout:auto!important}
+@media(max-width:1100px){body.hoa-dashboard .cs-hoa-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}body.hoa-dashboard .stats{grid-template-columns:repeat(3,minmax(0,1fr))!important}body.hoa-dashboard .context{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:820px){body.hoa-dashboard .app-main{margin-left:0!important}body.hoa-dashboard .cs-hoa-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}body.hoa-dashboard .cs-hoa-bottom{grid-template-columns:1fr!important}body.hoa-dashboard .cs-hoa-intel-controls{grid-template-columns:repeat(2,minmax(0,1fr))!important}body.hoa-dashboard .cs-hoa-intel-summary{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:560px){body.hoa-dashboard .cs-hoa-grid,body.hoa-dashboard .stats,body.hoa-dashboard .context{grid-template-columns:1fr!important}body.hoa-dashboard .hero{flex-direction:column!important}body.hoa-dashboard .cs-hoa-intel-controls{grid-template-columns:1fr!important}}
+</style>
+
+<style id="connectsukuu-hoa-final-active-nav-and-data-layout">
+/* Let the complete dashboard scroll so Academic intelligence remains below Academic operations. */
+body.hoa-dashboard .app-main{height:100vh!important;min-height:100vh!important;overflow-y:auto!important;overflow-x:hidden!important}
+body.hoa-dashboard .app-content{height:auto!important;min-height:100%!important;overflow:visible!important;padding-bottom:48px!important}
+/* Consistent full-width academic context selectors and metric rows. */
+body.hoa-dashboard .stats,body.hoa-dashboard .hoa-a-grid{width:100%!important;max-width:none!important;grid-template-columns:repeat(4,minmax(0,1fr))!important}
+body.hoa-dashboard .stat{width:100%!important;min-width:0!important;padding:20px 18px!important}
+body.hoa-dashboard .stat-value{font-size:27px!important;line-height:1.15!important;font-weight:800!important}
+body.hoa-dashboard .stat-label{font-size:11px!important;letter-spacing:.06em!important}
+body.hoa-dashboard .filter-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;width:100%!important}
+body.hoa-dashboard .filter-grid .field{min-width:0!important}
+body.hoa-dashboard .hoa-analytics-clean{width:100%!important;max-width:none!important}
+body.hoa-dashboard .hoa-a-grid{gap:12px!important}
+body.hoa-dashboard .hoa-a-card{min-width:0!important}
+@media(max-width:1000px){body.hoa-dashboard .stats,body.hoa-dashboard .hoa-a-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}body.hoa-dashboard .filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:600px){body.hoa-dashboard .stats,body.hoa-dashboard .hoa-a-grid,body.hoa-dashboard .filter-grid{grid-template-columns:1fr!important}}
+</style>
+
+
+<style id="connectsukuu-hoa-frozen-active-nav">
+.cs-hoa-final-nav a:hover:not(.active) { color:#fff !important; background:#17233a !important; }
+</style>
+
+<style id="connectsukuu-hoa-nav-color-consistency">
+/* Keep Communication links visually identical to the existing HoA navigation items. */
+.cs-hoa-final-nav a[data-cs-hoa-nav="announcements"],
+.cs-hoa-final-nav a[data-cs-hoa-nav="messages"],
+.cs-hoa-final-nav a[data-cs-hoa-nav="notifications"]{color:#94a3b8!important;background:transparent!important;box-shadow:none!important}
+.cs-hoa-final-nav a[data-cs-hoa-nav="announcements"]:hover,
+.cs-hoa-final-nav a[data-cs-hoa-nav="messages"]:hover,
+.cs-hoa-final-nav a[data-cs-hoa-nav="notifications"]:hover{color:#fff!important;background:#17233a!important}
+.cs-hoa-final-nav a[data-cs-hoa-nav="announcements"].active,
+.cs-hoa-final-nav a[data-cs-hoa-nav="messages"].active,
+.cs-hoa-final-nav a[data-cs-hoa-nav="notifications"].active{background:rgba(37,99,235,.22)!important;color:#fff!important;box-shadow:inset 3px 0 0 #3b82f6!important}
+</style>
+
+
+<style id="hoa-activities-styles">
+:root{--primary:#2563eb;--border:#e3e8f0}
+.main{min-height:100vh;overflow-y:auto;height:100vh}
+.content{padding:28px 30px 40px;max-width:1450px;margin:0 auto}
+.heading{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:22px}
+.heading h1{font-size:clamp(24px,2.3vw,32px);letter-spacing:-.04em;margin:0;color:#172033}
+.heading p{font-size:13px;color:#667085;line-height:1.6;max-width:760px;margin:8px 0 0}
+.eyebrow{font-size:11px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#2563eb;margin-bottom:7px}
+.activity-layout{display:grid;grid-template-columns:minmax(320px,.85fr) minmax(0,1.4fr);gap:16px;align-items:start}
+.activity-card{background:#fff;border:1px solid #e3e8f0;border-radius:14px;box-shadow:0 2px 7px #10182806;overflow:hidden;min-width:0}
+.activity-head{padding:17px 19px;border-bottom:1px solid #edf0f5}
+.activity-head h2{font-size:16px;margin:0;font-weight:900}
+.activity-head p{font-size:11px;line-height:1.5;color:#667085;margin:5px 0 0}
+.activity-body{padding:18px}
+.field{margin-bottom:13px}.field label{display:block;font-size:11px;color:#475467;font-weight:850;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;border:1px solid #d6ddea;border-radius:9px;background:#fff;padding:10px 11px;color:#172033;outline:none;font:inherit;font-size:12px}
+.field input,.field select{height:41px}.field textarea{min-height:94px;resize:vertical;line-height:1.5}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#2563eb;box-shadow:0 0 0 3px #2563eb14}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.full{grid-column:1/-1}
+.actions{display:flex;gap:8px;justify-content:flex-end;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid #d8dee9;background:#fff;color:#344054;padding:10px 13px;border-radius:9px;font-weight:800;font-size:12px;transition:.16s}.btn:hover{transform:translateY(-1px);box-shadow:0 5px 13px #1018280d}.btn-primary{background:#2563eb;color:#fff;border-color:#2563eb}.btn-primary:hover{background:#1d4ed8}.btn-danger{color:#b42318;border-color:#fecdca;background:#fff}.btn:disabled{opacity:.6;cursor:wait;transform:none}
+.toolbar{padding:12px 18px;border-bottom:1px solid #edf0f5;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.search{height:38px;width:min(330px,100%);border:1px solid #d6ddea;border-radius:9px;padding:0 11px;outline:none;font-size:12px}
+.count{font-size:11px;font-weight:850;color:#2563eb;background:#eff6ff;border-radius:99px;padding:6px 9px;white-space:nowrap}
+.event-list{display:flex;flex-direction:column;gap:10px;padding:14px}
+.event{border:1px solid #e4eaf3;border-radius:12px;padding:14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start}
+.event-title{font-size:14px;font-weight:900;color:#172033;margin:0}
+.event-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.pill{font-size:10px;font-weight:850;color:#344054;background:#f2f4f7;padding:5px 8px;border-radius:99px}
+.pill.blue{color:#1d4ed8;background:#eff6ff}.event-desc{font-size:12px;color:#667085;line-height:1.55;margin:9px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.event-location{font-size:11px;color:#475467;margin-top:8px}
+.empty{padding:42px 20px;text-align:center;color:#667085;font-size:12px;line-height:1.6}
+.notice{display:none;margin:0 0 13px;border-radius:9px;padding:10px 12px;font-size:11px;line-height:1.5}.notice.show{display:block}.notice.error{background:#fef3f2;color:#b42318}.notice.success{background:#ecfdf3;color:#067647}
+.toast{position:fixed;right:24px;bottom:24px;z-index:200;max-width:420px;padding:13px 16px;border-radius:10px;background:#172033;color:#fff;font-size:12px;font-weight:800;box-shadow:0 14px 35px #0f172a33;opacity:0;transform:translateY(10px);pointer-events:none;transition:.18s}.toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:1000px){.activity-layout{grid-template-columns:1fr}}
+@media(max-width:800px){.content{padding:20px 16px}.heading{display:block}.activity-layout{grid-template-columns:1fr}}
+@media(max-width:560px){.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.event{grid-template-columns:1fr}.event .actions{justify-content:flex-start}}
+
+.broadcast-box{border:1px solid #dce6f5;background:#f8fbff;border-radius:12px;padding:13px;margin:4px 0 17px}
+.broadcast-box h3{font-size:12px;margin:0 0 5px;color:#172033}.broadcast-box>p{font-size:10px;line-height:1.5;color:#667085;margin:0 0 10px}
+.broadcast-option{display:flex;align-items:flex-start;gap:9px;padding:9px 10px;border:1px solid #e1e8f2;border-radius:9px;background:#fff;margin:7px 0;cursor:pointer}
+.broadcast-option input,.activity-class-option input{margin-top:2px;accent-color:#2563eb}.broadcast-option span{display:flex;flex-direction:column;gap:3px}.broadcast-option strong{font-size:11px;color:#24324a}.broadcast-option small{font-size:9px;color:#71819b}
+.broadcast-class-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0 7px;font-size:11px;color:#34435c}.broadcast-class-head .btn{min-height:27px;padding:0 8px;font-size:9px}
+.activity-class-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;max-height:190px;overflow:auto}
+.activity-class-option{display:flex;align-items:center;gap:7px;min-width:0;border:1px solid #e1e8f2;background:#fff;border-radius:8px;padding:8px;font-size:10px;color:#34435c;cursor:pointer}.activity-class-option span{overflow-wrap:anywhere}
+
+</style>
+
+<link rel="stylesheet" href="/assets/css/mobile-shell.css" media="(max-width:820px)"><script src="/assets/js/mobile-shell.js" defer></script></head><body class="hoa-dashboard">
+<div class="app">
+<aside class="cs-hoa-final-sidebar" aria-label="Head of Academics navigation"><div class="cs-hoa-final-sidebar-inner"><a class="cs-hoa-final-brand" href="/roles/hoa/hoa-dashboard.html"><img src="/assets/images/favicon.svg" alt="ConnectSukuu"><span>Connect<span>Sukuu</span></span></a><nav class="cs-hoa-final-nav">
+<div class="cs-hoa-final-section">Workspace</div>
+<a data-cs-hoa-nav="dashboard" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-dashboard.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg></span><span>Dashboard</span></a>
+<a data-cs-hoa-nav="academic" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-academic.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><path d="M3 6.5 12 3l9 3.5L12 10 3 6.5Z"/><path d="M6 9v5.5c2 1.8 4 2.5 6 2.5s4-.7 6-2.5V9"/><path d="M21 7v7"/></svg></span><span>Academic Setup</span></a>
+<a data-cs-hoa-nav="students" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-students.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2.5 21c.5-4 2.7-6 6.5-6s6 2 6.5 6"/><path d="M16 11a3 3 0 1 0 0-6"/><path d="M17 15c2.5.3 4 2 4.5 5"/></svg></span><span>Students</span></a>
+<a data-cs-hoa-nav="attendance" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-attendance.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h5M8 16h3"/><path d="m14 16 1.5 1.5L19 14"/></svg></span><span>Attendance</span></a>
+<div class="cs-hoa-final-section">Teaching</div>
+<a data-cs-hoa-nav="teaching" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-teaching-assignments.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 9h18M8 13h3M13 13h3M8 17h3"/></svg></span><span>Teaching Assignments</span></a>
+<a data-cs-hoa-nav="timetable" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-timetable.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18M8 13h3M13 13h3M8 17h3"/></svg></span><span>Timetable</span></a>
+<a data-cs-hoa-nav="activities" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-activities.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18M8 13h3M13 13h3M8 17h3"/></svg></span><span>Activities</span></a>
+<a data-cs-hoa-nav="assessments" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-assessments.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><path d="M5 3h14v18H5z"/><path d="M8 7h8M8 11h8M8 15h5"/><path d="m15 18 1.5 1.5L20 16"/></svg></span><span>Assessments & Reports</span></a>
+<div class="cs-hoa-final-section">Communication</div>
+<a data-cs-hoa-nav="announcements" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-announcements.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><span>Announcements</span></a>
+<a data-cs-hoa-nav="messages" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-messages.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 3z"/><path d="M8 9h8M8 13h5"/></svg></span><span>Messages</span></a>
+<a data-cs-hoa-nav="notifications" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-notifications.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></span><span>Notifications</span></a>
+</nav></div><div class="cs-hoa-final-logout"><button type="button" id="cskHoaFinalLogout">↪ <span>Log out</span></button></div></aside>
+<main class="main">
+<header class="cs-hoa-final-topbar"><div class="cs-hoa-final-title">Activities</div><div class="cs-hoa-final-profile"><div class="cs-hoa-final-avatar" id="cskHoaAvatar">H</div><div class="cs-hoa-final-profile-copy"><span id="cskHoaWho">User</span><span>Head of Academics</span></div></div></header>
+<section class="content">
+  <div class="heading"><div><div class="eyebrow">School life &amp; engagement</div><h1>Activities &amp; Events</h1><p>Plan excursions, fun and games, sports days, cultural events and other school activities. Saved activities are listed here for your school.</p></div></div>
+  <div class="activity-layout">
+    <section class="activity-card">
+      <div class="activity-head"><h2>Create a school activity</h2><p>Complete the details below. The activity is saved to your school's existing events record.</p></div>
+      <div class="activity-body">
+        <div id="formNotice" class="notice"></div>
+        <form id="activityForm">
+          <div class="field"><label for="title">Activity title *</label><input id="title" maxlength="120" placeholder="e.g. End-of-term excursion" required></div>
+          <div class="field"><label for="type">Activity type *</label><select id="type" required><option value="EXCURSION">Excursion</option><option value="FUN_AND_GAMES">Fun &amp; Games</option><option value="SPORTS">Sports day</option><option value="CULTURAL">Cultural event</option><option value="ACADEMIC">Academic activity</option><option value="OTHER">Other</option></select></div>
+          <div class="form-grid">
+            <div class="field"><label for="startsAt">Starts *</label><input type="datetime-local" id="startsAt" required></div>
+            <div class="field"><label for="endsAt">Ends (optional)</label><input type="datetime-local" id="endsAt"></div>
+            <div class="field full"><label for="location">Location (optional)</label><input id="location" maxlength="180" placeholder="e.g. Aburi Botanical Gardens"></div>
+            <div class="field full"><label for="description">Description / notes</label><textarea id="description" maxlength="3000" placeholder="Purpose, items students should bring, meeting point, or other useful details."></textarea></div>
+          </div>
+          <section class="broadcast-box" aria-labelledby="broadcastTitle">
+            <h3 id="broadcastTitle">Notify selected people</h3>
+            <p>Choose the classes that should receive this activity notification. You can notify every student and/or all teachers as well.</p>
+            <label class="broadcast-option"><input id="notifyAllStudents" type="checkbox"><span><strong>All students</strong><small>Every active student in this school</small></span></label>
+            <label class="broadcast-option"><input id="notifyTeachers" type="checkbox"><span><strong>All teachers</strong><small>Teachers with active accounts in this school</small></span></label>
+            <div class="broadcast-class-head"><strong>Selected classes</strong><button type="button" class="btn" id="selectAllClasses">Select all classes</button></div>
+            <div id="activityClassList" class="activity-class-list"><span class="empty">Loading classes…</span></div>
+            <div class="quick-note">Selecting a class sends the notification to active students currently enrolled in that class. This does not send to every student unless “All students” is checked.</div>
+          </section>
+          <label style="display:flex;gap:9px;align-items:flex-start;font-size:11px;line-height:1.5;color:#475467;margin:2px 0 17px"><input id="isOptional" type="checkbox" checked style="margin-top:2px"> <span>Participation is optional</span></label>
+          <div class="actions"><button class="btn" type="reset" id="resetBtn">Clear form</button><button class="btn btn-primary" id="saveBtn" type="submit">Save activity &amp; notify</button></div>
+        </form>
+      </div>
+    </section>
+    <section class="activity-card">
+      <div class="activity-head"><h2>School activities</h2><p>Upcoming and previous activities are listed here. Search by title, type or location.</p></div>
+      <div class="toolbar"><input id="search" class="search" placeholder="Search activities..."><span class="count" id="eventCount">Loading…</span></div>
+      <div id="eventList" class="event-list"><div class="empty">Loading school activities…</div></div>
+    </section>
+  </div>
+</section>
+</main>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="/assets/js/config.js"></script><script src="/assets/js/app.js"></script><script src="/assets/js/role-shell-extension.js"></script>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const TYPE_LABELS={EXCURSION:'Excursion',FUN_AND_GAMES:'Fun & Games',SPORTS:'Sports day',CULTURAL:'Cultural event',ACADEMIC:'Academic activity',OTHER:'Other'};
+let events=[];let activityClasses=[];
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function apiUrl(path){const base=String(window.API_BASE||'http://localhost:4000').replace(/\/$/,'');const clean=String(path||'').startsWith('/')?String(path):'/'+path;return base.endsWith('/api')?base+clean:base+'/api'+clean;}
+async function api(path,opt={}){const token=(window.AUTH&&AUTH.getToken&&AUTH.getToken())||localStorage.getItem('cs_token')||localStorage.getItem('connectsukuu_token')||'';const r=await fetch(apiUrl(path),{...opt,headers:{'Content-Type':'application/json','Authorization':'Bearer '+token,...(opt.headers||{})},cache:'no-store'});const raw=await r.text();let d={};try{d=raw?JSON.parse(raw):{}}catch(_){}if(r.status===401){if(window.AUTH&&AUTH.logout)AUTH.logout();throw new Error('Your session has expired. Please sign in again.')}if(!r.ok)throw new Error(d.error||d.message||'Request failed ('+r.status+')');return d;}
+function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(window.__hoaActivitiesToast);window.__hoaActivitiesToast=setTimeout(()=>$('toast').classList.remove('show'),3500);}
+function dateLabel(value){if(!value)return 'Date not set';const d=new Date(value);return Number.isNaN(d.getTime())?'Date not set':d.toLocaleString(undefined,{day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'});}
+function showNotice(message,type='error'){$('formNotice').textContent=message;$('formNotice').className='notice show '+type;}
+function hideNotice(){$('formNotice').className='notice';$('formNotice').textContent='';}
+function render(){const q=$('search').value.trim().toLowerCase();const list=events.filter(e=>[e.title,e.type,e.location,e.description].some(v=>String(v||'').toLowerCase().includes(q))).sort((a,b)=>new Date(a.startsAt)-new Date(b.startsAt));$('eventCount').textContent=events.length+' total';if(!list.length){$('eventList').innerHTML='<div class="empty"><strong>No activities found.</strong><br>Create an activity using the form, or adjust your search.</div>';return;}$('eventList').innerHTML=list.map(e=>{const type=TYPE_LABELS[e.type]||e.type||'Activity';return `<article class="event"><div><h3 class="event-title">${esc(e.title)}</h3><div class="event-meta"><span class="pill blue">${esc(type)}</span><span class="pill">${esc(dateLabel(e.startsAt))}</span>${e.endsAt?`<span class="pill">Ends ${esc(dateLabel(e.endsAt))}</span>`:''}<span class="pill">${e.isOptional?'Optional participation':'Required participation'}</span></div>${e.location?`<div class="event-location">📍 ${esc(e.location)}</div>`:''}${e.description?`<p class="event-desc">${esc(e.description)}</p>`:''}</div><div class="actions"><button class="btn btn-danger" type="button" data-delete="${esc(e.id)}">Delete</button></div></article>`;}).join('');}
+async function load(){const tasks=[api('/school-events'),api('/school-events/classes')];try{const results=await Promise.allSettled(tasks);if(results[0].status==='fulfilled'){const data=results[0].value;events=Array.isArray(data)?data:(data.events||[]);render();}else{$('eventCount').textContent='Unavailable';$('eventList').innerHTML=`<div class="empty">${esc(results[0].reason.message)}<br><br>Check the API and your account access.</div>`;toast(results[0].reason.message);}if(results[1].status==='fulfilled'){const data=results[1].value;activityClasses=Array.isArray(data)?data:(data.classes||[]);renderClasses();}else{$('activityClassList').innerHTML=`<span class="empty">${esc(results[1].reason.message)}. Class targeting is unavailable until the API route is installed.</span>`;}}catch(e){toast(e.message);}}
+function renderClasses(){const el=$('activityClassList');if(!activityClasses.length){el.innerHTML='<span class="empty">No classes found for this school.</span>';return;}el.innerHTML=activityClasses.map(c=>`<label class="activity-class-option"><input type="checkbox" name="activityClassId" value="${esc(c.id)}"><span>${esc(c.name)}${c.level&&c.level!==c.name?' · '+esc(c.level):''}${Number.isFinite(c.studentCount)?' ('+c.studentCount+' students)':''}</span></label>`).join('');}
+
+function localInputToIso(value){if(!value)return null;const d=new Date(value);return Number.isNaN(d.getTime())?null:d.toISOString();}
+async function save(e){e.preventDefault();hideNotice();const title=$('title').value.trim();const startsAt=localInputToIso($('startsAt').value);const endsAt=localInputToIso($('endsAt').value);if(!title||!startsAt){showNotice('Enter an activity title and start date/time.');return;}if($('endsAt').value&&!endsAt){showNotice('The end date/time is invalid.');return;}if(endsAt&&new Date(endsAt)<=new Date(startsAt)){showNotice('The end date/time must be after the start date/time.');return;}const classIds=Array.from(document.querySelectorAll('input[name="activityClassId"]:checked')).map(x=>x.value);const allStudents=$('notifyAllStudents').checked;const notifyTeachers=$('notifyTeachers').checked;if(!allStudents&&!notifyTeachers&&!classIds.length){if(!confirm('No recipients are selected. Save this activity without sending notifications?'))return;}const b=$('saveBtn');b.disabled=true;b.textContent='Saving & notifying…';try{const created=await api('/school-events',{method:'POST',body:JSON.stringify({title,type:$('type').value,description:$('description').value.trim()||null,startsAt,endsAt,location:$('location').value.trim()||null,isOptional:$('isOptional').checked,recipients:{allStudents,notifyTeachers,classIds}})});events.push(created);render();$('activityForm').reset();$('type').value='EXCURSION';$('isOptional').checked=true;showNotice(created.delivery?.warning?`Activity saved, but notification delivery needs attention: ${created.delivery.warning}`:created.delivery?`Activity saved. Notifications sent to ${created.delivery.students||0} student(s) and ${created.delivery.teachers||0} teacher(s).`:'Activity saved successfully.','success');toast(created.delivery?.warning?created.delivery.warning:created.delivery?`Activity created; sent ${created.delivery.students||0} student and ${created.delivery.teachers||0} teacher notifications.`:'School activity created.');}catch(err){showNotice(err.message||'Could not save this activity.');toast(err.message||'Could not save this activity.');}finally{b.disabled=false;b.textContent='Save activity & notify';}}
+async function deleteEvent(id){const ev=events.find(x=>x.id===id);if(!ev||!confirm('Delete "'+ev.title+'"? This cannot be undone.'))return;try{await api('/school-events/'+encodeURIComponent(id),{method:'DELETE'});events=events.filter(x=>x.id!==id);render();toast('Activity deleted.');}catch(e){toast(e.message||'Could not delete activity.');}}
+function bind(){$('activityForm').addEventListener('submit',save);$('search').addEventListener('input',render);$('eventList').addEventListener('click',e=>{const b=e.target.closest('[data-delete]');if(b)deleteEvent(b.dataset.delete);});$('resetBtn').addEventListener('click',()=>{hideNotice();$('type').value='EXCURSION';$('isOptional').checked=true;document.querySelectorAll('input[name="activityClassId"]').forEach(x=>x.checked=false);$('notifyAllStudents').checked=false;$('notifyTeachers').checked=false;$('selectAllClasses').textContent='Select all classes';});$('selectAllClasses').addEventListener('click',()=>{const boxes=Array.from(document.querySelectorAll('input[name="activityClassId"]'));const select=boxes.some(x=>!x.checked);boxes.forEach(x=>x.checked=select);$('selectAllClasses').textContent=select?'Clear class selection':'Select all classes';});const logout=$('cskHoaFinalLogout');if(logout&&window.AUTH&&AUTH.logout)logout.addEventListener('click',()=>AUTH.logout());}
+function guard(){let user={};try{user=(window.AUTH&&AUTH.getUser&&AUTH.getUser())||JSON.parse(localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user')||'{}')}catch(_){}if(user.role&&String(user.role).toUpperCase()!=='HEAD_OF_ACADEMICS'){location.replace('/auth/signin.html');return false;}const name=$('cskHoaWho');if(name)name.textContent=[user.firstName,user.lastName].filter(Boolean).join(' ')||user.email||'Head of Academics';const avatar=$('cskHoaAvatar');if(avatar)avatar.textContent=(user.firstName||user.email||'H').charAt(0).toUpperCase();return true;}
+if(guard()){bind();load();}
+})();
+</script>
+<script id="connectsukuu-hoa-activities-shell-runtime">
+(function(){'use strict';var expected='HEAD_OF_ACADEMICS';var user={};try{user=(window.AUTH&&AUTH.getUser&&AUTH.getUser())||JSON.parse(localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user')||'{}')}catch(_){}if(user.role&&String(user.role).toUpperCase()!==expected){location.replace('/auth/signin.html');return;}document.querySelectorAll('.cs-hoa-final-nav a[data-cs-hoa-nav]').forEach(function(a){var active=a.getAttribute('data-cs-hoa-nav')==='activities';a.classList.toggle('active',active);if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});var title=document.querySelector('.cs-hoa-final-title');if(title)title.textContent='Activities';document.title='Activities';})();
+</script>
+</body>
+</html>

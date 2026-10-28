@@ -1,0 +1,2054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academic Setup</title>
+  <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap"></noscript><link rel="stylesheet" href="/assets/css/marketing.css">
+<style id="connectsukuu-headteacher-section-padding-fix">
+/* /assets/css/marketing.css sets a generic section{padding:4rem 0} rule for the
+   marketing pages. Several app sections here (.card, .stats, the
+   grading-system panel, the A-F scale panel) are bare section tags
+   with no padding of their own, so that rule was leaking 64px
+   top/bottom padding onto them -- the large empty bands above each
+   card heading. Same specificity as /assets/css/marketing.css, later in the
+   cascade, so it wins here; every section with its own explicit
+   padding (set via a class/id selector) still overrides this. */
+section{padding:0}
+</style>
+
+  <style>
+    :root {
+      --primary:#2563eb; --primary-dark:#1d4ed8; --success:#16a34a;
+      --danger:#dc2626; --text:#172033; --muted:#667085;
+      --border:#e5e7eb; --bg:#f7f9fc; --card:#fff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .layout{min-height:100vh;display:flex}
+    .sidebar{width:250px;min-height:100vh;background:#111827;color:#fff;padding:22px 16px;position:fixed;left:0;top:0;bottom:0;overflow-y:auto;display:flex;flex-direction:column}
+    .sidebar > .nav{flex:0 0 auto}
+    .academic-sidebar-footer{margin-top:auto;padding-top:18px;flex:0 0 auto}
+    .academic-sidebar-footer .logout-btn{width:100%;box-sizing:border-box}
+    .brand{display:flex;align-items:center;gap:10px;padding:8px 10px 26px;font-size:20px;font-weight:800}
+    .brand img{width:34px;height:34px}
+    .nav{display:flex;flex-direction:column;gap:5px}
+    .nav a{text-decoration:none;color:#cbd5e1;padding:11px 13px;border-radius:9px;font-size:14px;font-weight:600}
+    .nav a:hover{background:#1f2937;color:#fff}.nav a.active{background:#1d4ed8;color:#fff}
+    .nav-section{margin:22px 10px 7px;color:#64748b;text-transform:uppercase;letter-spacing:.08em;font-size:10px;font-weight:800}
+    .main{margin-left:250px;width:calc(100% - 250px);min-height:100vh}
+    .topbar{height:72px;background:#fff;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;padding:0 32px;position:sticky;top:0;z-index:10}
+    .topbar-title{font-size:16px;font-weight:700}.topbar-user{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px}
+    .avatar{width:34px;height:34px;border-radius:50%;background:#dbeafe;color:#1d4ed8;display:grid;place-items:center;font-weight:800}
+    .content{padding:32px;max-width:1500px;margin:0 auto}
+    .heading{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:28px}
+    .heading h1{margin:0 0 7px;font-size:30px;letter-spacing:-.02em}.heading p{margin:0;color:var(--muted);max-width:760px;line-height:1.6}
+    button{font-family:inherit}.primary-btn{border:0;background:var(--primary);color:#fff;padding:11px 17px;border-radius:9px;font-weight:700;cursor:pointer;white-space:nowrap}
+    .primary-btn:hover{background:var(--primary-dark)}.primary-btn:disabled,.action-btn:disabled{opacity:.55;cursor:not-allowed}
+    .secondary-btn{border:1px solid #d0d5dd;background:#fff;color:#344054;padding:10px 15px;border-radius:8px;cursor:pointer;font-weight:700}
+    .current-card{position:relative;overflow:hidden;background:linear-gradient(135deg,#2563eb 0%,#1d4ed8 58%,#1e40af 100%);border:1px solid #1d4ed8;border-radius:14px;padding:24px 26px;margin-bottom:22px;color:#fff;box-shadow:0 8px 24px rgba(37,99,235,.18)}
+    .current-card:after{content:'';position:absolute;width:180px;height:180px;border-radius:50%;right:-55px;top:-85px;background:rgba(255,255,255,.08);pointer-events:none}
+
+    .current-label{position:relative;z-index:1;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.78);font-weight:800}.current-name{position:relative;z-index:1;font-size:25px;font-weight:800;margin:6px 0;color:#fff}.current-dates{position:relative;z-index:1;color:rgba(255,255,255,.84);font-size:13px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:22px;overflow:hidden}
+    .card-header{padding:21px 24px;display:flex;justify-content:space-between;align-items:center;gap:15px;border-bottom:1px solid var(--border)}
+    .card-header h2{margin:0;font-size:18px}.card-header p{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .count{font-size:12px;background:#f1f5f9;color:#475569;padding:6px 10px;border-radius:999px;font-weight:700;white-space:nowrap}
+    .body{padding:0}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:760px}
+    th,td{padding:15px 22px;text-align:left;border-bottom:1px solid #eef0f3;font-size:14px}th{color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:.04em;background:#fafbfc}
+    tbody tr:hover{background:#fafcff}.muted{color:var(--muted)}.name{font-weight:750}
+    .badge{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800}.current{background:#dcfce7;color:#166534}.inactive{background:#f1f5f9;color:#64748b}
+    .action-btn{border:1px solid #dbe2ea;background:#fff;color:#334155;padding:7px 11px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:700}.action-btn:hover{background:#f8fafc}
+    .empty{padding:45px 25px;text-align:center;color:var(--muted)}.empty-icon{width:48px;height:48px;border-radius:14px;background:#eff6ff;color:#2563eb;display:grid;place-items:center;margin:0 auto 15px;font-size:22px}.empty h3{margin:0 0 6px;color:var(--text);font-size:17px}.empty p{margin:0;font-size:13px}
+    .loading{padding:32px;text-align:center;color:var(--muted);font-size:14px}
+    .panel{border-top:1px solid #dbe7f5;padding:24px;background:linear-gradient(180deg,#f7faff 0%,#f2f7fd 100%)}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}.panel-head h3{position:relative;padding-left:12px}.panel-head h3:before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;border-radius:3px;background:#3b82f6}.panel-head h3{margin:0 0 5px}.panel-head p{margin:0;color:var(--muted);font-size:13px}
+    .section-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.select{border:1px solid #d0d5dd;background:#fff;border-radius:8px;padding:9px 11px;color:#344054;min-width:220px}
+    .subject-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;padding:20px 24px}
+    .subject-card{border:1px solid #d9e2ec;border-radius:12px;padding:17px;background:linear-gradient(145deg,#ffffff 0%,#f8fbff 100%);box-shadow:0 2px 8px rgba(15,23,42,.035);transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}.subject-card:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(15,23,42,.07);border-color:#c7d7ea}.subject-card h3{margin:0 0 5px;font-size:16px}.subject-code{font-size:12px;color:var(--muted)}.subject-meta{margin-top:12px;font-size:12px;color:#475569}
+    .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.52);z-index:100;align-items:center;justify-content:center;padding:20px}.modal-backdrop.open{display:flex}
+    .modal{width:min(500px,100%);background:#fff;border-radius:16px;box-shadow:0 25px 70px rgba(15,23,42,.22);overflow:hidden}.modal-header{padding:18px 21px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}.modal-header h2{margin:0;font-size:18px}.close-btn{border:0;background:transparent;font-size:26px;color:#667085;cursor:pointer}
+    .modal-body{padding:22px}.form-group{margin-bottom:17px}.form-group label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}.form-group input,.form-group select{width:100%;padding:11px 12px;border:1px solid #d0d5dd;border-radius:8px;font:inherit;outline:none}.form-group input:focus,.form-group select:focus{border-color:#2563eb;box-shadow:0 0 0 3px #dbeafe}
+    .hint{font-size:12px;color:var(--muted);margin-top:6px}.modal-footer{padding:16px 21px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
+    .toast{position:fixed;right:22px;bottom:22px;z-index:200;background:#111827;color:#fff;padding:12px 16px;border-radius:9px;font-size:13px;box-shadow:0 12px 30px rgba(0,0,0,.18);display:none;max-width:360px}.toast.show{display:block}
+    @media(max-width:800px){.sidebar{width:220px}.main{margin-left:220px;width:calc(100% - 220px)}.content{padding:22px}.topbar{padding:0 22px}.heading{flex-direction:column}}
+    @media(max-width:600px){.sidebar{display:none}.main{margin-left:0;width:100%}.content{padding:17px}.topbar{padding:0 17px}.heading h1{font-size:25px}}
+  
+    /* Academic Setup 2.0 */
+    .nav-hidden{display:none !important}
+    .primary-btn,.secondary-btn,.action-btn{transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease,border-color .16s ease}
+    .primary-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 7px 18px rgba(37,99,235,.18)}
+    .secondary-btn:hover:not(:disabled),.action-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 5px 14px rgba(15,23,42,.07)}
+    .current-card{box-shadow:0 12px 32px rgba(37,99,235,.20);transition:transform .22s ease,box-shadow .22s ease}
+    .current-card:hover{transform:translateY(-2px);box-shadow:0 17px 38px rgba(37,99,235,.24)}
+    .card{transition:box-shadow .2s ease}
+    .card:hover{box-shadow:0 8px 25px rgba(15,23,42,.055)}
+    .panel{background:linear-gradient(180deg,#f8fbff 0%,#f1f6fc 100%)}
+    .subject-card{background:linear-gradient(145deg,#fff 0%,#f5f9ff 100%);border-color:#d8e3ef;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+    .subject-card:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(37,99,235,.09);border-color:#bfd3ea}
+    @media(max-width:720px){
+      .heading{gap:14px}
+      .heading .primary-btn{width:100%}
+      .section-controls{width:100%}
+      .section-controls .select{flex:1;min-width:180px}
+    }
+
+
+    /* CONNECTSUKUU_HEAD_TEACHER_ACADEMIC_OVERSIGHT */
+    .ht-academic-oversight{display:none;margin:0 0 22px;border:1px solid #dbeafe;border-radius:16px;background:linear-gradient(145deg,#ffffff 0%,#f7fbff 100%);box-shadow:0 10px 28px rgba(15,23,42,.055);overflow:hidden}
+    .ht-academic-oversight.show{display:block;animation:htAcademicRise .35s ease both}
+    .ht-academic-oversight-head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;padding:20px 22px;border-bottom:1px solid #e5eef8}
+    .ht-academic-kicker{font-size:10px;font-weight:850;letter-spacing:.12em;text-transform:uppercase;color:#2563eb}
+    .ht-academic-oversight h2{margin:5px 0;font-size:19px;color:#172033}
+    .ht-academic-oversight-head p{margin:0;color:#667085;font-size:12.5px;line-height:1.55;max-width:760px}
+    .ht-academic-scope{display:inline-flex;align-items:center;white-space:nowrap;padding:7px 10px;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:800}
+    .ht-academic-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:16px 22px}
+    .ht-academic-stat{padding:13px 14px;border:1px solid #e2e8f0;border-radius:12px;background:#fff;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+    .ht-academic-stat:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(15,23,42,.06);border-color:#bfdbfe}
+    .ht-academic-stat-label{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#64748b}
+    .ht-academic-stat-value{margin-top:4px;font-size:22px;font-weight:850;color:#0f172a}
+    .ht-academic-stat-note{margin-top:2px;font-size:10.5px;color:#94a3b8}
+    .ht-academic-detail{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;padding:0 22px 20px}
+    .ht-academic-panel{border:1px solid #e2e8f0;border-radius:13px;background:#fff;overflow:hidden}
+    .ht-academic-panel-head{padding:12px 14px;border-bottom:1px solid #eef2f7;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .ht-academic-panel-head strong{font-size:12.5px;color:#172033}
+    .ht-academic-panel-head span{font-size:10.5px;color:#94a3b8}
+    .ht-academic-list{padding:8px 14px 12px}
+    .ht-academic-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:11.5px}
+    .ht-academic-row:last-child{border-bottom:0}
+    .ht-academic-row strong{color:#334155}
+    .ht-academic-row span{color:#64748b;text-align:right}
+    .ht-academic-status{display:inline-flex!important;align-items:center;padding:4px 7px;border-radius:999px;font-size:10px!important;font-weight:800}
+    .ht-academic-status.ready{background:#f0fdf4;color:#15803d!important}
+    .ht-academic-status.attention{background:#fff7ed;color:#c2410c!important}
+    .ht-academic-status.empty{background:#f1f5f9;color:#64748b!important}
+    .ht-academic-actions{display:flex;flex-wrap:wrap;gap:8px;padding:0 22px 20px}
+    .ht-academic-action{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid #dbe2ea;background:#fff;color:#334155;padding:8px 11px;border-radius:8px;font-size:11px;font-weight:750;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+    .ht-academic-action:hover{transform:translateY(-1px);box-shadow:0 6px 15px rgba(15,23,42,.07);border-color:#bfdbfe}
+    .ht-academic-action.primary{background:#2563eb;color:#fff;border-color:#2563eb}
+    .ht-academic-loading{padding:12px 14px;color:#94a3b8;font-size:11.5px}
+    @keyframes htAcademicRise{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+    @media(max-width:900px){.ht-academic-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.ht-academic-detail{grid-template-columns:1fr}}
+    @media(max-width:560px){.ht-academic-oversight-head{flex-direction:column}.ht-academic-stats{grid-template-columns:1fr 1fr}.ht-academic-detail{padding-left:14px;padding-right:14px}.ht-academic-actions{padding-left:14px;padding-right:14px}}
+
+  </style>
+<style id="connectsukuu-academic-profile-final">
+.topbar{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:18px!important;min-height:64px!important}.topbar-title{min-width:0!important}.topbar-user{margin-left:auto!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:10px!important;white-space:nowrap!important}.topbar-user .avatar{flex:0 0 auto!important}.cs-academic-role{font-size:.68rem;color:#64748b;font-weight:750;display:block;line-height:1.1}.cs-academic-user-copy{display:flex;flex-direction:column;align-items:flex-end;line-height:1.15}
+</style>
+<style id="connectsukuu-academic-default-af-scale-css">
+.cs-academic-af-scale{margin:0 0 22px;border:1px solid #dbe5f2;border-radius:16px;background:linear-gradient(135deg,#ffffff 0%,#f7faff 100%);box-shadow:0 8px 24px rgba(15,23,42,.06);overflow:hidden}
+.cs-academic-af-scale-head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 22px;border-bottom:1px solid #e4eaf2}
+.cs-academic-af-scale-title{font-size:17px;font-weight:850;color:#172033;margin:0}
+.cs-academic-af-scale-subtitle{font-size:12px;color:#667085;margin:4px 0 0}
+.cs-academic-af-scale-bands{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px;padding:16px 22px}
+.cs-academic-af-band{border:1px solid #dce5ef;border-radius:12px;padding:12px 10px;text-align:center;background:#fff;min-width:0}
+.cs-academic-af-band strong{display:block;font-size:18px;line-height:1.1;color:#172033}
+.cs-academic-af-band span{display:block;margin-top:5px;font-size:11px;font-weight:750;color:#667085;white-space:nowrap}
+@media(max-width:850px){.cs-academic-af-scale-bands{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:520px){.cs-academic-af-scale-head{align-items:flex-start}.cs-academic-af-scale-bands{grid-template-columns:repeat(2,minmax(0,1fr));padding:14px}.cs-academic-af-scale-head{padding:16px}}
+</style>
+<style id="connectsukuu-academic-layout-standard">
+.content{padding:22px 30px 32px!important}
+.heading{margin-bottom:20px!important}
+.heading h1{margin-bottom:5px!important}
+.heading p{line-height:1.5!important}
+.current-card{margin-bottom:18px!important}
+.card{margin-bottom:18px!important}
+.card-header{padding:18px 20px!important;min-height:0!important}
+.card-header h2{line-height:1.25!important}
+.card-header p{margin-top:4px!important;line-height:1.45!important}
+#connectsukuuGradingSystemPanel{margin-top:18px!important}
+#connectsukuuGradingSystemPanel > div:first-child{padding:18px 20px!important}
+.cs-academic-af-scale{margin-bottom:18px!important}
+.cs-academic-af-scale-head{padding:18px 20px!important}
+</style>
+
+
+
+
+
+<style id="connectsukuu-hoa-shell-final-spacing-standard">
+/*
+ * ConnectSukuu HoA shell final spacing standard.
+ * This is a presentation-only repair. It does not alter application logic,
+ * API calls, report-card code, grading code, or database behavior.
+ */
+html, body {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+*, *::before, *::after {
+  box-sizing: border-box !important;
+}
+
+/* ---------- DESKTOP SHELL: one canonical 255px sidebar ---------- */
+@media (min-width: 821px) {
+  /* Dashboard / app-shell pages */
+  body .app-shell {
+    grid-template-columns: 255px minmax(0, 1fr) !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  body .app-sidebar {
+    width: 255px !important;
+    min-width: 255px !important;
+    max-width: 255px !important;
+  }
+  body .app-main {
+    width: auto !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  /* Academic / attendance / teaching / timetable native layout */
+  body .layout {
+    grid-template-columns: 255px minmax(0, 1fr) !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  body .layout > .sidebar,
+  body .sidebar {
+    width: 255px !important;
+    min-width: 255px !important;
+    max-width: 255px !important;
+  }
+  body .layout > .main,
+  body .layout .main {
+    width: auto !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  /* Assessment page uses a fixed custom sidebar. */
+  body .cs-assessment-sidebar {
+    width: 255px !important;
+    min-width: 255px !important;
+    max-width: 255px !important;
+    left: 0 !important;
+  }
+  body .cs-assessment-sidebar + .main {
+    margin-left: 255px !important;
+    width: calc(100% - 255px) !important;
+    min-width: 0 !important;
+  }
+}
+
+/* ---------- CANONICAL BRAND ---------- */
+body .app-sidebar .brand,
+body .sidebar .brand,
+body .cs-assessment-sidebar .brand,
+body .cs-assessment-sidebar .cs-assessment-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 40px !important;
+  height: 40px !important;
+  margin: 0 0 22px !important;
+  padding: 0 10px !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+}
+
+body .app-sidebar .brand img,
+body .sidebar .brand img,
+body .cs-assessment-sidebar .brand img,
+body .cs-assessment-sidebar .cs-assessment-brand img {
+  display: block !important;
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  max-width: 34px !important;
+  max-height: 34px !important;
+  flex: 0 0 34px !important;
+  object-fit: contain !important;
+}
+
+body .app-sidebar .brand .brand-mark,
+body .sidebar .brand .brand-mark,
+body .cs-assessment-sidebar .brand .brand-mark,
+body .cs-assessment-sidebar .cs-assessment-brand-mark {
+  display: grid !important;
+  place-items: center !important;
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  max-width: 34px !important;
+  max-height: 34px !important;
+  flex: 0 0 34px !important;
+  border-radius: 9px !important;
+  overflow: hidden !important;
+  font-size: 0 !important;
+  line-height: 1 !important;
+}
+
+body .app-sidebar .brand .brand-mark img,
+body .sidebar .brand .brand-mark img,
+body .cs-assessment-sidebar .brand .brand-mark img,
+body .cs-assessment-sidebar .cs-assessment-brand-mark img {
+  width: 26px !important;
+  height: 26px !important;
+  max-width: 26px !important;
+  max-height: 26px !important;
+}
+
+body .app-sidebar .brand > span,
+body .sidebar .brand > span,
+body .cs-assessment-sidebar .brand > span,
+body .cs-assessment-sidebar .cs-assessment-brand > span {
+  display: block !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  color: #fff !important;
+  font-size: 20px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  letter-spacing: -.02em !important;
+}
+
+body .app-sidebar .brand .brand-accent,
+body .sidebar .brand .brand-accent,
+body .cs-assessment-sidebar .brand .brand-accent {
+  color: #60a5fa !important;
+}
+
+/* ---------- HEADER: title left, profile flush to right ---------- */
+body .app-topbar,
+body .topbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  padding: 0 18px !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 120 !important;
+}
+
+body .app-topbar > .who,
+body .app-topbar > .user,
+body .topbar > .who,
+body .topbar > .user,
+body .topbar > .topbar-user {
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  position: static !important;
+  right: auto !important;
+  top: auto !important;
+  transform: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+}
+
+body .app-topbar h1,
+body .topbar-title {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* ---------- NATIVE CONTENT: consistent 28px desktop gutter ---------- */
+@media (min-width: 821px) {
+  body .app-content,
+  body .content,
+  body .page {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Only establish the common outer gutter. Inner cards retain their own design. */
+  body .app-content {
+    padding-left: 28px !important;
+    padding-right: 28px !important;
+  }
+  body .content {
+    padding-left: 28px !important;
+    padding-right: 28px !important;
+  }
+  body .page {
+    padding-left: 28px !important;
+    padding-right: 28px !important;
+  }
+
+  /* Assessment page had an excessive left offset. */
+  body .cs-assessment-sidebar + .main .page {
+    margin-left: 0 !important;
+    padding-left: 28px !important;
+    padding-right: 28px !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  /* Academic heading/current cards should use the same content edge. */
+  body .layout .main > .content {
+    width: 100% !important;
+  }
+}
+
+/* ---------- STUDENTS: preserve full table width and action column ---------- */
+body table {
+  max-width: 100% !important;
+}
+body .students-page table,
+body .student-table {
+  width: 100% !important;
+}
+body .students-page,
+body .student-list,
+body .student-table-wrap {
+  min-width: 0 !important;
+  max-width: none !important;
+}
+
+/* ---------- ASSESSMENTS: custom sidebar and content must never inherit
+   oversized logo / old shell offsets ---------- */
+body .cs-assessment-sidebar {
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+body .cs-assessment-sidebar .cs-assessment-brand,
+body .cs-assessment-sidebar .brand {
+  position: static !important;
+  inset: auto !important;
+}
+body .cs-assessment-sidebar .cs-assessment-brand-mark,
+body .cs-assessment-sidebar .brand-mark {
+  position: static !important;
+  inset: auto !important;
+  transform: none !important;
+  margin: 0 !important;
+}
+body .cs-assessment-sidebar .cs-assessment-nav,
+body .cs-assessment-sidebar nav {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+body .cs-assessment-sidebar .cs-nav-text {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+body .cs-assessment-sidebar + .main {
+  overflow-x: hidden !important;
+}
+
+/* ---------- MOBILE: do not force desktop dimensions ---------- */
+@media (max-width: 820px) {
+  body .app-shell,
+  body .layout {
+    grid-template-columns: 1fr !important;
+  }
+  body .app-sidebar,
+  body .sidebar,
+  body .cs-assessment-sidebar {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    position: relative !important;
+  }
+  body .cs-assessment-sidebar + .main {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+  body .app-content,
+  body .content,
+  body .page {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+}
+</style>
+
+
+<style id="connectsukuu-hoa-shell-consistency-final">
+/* ConnectSukuu HoA shell consistency finalization.
+   Presentation-only: no API, assessment, grading, report-card, or database logic. */
+html,body{box-sizing:border-box!important;max-width:100%!important;overflow-x:hidden!important}
+*,*::before,*::after{box-sizing:border-box!important}
+
+/* ================================================================
+   1. CANONICAL BRAND — 34px logo, Connect white, Sukuu blue
+   ================================================================ */
+body .brand,
+body .app-sidebar .brand,
+body .sidebar .brand,
+body .cs-assessment-sidebar .brand,
+body .cs-assessment-sidebar .cs-assessment-brand{
+  display:flex!important;align-items:center!important;gap:10px!important;
+  width:100%!important;min-width:0!important;height:40px!important;min-height:40px!important;
+  padding:0 10px!important;margin:0 0 22px!important;overflow:hidden!important;
+  white-space:nowrap!important;line-height:1!important;
+}
+body .brand img,
+body .app-sidebar .brand img,
+body .sidebar .brand img,
+body .cs-assessment-sidebar .brand img,
+body .cs-assessment-sidebar .cs-assessment-brand img{
+  display:block!important;width:34px!important;height:34px!important;
+  min-width:34px!important;min-height:34px!important;max-width:34px!important;max-height:34px!important;
+  flex:0 0 34px!important;object-fit:contain!important;border-radius:9px!important;
+}
+body .brand .brand-word,
+body .app-sidebar .brand .brand-word,
+body .sidebar .brand .brand-word,
+body .cs-assessment-sidebar .brand .brand-word{
+  display:block!important;min-width:0!important;overflow:visible!important;
+  color:#fff!important;font-size:20px!important;font-weight:800!important;
+  letter-spacing:-.02em!important;line-height:1!important;white-space:nowrap!important;
+}
+body .brand .brand-accent,
+body .app-sidebar .brand .brand-accent,
+body .sidebar .brand .brand-accent,
+body .cs-assessment-sidebar .brand .brand-accent{color:#60a5fa!important}
+body .brand .brand-mark,
+body .app-sidebar .brand .brand-mark,
+body .sidebar .brand .brand-mark,
+body .cs-assessment-sidebar .brand .brand-mark{
+  width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;
+  max-width:34px!important;max-height:34px!important;flex:0 0 34px!important;
+  display:grid!important;place-items:center!important;border-radius:9px!important;overflow:hidden!important;
+}
+
+/* ================================================================
+   2. FIXED LEFT SHELL FOR NATIVE .layout PAGES
+      Academic/Students/Attendance/Teaching must never paint beneath
+      the fixed sidebar. Timetable is the width/content reference and
+      is deliberately left alone.
+   ================================================================ */
+@media(min-width:821px){
+  body .layout > .sidebar{width:255px!important;min-width:255px!important;max-width:255px!important;}
+  body .layout > .main{margin-left:255px!important;width:calc(100% - 255px)!important;min-width:0!important;max-width:none!important;}
+  body .layout > .main > .topbar{width:100%!important;min-width:0!important;max-width:none!important;}
+  body .layout > .main > .content{width:100%!important;min-width:0!important;max-width:none!important;}
+}
+
+/* Do not alter the working Timetable canvas/content dimensions. */
+body .layout .main .content-grid,
+body .layout .main .board-card{min-width:0!important}
+
+/* ================================================================
+   3. HEADER — only the standardized right profile remains.
+      The native centered .user is hidden; the established right-side
+      profile rendered by the shared shell remains untouched.
+   ================================================================ */
+@media(min-width:821px){
+  body .layout > .main > .topbar .user,
+  body .layout > .main > .topbar .topbar-user{display:none!important}
+  body .cs-assessment-main-shift .topbar .user,
+  body .cs-assessment-main-shift .topbar .topbar-user{display:none!important}
+}
+
+/* Keep any shared/global profile flush right and vertically centered. */
+body .app-topbar .who,
+body .app-topbar .topbar-user,
+body .topbar .who,
+body .topbar > .global-user,
+body .global-topbar .who{
+  margin-left:auto!important;margin-right:0!important;position:static!important;
+  right:auto!important;left:auto!important;top:auto!important;transform:none!important;
+  display:flex!important;align-items:center!important;justify-content:flex-end!important;
+  flex:0 0 auto!important;white-space:nowrap!important;
+}
+
+/* ================================================================
+   4. LOGOUT — one standard treatment everywhere.
+      Match the working Attendance/Assessments visual treatment.
+   ================================================================ */
+body .sidebar-footer,
+body .sidebar-bottom,
+body .app-sidebar-footer{
+  margin-top:auto!important;width:100%!important;box-sizing:border-box!important;
+}
+body .sidebar-footer,
+body .sidebar-bottom{position:static!important;left:auto!important;right:auto!important;bottom:auto!important;padding:12px 2px 0!important}
+body .sidebar-footer .logout-btn,
+body .sidebar-bottom .logout,
+body .app-sidebar-footer .logout-btn{
+  width:100%!important;height:40px!important;min-height:40px!important;
+  border:1px solid rgba(255,255,255,.10)!important;border-radius:8px!important;
+  background:#1b2638!important;color:#d5dbea!important;padding:0 12px!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  font-size:13px!important;font-weight:700!important;line-height:1!important;
+  box-shadow:none!important;
+}
+body .sidebar-footer .logout-btn:hover,
+body .sidebar-bottom .logout:hover,
+body .app-sidebar-footer .logout-btn:hover{background:#253249!important;color:#fff!important}
+
+/* ================================================================
+   5. ACADEMIC SETUP — stop content/header overlap and tighten heading.
+   ================================================================ */
+body .layout > .main .content .heading h1,
+body .layout > .main .content h1{margin-top:2px!important;margin-bottom:5px!important}
+body .layout > .main .content .heading .intro,
+body .layout > .main .content p.intro{margin-top:0!important;line-height:1.42!important}
+body .layout > .main .content .heading{margin-bottom:18px!important}
+
+/* Academic page specifically: keep cards inside the main column. */
+@media(min-width:821px){
+  body .layout > .main .content,
+  body .layout > .main .content > *{max-width:100%!important;min-width:0!important}
+  body .layout > .main .content .card,
+  body .layout > .main .content section{overflow:visible!important}
+}
+
+/* ================================================================
+   6. STUDENTS — action column belongs to the table grid, not the edge.
+   ================================================================ */
+body .students-page table th:last-child,
+body .students-page table td:last-child,
+body .student-table th:last-child,
+body .student-table td:last-child{
+  text-align:center!important;vertical-align:middle!important;
+}
+body .students-page table th:last-child,
+body .student-table th:last-child{width:120px!important}
+body .students-page table td:last-child button,
+body .student-table td:last-child button{margin-left:auto!important;margin-right:auto!important;}
+
+/* ================================================================
+   7. ASSESSMENTS — preserve the now-correct synchronized widths.
+      Only remove the duplicate centered native profile and normalize
+      the sidebar brand. Do not touch review-center sizing.
+   ================================================================ */
+body .cs-assessment-sidebar{box-sizing:border-box!important;overflow:hidden!important}
+body .cs-assessment-sidebar .cs-assessment-brand,
+body .cs-assessment-sidebar .brand{position:static!important;inset:auto!important;}
+body .cs-assessment-sidebar .cs-assessment-brand-mark,
+body .cs-assessment-sidebar .brand-mark{position:static!important;inset:auto!important;transform:none!important;margin:0!important;}
+body .cs-assessment-sidebar + .main{overflow-x:hidden!important}
+
+/* Mobile: native mobile behavior remains intact. */
+@media(max-width:820px){
+  body .layout > .sidebar{width:100%!important;min-width:0!important;max-width:none!important;position:relative!important;inset:auto!important}
+  body .layout > .main{margin-left:0!important;width:100%!important;max-width:100%!important}
+  body .layout > .main > .topbar{width:100%!important}
+}
+</style>
+<style>
+/* CONNECTSUKUU_TEACHER_ROLE_SHELL */
+body .sidebar,body .app-sidebar,body aside.sidebar,body aside.app-sidebar{width:255px!important;min-width:255px!important}
+body .topbar,body .app-topbar{position:sticky!important;top:0!important;z-index:1000!important}
+body .topbar .user,body .app-topbar .who{margin-left:auto!important;position:static!important;transform:none!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:10px!important;flex:0 0 auto!important}
+body .topbar .user-info,body .app-topbar .profile-copy{display:flex!important;flex-direction:column!important;justify-content:center!important;line-height:1.15!important}
+body .topbar-title,body .app-topbar h1{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+</style>
+<script id="connectsukuu-teacher-shared-page-guard">(function(){try{var u=JSON.parse(localStorage.getItem("cs_user")||"null");if(u&&String(u.role||"").toUpperCase()==="TEACHER")location.replace("/roles/teacher/teacher-dashboard.html")}catch(_){}})();</script>
+<script id="connectsukuu-role-isolation-guard">
+(function(){
+  'use strict';
+  var EXPECTED_ROLE='HEAD_TEACHER';
+  try{
+    var raw=localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user');
+    if(raw){
+      var user=JSON.parse(raw);
+      if(user && String(user.role||'').toUpperCase()!==EXPECTED_ROLE){
+        location.replace('/auth/signin.html');
+      }
+    }
+  }catch(_){ }
+})();
+</script>
+
+
+
+<style id="connectsukuu-headteacher-final-shell-style">
+:root{
+  --csk-ht-sidebar:255px;
+  --csk-ht-header:58px;
+  --csk-ht-navy:#0b1730;
+  --csk-ht-navy-2:#101d38;
+  --csk-ht-blue:#2563eb;
+  --csk-ht-ink:#172033;
+  --csk-ht-muted:#667085;
+  --csk-ht-line:#e4e7ec;
+  --csk-ht-bg:#f7f9fc;
+}
+html,body{width:100%!important;min-width:0!important;min-height:100%!important;margin:0!important;background:var(--csk-ht-bg)!important;color:var(--csk-ht-ink)!important;overflow-x:hidden!important;}
+body *{box-sizing:border-box;}
+
+/* Hide every legacy Head Teacher shell. Business content remains intact. */
+body>.app-shell,body>.layout,body>.app{display:block!important;width:100%!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:100vh!important;margin:0!important;padding:0!important;background:var(--csk-ht-bg)!important;overflow:visible!important;}
+body>.app-shell>.app-sidebar,body>.layout>.sidebar,body>.app>.sidebar,body>.app-sidebar,body>.sidebar,body>.cs-assessment-sidebar{display:none!important;}
+body .app-topbar,body .topbar,body .cs-assessment-topbar{display:none!important;}
+body .app-sidebar-footer,body .sidebar-footer,body .sidebar-bottom,body .academic-sidebar-footer{display:none!important;}
+
+/* One canonical fixed sidebar. */
+.csk-ht-sidebar-final{
+  position:fixed!important;left:0!important;top:0!important;bottom:0!important;
+  width:var(--csk-ht-sidebar)!important;min-width:var(--csk-ht-sidebar)!important;max-width:var(--csk-ht-sidebar)!important;
+  height:100vh!important;min-height:100vh!important;z-index:5000!important;
+  display:flex!important;flex-direction:column!important;overflow:hidden!important;
+  margin:0!important;padding:0!important;background:linear-gradient(180deg,var(--csk-ht-navy),var(--csk-ht-navy-2))!important;
+  border-right:1px solid rgba(255,255,255,.08)!important;color:#fff!important;
+}
+.csk-ht-brand-final{
+  height:var(--csk-ht-header)!important;min-height:var(--csk-ht-header)!important;flex:0 0 var(--csk-ht-header)!important;
+  display:flex!important;align-items:center!important;gap:10px!important;padding:0 18px!important;
+  border-bottom:1px solid rgba(255,255,255,.08)!important;box-sizing:border-box!important;
+}
+.csk-ht-brand-final .brand-mark{
+  width:34px!important;height:34px!important;min-width:34px!important;border-radius:9px!important;
+  display:grid!important;place-items:center!important;background:#2563eb!important;overflow:hidden!important;
+}
+.csk-ht-brand-final .brand-mark img{width:34px!important;height:34px!important;display:block!important;object-fit:cover!important;}
+.csk-ht-brand-final .brand-connect{color:#fff!important;font-size:19px!important;font-weight:800!important;letter-spacing:-.035em!important;}
+.csk-ht-brand-final .brand-sukuu{color:#60a5fa!important;}
+.csk-ht-nav-final{padding:16px 12px!important;display:flex!important;flex-direction:column!important;gap:4px!important;overflow-y:auto!important;overflow-x:hidden!important;flex:1!important;}
+.csk-ht-nav-final .nav-label{font-size:10px!important;font-weight:800!important;letter-spacing:.12em!important;color:#8492aa!important;padding:10px 12px 6px!important;margin:0!important;}
+.csk-ht-nav-final a{
+  min-height:44px!important;height:44px!important;width:100%!important;display:flex!important;align-items:center!important;gap:11px!important;
+  padding:0 12px!important;border-radius:9px!important;text-decoration:none!important;color:#c2ccdc!important;font-size:13px!important;font-weight:650!important;
+  line-height:1.2!important;white-space:nowrap!important;overflow:hidden!important;transition:background .16s ease,color .16s ease!important;
+}
+.csk-ht-nav-final a:hover{background:rgba(255,255,255,.07)!important;color:#fff!important;transform:none!important;}
+.csk-ht-nav-final a.active{background:rgba(37,99,235,.22)!important;color:#fff!important;box-shadow:inset 3px 0 0 #3b82f6!important;}
+.csk-ht-nav-final .nav-icon{width:20px!important;min-width:20px!important;height:20px!important;display:grid!important;place-items:center!important;color:inherit!important;line-height:1!important;}
+.csk-ht-nav-final .nav-icon svg{width:17px!important;height:17px!important;display:block!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important;}
+.csk-ht-logout-final{margin:0 14px 14px!important;width:calc(100% - 28px)!important;height:42px!important;min-height:42px!important;border:1px solid rgba(255,255,255,.14)!important;background:rgba(255,255,255,.035)!important;color:#e5eaf3!important;border-radius:8px!important;font-size:12px!important;font-weight:750!important;cursor:pointer!important;}
+.csk-ht-logout-final:hover{background:rgba(255,255,255,.09)!important;color:#fff!important;}
+
+/* One canonical fixed header and one scrollable content region. */
+.csk-ht-main-final{
+  display:block!important;position:relative!important;margin-left:var(--csk-ht-sidebar)!important;
+  width:calc(100% - var(--csk-ht-sidebar))!important;min-width:0!important;min-height:100vh!important;
+  padding:var(--csk-ht-header) 0 0!important;background:var(--csk-ht-bg)!important;box-sizing:border-box!important;
+}
+.csk-ht-header-final{
+  position:fixed!important;left:var(--csk-ht-sidebar)!important;right:0!important;top:0!important;width:auto!important;
+  height:var(--csk-ht-header)!important;min-height:var(--csk-ht-header)!important;z-index:4900!important;
+  background:#fff!important;border-bottom:1px solid var(--csk-ht-line)!important;display:flex!important;align-items:center!important;
+  justify-content:space-between!important;padding:0 20px!important;box-sizing:border-box!important;
+}
+.csk-ht-header-title-final{margin:0!important;padding:0!important;color:var(--csk-ht-ink)!important;font-size:19px!important;font-weight:750!important;line-height:1!important;letter-spacing:-.025em!important;}
+.csk-ht-profile-final{display:flex!important;align-items:center!important;gap:10px!important;min-width:0!important;padding:6px 9px!important;border:1px solid #e5e7eb!important;border-radius:10px!important;background:#fff!important;box-shadow:0 2px 8px rgba(15,23,42,.04)!important;}
+.csk-ht-profile-copy-final{display:flex!important;flex-direction:column!important;align-items:flex-end!important;min-width:0!important;line-height:1.15!important;}
+.csk-ht-profile-email-final{max-width:210px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;color:#344054!important;font-size:11px!important;font-weight:750!important;}
+.csk-ht-profile-role-final{margin-top:3px!important;color:#98a2b3!important;font-size:10px!important;font-weight:500!important;}
+.csk-ht-avatar-final{width:34px!important;height:34px!important;min-width:34px!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:#eff6ff!important;color:#2563eb!important;font-size:12px!important;font-weight:850!important;}
+.csk-ht-main-final>.app-content,.csk-ht-main-final>.content,.csk-ht-main-final>.page,.csk-ht-main-final>section.content{width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:24px 28px 44px!important;box-sizing:border-box!important;}
+.csk-ht-main-final>.app-content{height:calc(100vh - var(--csk-ht-header))!important;min-height:calc(100vh - var(--csk-ht-header))!important;overflow-y:auto!important;overflow-x:hidden!important;}
+.csk-ht-main-final>.app-content table,.csk-ht-main-final>.content table,.csk-ht-main-final>.page table{max-width:100%!important;}
+
+/* HT must never display the HoA dashboard/intelligence layer. */
+body.cs-headteacher-final-shell #csHoaDashboard,body.cs-headteacher-final-shell #csHoaAcademicIntelligence,body.cs-headteacher-final-shell .cs-hoa-dashboard,body.cs-headteacher-final-shell .cs-hoa-intel{display:none!important;visibility:hidden!important;}
+
+/* Keep the Students Actions column inside the table. */
+body.cs-headteacher-final-shell #students-table{width:100%!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;}
+body.cs-headteacher-final-shell #students-table th,body.cs-headteacher-final-shell #students-table td{overflow:hidden!important;text-overflow:ellipsis!important;vertical-align:middle!important;}
+body.cs-headteacher-final-shell #students-table th:last-child,body.cs-headteacher-final-shell #students-table td:last-child{width:120px!important;min-width:120px!important;max-width:120px!important;text-align:center!important;}
+body.cs-headteacher-final-shell #students-table td:last-child .student-actions,body.cs-headteacher-final-shell #students-table td:last-child .cs-row-actions{width:100%!important;display:flex!important;justify-content:center!important;align-items:center!important;gap:6px!important;overflow:hidden!important;}
+
+@media(max-width:900px){
+  :root{--csk-ht-sidebar:0px;}
+  html,body{overflow-x:hidden!important;}
+  .csk-ht-sidebar-final{position:relative!important;width:100%!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:0!important;}
+  .csk-ht-nav-final{max-height:360px!important;overflow-y:auto!important;}
+  .csk-ht-main-final{margin-left:0!important;width:100%!important;padding-top:58px!important;}
+  .csk-ht-header-final{left:0!important;padding:0 14px!important;}
+  .csk-ht-main-final>.app-content,.csk-ht-main-final>.content,.csk-ht-main-final>.page,.csk-ht-main-final>section.content{padding:20px 16px 34px!important;}
+  .csk-ht-profile-email-final{max-width:150px!important;}
+}
+</style>
+<!-- CONNECTSUKUU_HT_CONTENT_POLISH_FINAL -->
+<style id="connectsukuu-ht-content-polish-final">
+/* ------------------------------------------------------------------
+   ConnectSukuu Head Teacher content polish.
+   Presentation only: no API, permission, assessment, finance, student,
+   grading, timetable or database logic is changed here.
+   ------------------------------------------------------------------ */
+
+/* Shared page rhythm ------------------------------------------------ */
+.csk-ht-main-final>.app-content,
+.csk-ht-main-final>.content,
+.csk-ht-main-final>.page,
+.csk-ht-main-final>section.content{
+  padding:20px 28px 40px!important;
+}
+
+/* Dashboard --------------------------------------------------------- */
+body.cs-headteacher-final-shell .ht-hero{
+  display:flex!important;align-items:flex-end!important;justify-content:space-between!important;
+  gap:20px!important;padding:22px 24px!important;margin:0 0 16px!important;
+  border:1px solid #dbe5f2!important;border-radius:16px!important;
+  background:linear-gradient(135deg,#ffffff 0%,#f7fbff 62%,#eef5ff 100%)!important;
+  box-shadow:0 8px 24px rgba(16,24,40,.05)!important;
+}
+body.cs-headteacher-final-shell .ht-eyebrow,
+body.cs-headteacher-final-shell .ht-panel-kicker{
+  color:#2563eb!important;font-size:10px!important;font-weight:850!important;
+  letter-spacing:.10em!important;text-transform:uppercase!important;
+}
+body.cs-headteacher-final-shell .ht-hero h2{
+  margin:5px 0 7px!important;font-size:29px!important;line-height:1.08!important;
+  letter-spacing:-.035em!important;color:#172033!important;
+}
+body.cs-headteacher-final-shell .ht-hero p{
+  margin:0!important;max-width:760px!important;color:#667085!important;font-size:13px!important;line-height:1.55!important;
+}
+body.cs-headteacher-final-shell .ht-role-pill{
+  flex:0 0 auto!important;padding:7px 10px!important;border-radius:999px!important;
+  background:#eef4ff!important;color:#175cd3!important;border:1px solid #dbe7ff!important;
+  font-size:10px!important;font-weight:800!important;
+}
+body.cs-headteacher-final-shell .ht-stat-grid{
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:13px!important;
+  margin:0 0 16px!important;
+}
+body.cs-headteacher-final-shell .ht-stat-card{
+  display:grid!important;grid-template-columns:auto 1fr!important;grid-template-rows:auto auto auto!important;
+  column-gap:11px!important;align-items:center!important;min-width:0!important;
+  padding:16px 17px!important;border:1px solid #e2e8f0!important;border-radius:14px!important;
+  background:#fff!important;color:#172033!important;text-decoration:none!important;
+  box-shadow:0 5px 18px rgba(16,24,40,.045)!important;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease!important;
+}
+body.cs-headteacher-final-shell .ht-stat-card:hover{
+  transform:translateY(-2px)!important;box-shadow:0 10px 24px rgba(16,24,40,.08)!important;border-color:#cbdcf8!important;
+}
+body.cs-headteacher-final-shell .ht-stat-icon{
+  grid-row:1 / span 3!important;width:38px!important;height:38px!important;display:grid!important;place-items:center!important;
+  border-radius:11px!important;background:#eef4ff!important;color:#2563eb!important;font-size:10px!important;font-weight:900!important;
+}
+body.cs-headteacher-final-shell .ht-stat-card:nth-child(2) .ht-stat-icon{background:#f5f3ff!important;color:#7c3aed!important}
+body.cs-headteacher-final-shell .ht-stat-card:nth-child(3) .ht-stat-icon{background:#ecfdf3!important;color:#15803d!important}
+body.cs-headteacher-final-shell .ht-stat-card:nth-child(4) .ht-stat-icon{background:#fff7ed!important;color:#c2410c!important}
+body.cs-headteacher-final-shell .ht-stat-label{font-size:10px!important;font-weight:800!important;letter-spacing:.055em!important;text-transform:uppercase!important;color:#667085!important}
+body.cs-headteacher-final-shell .ht-stat-card strong{margin-top:3px!important;font-size:24px!important;line-height:1.05!important;font-weight:850!important;color:#172033!important}
+body.cs-headteacher-final-shell .ht-stat-note{font-size:10px!important;color:#98a2b3!important;margin-top:3px!important}
+body.cs-headteacher-final-shell .ht-grid{
+  display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(330px,.85fr)!important;gap:16px!important;margin:0 0 16px!important;
+}
+body.cs-headteacher-final-shell .ht-panel{
+  min-width:0!important;padding:17px 18px!important;border:1px solid #e2e8f0!important;border-radius:14px!important;
+  background:#fff!important;box-shadow:0 5px 18px rgba(16,24,40,.04)!important;
+}
+body.cs-headteacher-final-shell .ht-panel-head{
+  display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:12px!important;margin-bottom:13px!important;
+}
+body.cs-headteacher-final-shell .ht-panel-head h3{margin:3px 0 0!important;font-size:15px!important;color:#172033!important}
+body.cs-headteacher-final-shell .ht-link{font-size:11px!important;font-weight:750!important;color:#2563eb!important;text-decoration:none!important;white-space:nowrap!important}
+body.cs-headteacher-final-shell .ht-context{display:grid!important;grid-template-columns:1fr 1fr!important;gap:9px!important;margin-bottom:13px!important}
+body.cs-headteacher-final-shell .ht-context-item{
+  padding:11px 12px!important;border:1px solid #edf0f5!important;border-radius:11px!important;background:#f8fafc!important;
+}
+body.cs-headteacher-final-shell .ht-context-item span{display:block!important;font-size:9px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.05em!important;color:#98a2b3!important}
+body.cs-headteacher-final-shell .ht-context-item strong{display:block!important;margin-top:4px!important;font-size:13px!important;color:#172033!important}
+body.cs-headteacher-final-shell .ht-progress-row{display:flex!important;justify-content:space-between!important;align-items:flex-end!important;gap:12px!important;margin-top:4px!important}
+body.cs-headteacher-final-shell .ht-progress-row strong{display:block!important;margin-top:3px!important;font-size:12px!important;color:#344054!important}
+body.cs-headteacher-final-shell .ht-readiness-badge{padding:5px 8px!important;border-radius:999px!important;background:#ecfdf3!important;color:#15803d!important;font-size:9px!important;font-weight:850!important;white-space:nowrap!important}
+body.cs-headteacher-final-shell .ht-progress{height:7px!important;margin:10px 0 7px!important;background:#eef2f7!important;border-radius:99px!important;overflow:hidden!important}
+body.cs-headteacher-final-shell .ht-progress span{display:block!important;height:100%!important;background:linear-gradient(90deg,#2563eb,#60a5fa)!important;border-radius:99px!important}
+body.cs-headteacher-final-shell .ht-muted{margin:0!important;color:#98a2b3!important;font-size:10.5px!important;line-height:1.45!important}
+body.cs-headteacher-final-shell .ht-actions{display:grid!important;gap:7px!important}
+body.cs-headteacher-final-shell .ht-actions a{
+  display:flex!important;align-items:center!important;gap:10px!important;padding:10px 11px!important;border:1px solid #edf0f5!important;border-radius:10px!important;
+  background:#fbfcfe!important;color:#172033!important;text-decoration:none!important;transition:transform .16s ease,background .16s ease,border-color .16s ease!important;
+}
+body.cs-headteacher-final-shell .ht-actions a:hover{transform:translateX(2px)!important;background:#f7faff!important;border-color:#cfe0ff!important}
+body.cs-headteacher-final-shell .ht-actions a>span{width:26px!important;height:26px!important;display:grid!important;place-items:center!important;border-radius:8px!important;background:#eef4ff!important;color:#2563eb!important;font-size:9px!important;font-weight:900!important}
+body.cs-headteacher-final-shell .ht-actions strong{display:block!important;font-size:11.5px!important}
+body.cs-headteacher-final-shell .ht-actions small{display:block!important;margin-top:2px!important;color:#98a2b3!important;font-size:9.5px!important}
+body.cs-headteacher-final-shell .ht-panel-wide{margin-bottom:16px!important}
+body.cs-headteacher-final-shell .ht-attention-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9px!important}
+body.cs-headteacher-final-shell .ht-attention-card{
+  display:flex!important;align-items:center!important;gap:9px!important;min-width:0!important;padding:11px 12px!important;
+  border:1px solid #edf0f5!important;border-radius:10px!important;background:#fbfcfe!important;color:#172033!important;text-decoration:none!important;
+}
+body.cs-headteacher-final-shell .ht-attention-icon{width:30px!important;height:30px!important;min-width:30px!important;display:grid!important;place-items:center!important;border-radius:9px!important;background:#eef4ff!important;color:#2563eb!important;font-weight:900!important;font-size:10px!important}
+body.cs-headteacher-final-shell .ht-attention-card strong{display:block!important;font-size:11px!important}
+body.cs-headteacher-final-shell .ht-attention-card p{margin:3px 0 0!important;color:#98a2b3!important;font-size:9.5px!important;line-height:1.35!important}
+body.cs-headteacher-final-shell .ht-arrow{margin-left:auto!important;color:#98a2b3!important}
+body.cs-headteacher-final-shell .ht-note-panel{display:flex!important;align-items:flex-start!important;gap:12px!important;margin-bottom:0!important}
+body.cs-headteacher-final-shell .ht-note-mark{width:34px!important;height:34px!important;min-width:34px!important;display:grid!important;place-items:center!important;border-radius:10px!important;background:#0f172a!important;color:#fff!important;font-size:9px!important;font-weight:900!important}
+body.cs-headteacher-final-shell .ht-note-panel h3{margin:3px 0 4px!important;font-size:14px!important}
+body.cs-headteacher-final-shell .ht-note-panel p{margin:0!important;color:#667085!important;font-size:10.5px!important;line-height:1.55!important}
+
+/* Team & Roles ----------------------------------------------------- */
+body.cs-headteacher-final-shell .team-table{width:100%!important;min-width:0!important;table-layout:fixed!important}
+body.cs-headteacher-final-shell .team-table th,
+body.cs-headteacher-final-shell .team-table td{vertical-align:middle!important}
+body.cs-headteacher-final-shell .team-table th:nth-child(1),body.cs-headteacher-final-shell .team-table td:nth-child(1){width:28%!important}
+body.cs-headteacher-final-shell .team-table th:nth-child(2),body.cs-headteacher-final-shell .team-table td:nth-child(2){width:17%!important}
+body.cs-headteacher-final-shell .team-table th:nth-child(3),body.cs-headteacher-final-shell .team-table td:nth-child(3){width:25%!important}
+body.cs-headteacher-final-shell .team-table th:nth-child(4),body.cs-headteacher-final-shell .team-table td:nth-child(4){width:12%!important}
+body.cs-headteacher-final-shell .team-table th:nth-child(5),body.cs-headteacher-final-shell .team-table td:nth-child(5){width:9%!important}
+body.cs-headteacher-final-shell .team-table th:nth-child(6),body.cs-headteacher-final-shell .team-table td:nth-child(6){width:120px!important}
+body.cs-headteacher-final-shell .team-person{min-width:0!important}
+body.cs-headteacher-final-shell .team-person-name,
+body.cs-headteacher-final-shell .team-person-sub,
+body.cs-headteacher-final-shell .team-role{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+body.cs-headteacher-final-shell .team-role{max-width:100%!important;vertical-align:middle!important}
+body.cs-headteacher-final-shell .team-actions{justify-content:center!important;gap:6px!important;white-space:nowrap!important}
+body.cs-headteacher-final-shell .team-action{height:34px!important;min-width:58px!important;padding:0 10px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important}
+body.cs-headteacher-final-shell .team-action.danger{min-width:64px!important}
+
+/* Academic Setup --------------------------------------------------- */
+body.cs-headteacher-final-shell .heading{margin-bottom:15px!important}
+body.cs-headteacher-final-shell .heading h1{margin-bottom:5px!important}
+body.cs-headteacher-final-shell .heading p{margin:0!important;line-height:1.5!important}
+body.cs-headteacher-final-shell .current-card{margin-bottom:14px!important;padding:21px 24px!important}
+body.cs-headteacher-final-shell #connectsukuuGradingSystemPanel{margin-top:14px!important;border-radius:15px!important}
+body.cs-headteacher-final-shell #connectsukuuGradingSystemPanel>div:first-child{padding:15px 18px!important}
+body.cs-headteacher-final-shell #connectsukuuGradingSystemPanel h2{font-size:18px!important}
+body.cs-headteacher-final-shell #connectsukuuGradingSystemPanel #csGradingScaleList{padding:13px 18px!important}
+body.cs-headteacher-final-shell .card{margin-bottom:14px!important}
+body.cs-headteacher-final-shell .card-header{padding:15px 18px!important}
+body.cs-headteacher-final-shell .card-header h2{font-size:16px!important}
+body.cs-headteacher-final-shell .card-header p{font-size:12px!important;line-height:1.45!important}
+body.cs-headteacher-final-shell .cs-academic-af-scale{margin-bottom:14px!important}
+body.cs-headteacher-final-shell .cs-academic-af-scale-head{padding:15px 18px!important}
+body.cs-headteacher-final-shell .cs-academic-af-scale-bands{padding:13px 18px!important}
+
+/* Students: Head Teacher is view/search only ----------------------- */
+body.cs-headteacher-final-shell #students-table th.student-select-cell,
+body.cs-headteacher-final-shell #students-table td.student-select-cell{display:none!important;width:0!important;min-width:0!important;max-width:0!important;padding:0!important;border:0!important}
+body.cs-headteacher-final-shell #students-table th:nth-child(2),body.cs-headteacher-final-shell #students-table td:nth-child(2){width:29%!important}
+body.cs-headteacher-final-shell #students-table th:nth-child(3),body.cs-headteacher-final-shell #students-table td:nth-child(3){width:16%!important}
+body.cs-headteacher-final-shell #students-table th:nth-child(4),body.cs-headteacher-final-shell #students-table td:nth-child(4){width:14%!important}
+body.cs-headteacher-final-shell #students-table th:nth-child(5),body.cs-headteacher-final-shell #students-table td:nth-child(5){width:18%!important}
+body.cs-headteacher-final-shell #students-table th:nth-child(6),body.cs-headteacher-final-shell #students-table td:nth-child(6){width:11%!important}
+body.cs-headteacher-final-shell #students-table th:nth-child(7),body.cs-headteacher-final-shell #students-table td:nth-child(7){width:110px!important;text-align:center!important}
+body.cs-headteacher-final-shell #students-table td:nth-child(7) .student-actions,
+body.cs-headteacher-final-shell #students-table td:nth-child(7) .cs-row-actions{justify-content:center!important;gap:0!important}
+body.cs-headteacher-final-shell #students-table input.student-select-all,
+body.cs-headteacher-final-shell #students-table input[data-student-select]{display:none!important}
+body.cs-headteacher-final-shell #student-bulk-toolbar{display:none!important}
+
+/* Assessments & Report Cards -------------------------------------- */
+body.cs-headteacher-final-shell .csk-ht-main-final>header.topbar,
+body.cs-headteacher-final-shell .csk-ht-main-final>.topbar,
+body.cs-headteacher-final-shell .csk-ht-main-final>.app-topbar{display:none!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.page{padding:19px 28px 38px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.page .hero{margin-bottom:17px!important;align-items:flex-start!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.page .hero h1{font-size:29px!important;margin-bottom:6px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.page .hero p{margin-top:0!important;font-size:12.5px!important;line-height:1.5!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.page .stats{gap:11px!important;margin-bottom:14px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.page .context{margin-bottom:14px!important;padding:12px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.page .tabs{margin-bottom:13px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.page .panel-head{padding:14px 16px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.page .panel-head h2{font-size:15px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.page .panel-head p{font-size:11px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.page table th{padding:10px 12px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.page table td{padding:11px 12px!important}
+
+/* Finance ---------------------------------------------------------- */
+body.cs-headteacher-final-shell .csk-ht-main-final>.content{padding:18px 28px 36px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content>header.topbar,
+body.cs-headteacher-final-shell .csk-ht-main-final>.content>.topbar{display:none!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content .hero{margin-bottom:12px!important;align-items:flex-start!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content .hero h1{font-size:28px!important;margin-bottom:5px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content .subtitle{font-size:12.5px!important;line-height:1.5!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content .filters{padding:14px 16px!important;margin-bottom:12px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content .stats{gap:11px!important;margin-bottom:12px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content .stat{padding:14px 15px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content .card{margin-bottom:12px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content .card-head{padding:13px 16px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content .card-head h2{font-size:15px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content .card-head p{margin-top:3px!important;font-size:10.5px!important;line-height:1.4!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content .school-stat{padding:16px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content .finance-ops{margin-top:12px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content .finance-ops-grid{gap:10px!important;padding:13px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content .finance-ops-card{padding:14px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content .finance-ops-section{padding:0 13px 13px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content .payroll-section{margin-top:12px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.content .payroll-summary{padding:12px 16px!important}
+
+/* Never show the obsolete page-local topbar underneath the canonical header. */
+body.cs-headteacher-final-shell .csk-ht-main-final>header.topbar,
+body.cs-headteacher-final-shell .csk-ht-main-final>.topbar,
+body.cs-headteacher-final-shell .csk-ht-main-final>.app-topbar{display:none!important}
+
+@media(max-width:1100px){
+  body.cs-headteacher-final-shell .ht-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body.cs-headteacher-final-shell .ht-grid{grid-template-columns:1fr!important}
+  body.cs-headteacher-final-shell .ht-attention-grid{grid-template-columns:1fr!important}
+}
+@media(max-width:760px){
+  body.cs-headteacher-final-shell .ht-hero{flex-direction:column!important;align-items:flex-start!important}
+  body.cs-headteacher-final-shell .ht-stat-grid{grid-template-columns:1fr!important}
+  body.cs-headteacher-final-shell .ht-context{grid-template-columns:1fr!important}
+  body.cs-headteacher-final-shell .csk-ht-main-final>.page,
+  body.cs-headteacher-final-shell .csk-ht-main-final>.content{padding:16px!important}
+}
+</style>
+<style id="connectsukuu-ht-final-selected-content-standard">
+/* Final selected-content standard: presentation only. */
+html,body{max-width:100%!important;overflow-x:hidden!important}
+*,*::before,*::after{box-sizing:border-box!important}
+
+/* TEAM & ROLES */
+body .team-page{width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
+body .team-page .callout-banner,
+body .team-page .team-hero,
+body .team-page .team-summary,
+body .team-page .card-panel,
+body .ht-team-leadership{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important}
+body .team-page .callout-banner{margin-bottom:12px!important}
+body .team-page .team-hero{margin-bottom:14px!important;padding:16px 18px!important;min-height:0!important}
+body .team-page .team-summary{margin-bottom:14px!important;gap:12px!important}
+body .team-page .team-summary .team-stat{min-height:78px!important}
+body .team-page .card-panel{margin-bottom:0!important;padding:0!important}
+body .ht-team-leadership,body .team-page .callout-banner,body .team-page .team-hero,body .team-page .team-summary,body .team-page .card-panel{border-radius:16px!important}
+
+/* ACADEMIC SETUP */
+body #connectsukuuGradingSystemPanel,
+body .cs-academic-af-scale,
+body .content>section.card{width:100%!important;max-width:none!important;min-height:0!important;height:auto!important}
+body #connectsukuuGradingSystemPanel{margin-top:14px!important;margin-bottom:14px!important}
+body #connectsukuuGradingSystemPanel>div:first-child{padding:14px 18px!important;min-height:0!important}
+body #connectsukuuGradingSystemPanel #csGradingScaleList{padding:10px 18px!important;min-height:0!important}
+body .cs-academic-af-scale{margin:0 0 14px!important}
+body .cs-academic-af-scale-head{padding:14px 18px!important}
+body .cs-academic-af-scale-bands{padding:12px 18px!important;gap:8px!important}
+body .cs-academic-af-band{padding:10px 8px!important}
+body .content>section.card{margin:0 0 14px!important}
+body .content>section.card .card-header{padding:14px 18px!important}
+body .content>section.card .panel{margin-top:10px!important}
+
+/* ASSESSMENTS & REPORTS */
+body:has(.cs-assessment-sidebar) .main>.topbar{display:none!important}
+body:has(.cs-assessment-sidebar) .main>.page{width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:24px 28px 44px!important}
+body:has(.cs-assessment-sidebar) .main>.page>.hero{width:100%!important;max-width:none!important;margin:0 0 18px!important}
+body:has(.cs-assessment-sidebar) .main>.page>.stats,
+body:has(.cs-assessment-sidebar) .main>.page>.context,
+body:has(.cs-assessment-sidebar) .main>.page>.panel{width:100%!important;max-width:none!important}
+body:has(.cs-assessment-sidebar) .main>.page>.stats{margin-bottom:18px!important}
+body:has(.cs-assessment-sidebar) .main>.page>.context{margin-bottom:14px!important}
+body:has(.cs-assessment-sidebar) .main>.page>.tabs{margin-top:0!important}
+body:has(.cs-assessment-sidebar) .main>.page>.panel{margin-top:0!important}
+
+/* FINANCE */
+body:has(.main .topbar .top-title) .content{width:100%!important;max-width:none!important;min-width:0!important;padding:24px 28px 44px!important}
+body:has(.main .topbar .top-title) .content>.hero{width:100%!important;max-width:none!important;margin:0 0 14px!important;padding:22px 24px!important;border:1px solid #dbe6f5!important;border-radius:18px!important;background:linear-gradient(135deg,#f7fbff 0%,#eef5ff 100%)!important;box-shadow:0 8px 24px rgba(15,23,42,.05)!important}
+body:has(.main .topbar .top-title) .content>.hero .subtitle{max-width:760px!important;line-height:1.55!important}
+body:has(.main .topbar .top-title) .content>.filters{width:100%!important;margin:0 0 14px!important;padding:16px 18px!important;border:1px solid #e1e8f2!important;border-radius:16px!important;background:#fff!important;box-shadow:0 6px 18px rgba(15,23,42,.04)!important}
+body:has(.main .topbar .top-title) .content>.stats{width:100%!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;margin:0 0 14px!important}
+body:has(.main .topbar .top-title) .content>.stats .stat{min-height:104px!important;padding:16px 18px!important;border:1px solid #e3e9f2!important;border-radius:16px!important;background:#fff!important;box-shadow:0 6px 18px rgba(15,23,42,.04)!important}
+body:has(.main .topbar .top-title) .content>.stats .stat-value{font-size:24px!important;line-height:1.15!important}
+body:has(.main .topbar .top-title) .content>.stats .stat-billed .stat-value{color:#2563eb!important}
+body:has(.main .topbar .top-title) .content>.stats .stat-collected .stat-value{color:#16a34a!important}
+body:has(.main .topbar .top-title) .content>.stats .stat-outstanding .stat-value{color:#dc2626!important}
+body:has(.main .topbar .top-title) .content>.stats .stat-rate .stat-value{color:#7c3aed!important}
+body:has(.main .topbar .top-title) .content>.card,
+body:has(.main .topbar .top-title) .content>.finance-ops,
+body:has(.main .topbar .top-title) .content>.payroll-section,
+body:has(.main .topbar .top-title) .content>.school-overview{width:100%!important;max-width:none!important;margin:0 0 14px!important;border-radius:16px!important}
+body:has(.main .topbar .top-title) .content>.school-overview{padding:0!important}
+body:has(.main .topbar .top-title) .content .finance-ops-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
+body:has(.main .topbar .top-title) .content .finance-ops-card{min-height:150px!important;border-radius:14px!important}
+body:has(.main .topbar .top-title) .content .school-stats{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+body:has(.main .topbar .top-title) .content .finance-reports-shell{width:100%!important;max-width:none!important;margin:0!important;border-radius:16px!important}
+@media(max-width:1000px){body:has(.main .topbar .top-title) .content>.stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}body:has(.main .topbar .top-title) .content .finance-ops-grid{grid-template-columns:1fr!important}body:has(.main .topbar .top-title) .content .school-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:700px){body:has(.main .topbar .top-title) .content{padding:18px 16px 32px!important}body:has(.main .topbar .top-title) .content>.stats{grid-template-columns:1fr!important}body:has(.main .topbar .top-title) .content .school-stats{grid-template-columns:1fr!important}}
+</style>
+
+<link rel="stylesheet" href="/roles/headteacher/headteacher-ui-refinement.css">
+<style id="ht-final-shell-guard">
+body.cs-headteacher-final-shell .cs-shell{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important;}
+body.cs-headteacher-final-shell aside[class*="sidebar"]:not(.csk-ht-sidebar-final),body.cs-headteacher-final-shell #cs-ht-final-sidebar,body.cs-headteacher-final-shell .cs-ht-sidebar{display:none!important;visibility:hidden!important;width:0!important;min-width:0!important;max-width:0!important;}
+body.cs-headteacher-final-shell .app-topbar,body.cs-headteacher-final-shell .topbar,body.cs-headteacher-final-shell .cs-topbar,body.cs-headteacher-final-shell .cs-ht-header{display:none!important;visibility:hidden!important;}
+body.cs-headteacher-final-shell .csk-ht-sidebar-final{display:flex!important;}
+body.cs-headteacher-final-shell .csk-ht-header-final{display:flex!important;}
+</style>
+<style id="cs-ht-canonical-header-guard">
+body.cs-headteacher-final-shell .csk-ht-header-final{display:flex!important;visibility:visible!important;opacity:1!important;position:fixed!important;left:255px!important;right:0!important;top:0!important;width:auto!important;height:58px!important;min-height:58px!important;z-index:99999!important;align-items:center!important}
+body.cs-headteacher-final-shell .csk-ht-main-final{padding-top:58px!important;min-height:0!important}
+body.cs-headteacher-final-shell .csk-ht-profile-final{display:flex!important;align-items:center!important;margin-left:auto!important;position:relative!important;right:auto!important;bottom:auto!important}
+body.cs-headteacher-final-shell .csk-ht-header-final .csk-ht-profile-final{margin-left:auto!important}
+@media(max-width:760px){body.cs-headteacher-final-shell .csk-ht-header-final{left:76px!important;padding-left:12px!important;padding-right:12px!important}}
+</style>
+<link rel="stylesheet" href="/assets/css/mobile-shell.css" media="(max-width:820px)"><script src="/assets/js/mobile-shell.js" defer></script></head>
+
+<body>
+
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand"><img src="/assets/images/favicon.svg" alt="ConnectSukuu"><span class="brand-word">Connect<span class="brand-accent">Sukuu</span></span></div>
+<nav class="nav app-nav connectsukuu-nav">
+<div class="section-label nav-section">Workspace</div>
+<a data-page="dashboard" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-dashboard.html"><span>Dashboard</span></a>
+<a data-page="team" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-team.html"><span>Team &amp; Roles</span></a>
+<a data-page="academic" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-academic.html"><span>Academic Setup</span></a>
+<a data-page="students" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-students.html"><span>Students</span></a>
+<a data-page="attendance" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-attendance.html"><span>Attendance</span></a>
+<div class="section-label nav-section">Teaching</div>
+<a data-page="teaching-assignments" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-teaching-assignments.html"><span>Teaching Assignments</span></a>
+<a data-page="timetable" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-timetable.html"><span>Timetable</span></a>
+<a data-page="assessments" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-assessments.html"><span>Assessments &amp; Reports</span></a>
+<div class="section-label nav-section">Finance</div>
+<a data-page="finance" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-finance.html"><span>Finance</span></a>
+<div class="section-label nav-section">System</div>
+<a data-page="settings" data-role-nav="HEAD_TEACHER" href="/roles/headteacher/headteacher-settings.html"><span>Settings</span></a>
+</nav>
+    <div class="academic-sidebar-footer">
+      <button type="button" id="academicLogoutBtn" class="logout-btn" title="Sign out of ConnectSukuu">
+        <span class="logout-icon">↪</span>
+        <span>Log out</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-title">Academic Setup</div>
+      <div class="topbar-user"><div class="avatar" id="userAvatar">U</div><span id="userName">User</span></div>
+    </header>
+
+    <section class="content">
+      <div class="heading">
+        <div>
+          <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#2563eb;margin-bottom:6px">School Academics</div>
+          <h1>Academic Setup</h1>
+          <p>Build your school's academic structure in the correct order: academic years, terms, classes and subjects.</p>
+        </div>
+        <button class="primary-btn" id="addYearBtn" data-academic-permission="canManageCalendar">+ Add Academic Year</button>
+      </div>
+
+      <section class="current-card">
+        <div class="current-label">Current Academic Year</div>
+        <div class="current-name" id="currentYearName">Loading...</div>
+        <div class="current-dates" id="currentYearDates">Loading academic configuration...</div>
+      </section>
+
+<section id="connectsukuuGradingSystemPanel" data-cs-grading-system="true" style="margin-top:18px;border:1px solid #dbe4f0;border-radius:18px;background:#fff;box-shadow:0 12px 35px rgba(15,23,42,.06);overflow:hidden">
+  <div style="padding:18px 20px;border-bottom:1px solid #e8edf4;display:flex;justify-content:space-between;gap:14px;align-items:center">
+    <div><div style="font-size:11px;font-weight:850;letter-spacing:.08em;text-transform:uppercase;color:#2563eb">Academic Rules</div><h2 style="margin:4px 0 4px;font-size:20px">Grading Systems</h2><p style="margin:0;color:#667085;font-size:13px">Create and edit the grading scales used to convert assessment percentages into grades.</p></div>
+    <button type="button" id="csAddGradingScale" class="primary-btn">+ New Grading System</button>
+  </div>
+  <div id="csGradingScaleList" style="padding:16px 20px"><div style="padding:20px;color:#98a2b3">Loading grading systems...</div></div>
+  <div id="csClassGradingPanel" style="border-top:1px solid #e8edf4;padding:16px 20px;background:#f8fbff">
+    <div style="margin-bottom:12px"><h3 style="margin:0;color:#2563eb;font-size:16px">Class-specific grading system</h3><p style="margin:4px 0 0;color:#667085;font-size:12px">Optionally override the school default for a class. The selected class scale takes precedence for its report cards.</p></div>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:end">
+      <label style="display:grid;gap:5px;font-size:11px;font-weight:800;color:#52627b">Academic year<select id="csClassGradeYear" style="width:100%;min-width:0;padding:10px;border:1px solid #d6dfed;border-radius:9px;background:#fff"><option value="">Loading years…</option></select></label>
+      <label style="display:grid;gap:5px;font-size:11px;font-weight:800;color:#52627b">Class<select id="csClassGradeClass" style="width:100%;min-width:0;padding:10px;border:1px solid #d6dfed;border-radius:9px;background:#fff"><option value="">Select year first</option></select></label>
+      <label style="display:grid;gap:5px;font-size:11px;font-weight:800;color:#52627b">Grading system<select id="csClassGradeScale" style="width:100%;min-width:0;padding:10px;border:1px solid #d6dfed;border-radius:9px;background:#fff"><option value="">Select a grading system</option></select></label>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:12px"><button type="button" id="csSaveClassGradeScale" class="primary-btn">Save class grading system</button></div>
+    <p id="csClassGradeStatus" role="status" style="font-size:11px;color:#64748b;margin:8px 0 0">No class override selected. The explicit school default will be used when available.</p>
+  </div>
+</section>
+<div id="csGradingScaleModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.48);z-index:9999;align-items:center;justify-content:center;padding:20px">
+  <div style="width:min(900px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:18px;box-shadow:0 24px 70px rgba(15,23,42,.25)">
+    <div style="padding:18px 20px;border-bottom:1px solid #e8edf4;display:flex;justify-content:space-between;align-items:center"><div><h3 id="csGradingModalTitle" style="margin:0">New Grading System</h3><p style="margin:4px 0 0;color:#667085;font-size:12px">Define percentage ranges and remarks.</p></div><button type="button" id="csCloseGradingModal" class="action-btn">Close</button></div>
+    <form id="csGradingScaleForm" style="padding:20px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><label>Name<input id="csGradeScaleName" required style="width:100%;padding:10px;border:1px solid #dbe4f0;border-radius:10px"></label><label>Description<input id="csGradeScaleDescription" style="width:100%;padding:10px;border:1px solid #dbe4f0;border-radius:10px"></label></div>
+      <label style="display:flex;gap:8px;align-items:center;margin:14px 0"><input id="csGradeScaleDefault" type="checkbox"> Set as default grading system</label>
+      <div id="csGradeBands"></div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px"><button type="button" id="csAddGradeBand" class="action-btn">+ Add Grade</button><button type="submit" class="primary-btn">Save Grading System</button></div>
+    </form>
+  </div>
+</div>
+<script id="connectsukuu-academic-grading-system-ui">
+window.addEventListener('DOMContentLoaded', function(){
+  'use strict';
+  const role=String(window.role||window.currentRole||localStorage.getItem('role')||'').toUpperCase();
+  const panel=document.getElementById('connectsukuuGradingSystemPanel');
+  if(role && !['HEAD_OF_ACADEMICS','HEAD_TEACHER'].includes(role)){if(panel)panel.style.display='none';return;}
+  const modal=document.getElementById('csGradingScaleModal'),list=document.getElementById('csGradingScaleList'),form=document.getElementById('csGradingScaleForm');
+  let editingId=null,scales=[];
+  function esc(x){return String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  function isLegacyImplicitDefault(s){return ['default 100-point scale','default a-f','default a-f scale'].includes(String(s?.name||'').trim().toLowerCase());}
+  async function req(path,options={}){const r=await academicApiFetch(path,options);const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Grading-system request failed.');return d;}
+  function bands(){return [...document.querySelectorAll('#csGradeBands .cs-grade-band')].map(row=>({label:row.querySelector('[data-grade-label]').value.trim(),minPercentage:Number(row.querySelector('[data-grade-min]').value),maxPercentage:Number(row.querySelector('[data-grade-max]').value),remark:row.querySelector('[data-grade-remark]').value.trim()}));}
+  function renderBands(items){document.getElementById('csGradeBands').innerHTML=(items||[]).map(b=>`<div class="cs-grade-band" style="display:grid;grid-template-columns:90px 1fr 1fr 1.4fr auto;gap:8px;align-items:end;margin:8px 0;padding:10px;border:1px solid #e6ebf2;border-radius:12px"><label>Grade<input data-grade-label value="${esc(b.label)}" style="width:100%"></label><label>Min %<input data-grade-min type="number" step="0.01" value="${esc(b.minPercentage??'')}" style="width:100%"></label><label>Max %<input data-grade-max type="number" step="0.01" value="${esc(b.maxPercentage??'')}" style="width:100%"></label><label>Remark<input data-grade-remark value="${esc(b.remark||'')}" style="width:100%"></label><button type="button" data-remove-grade class="action-btn">Remove</button></div>`).join('');}
+  function openScale(scale){editingId=scale?.id||null;document.getElementById('csGradingModalTitle').textContent=editingId?'Edit Grading System':'New Grading System';document.getElementById('csGradeScaleName').value=scale?.name||'';document.getElementById('csGradeScaleDescription').value=scale?.description||'';document.getElementById('csGradeScaleDefault').checked=!!scale?.isDefault;renderBands(scale?.bands?.length?scale.bands:[{label:'',minPercentage:'',maxPercentage:'',remark:''},{label:'',minPercentage:'',maxPercentage:'',remark:''}]);modal.style.display='flex';}
+  function closeScale(){modal.style.display='none';editingId=null;}
+  async function loadScales(){try{scales=await req('/api/assessment-engine/grading-scales');list.innerHTML=scales.length?scales.map(s=>`<div style="display:flex;justify-content:space-between;gap:14px;align-items:center;padding:13px 0;border-bottom:1px solid #eef2f6"><div><strong>${esc(s.name)}</strong>${s.isDefault&&!isLegacyImplicitDefault(s)&&s.bands?.length?'<span style="margin-left:7px;padding:4px 7px;border-radius:8px;background:#ecfdf3;color:#15803d;font-size:11px;font-weight:800">DEFAULT</span>':(s.isDefault&&isLegacyImplicitDefault(s)?'<span style="margin-left:7px;padding:4px 7px;border-radius:8px;background:#fff4e5;color:#9a3412;font-size:11px;font-weight:800">LEGACY DEFAULT — NOT USED</span>':'')}<div style="font-size:12px;color:#667085;margin-top:4px">${esc(s.description||'')} · ${s.bands?.length||0} grades</div></div><div style="display:flex;gap:7px;flex:0 0 auto"><button type="button" data-edit-grade="${esc(s.id)}" class="action-btn">Edit</button><button type="button" data-delete-grade="${esc(s.id)}" class="action-btn" style="color:#b42318;border-color:#f2c7c7">Delete</button></div></div>`).join(''):'<div style="padding:20px;color:#98a2b3">No usable grading system is configured yet. Create one with valid grade bands and explicitly mark it as the default. Legacy auto-created A–F defaults are ignored until renamed and deliberately selected.</div>';renderSelectedDefault();refreshClassGradeScales();}catch(e){list.innerHTML=`<div style="padding:20px;color:#b42318">${esc(e.message)}</div>`;const card=document.getElementById('connectsukuu-academic-default-af-scale');if(card)card.hidden=true;}}
+  function renderSelectedDefault(){const card=document.getElementById('connectsukuu-academic-default-af-scale');if(!card)return;const scale=scales.find(x=>x.isDefault&&!isLegacyImplicitDefault(x)&&Array.isArray(x.bands)&&x.bands.length>0);if(!scale){card.hidden=true;return;}card.hidden=false;document.getElementById('csSelectedDefaultScaleTitle').textContent=scale.name+' — Default Grading System';document.getElementById('csSelectedDefaultScaleDescription').textContent=scale.description||'The explicitly selected default grading system used for report-card calculations when no class-specific scale is assigned.';const bands=document.getElementById('csSelectedDefaultScaleBands');bands.innerHTML=(scale.bands||[]).slice().sort((a,b)=>Number(b.minPercentage)-Number(a.minPercentage)).map(b=>`<div class="cs-academic-af-band"><strong>${esc(b.label)}</strong><span>${Number(b.minPercentage)}–${Number(b.maxPercentage)}%</span></div>`).join('');}
+  const gradeYear=document.getElementById('csClassGradeYear'),gradeClass=document.getElementById('csClassGradeClass'),gradeScale=document.getElementById('csClassGradeScale'),gradeStatus=document.getElementById('csClassGradeStatus');
+  async function loadClassGradeYears(){if(!gradeYear)return;try{const r=await academicApiFetch('/api/academic-years');if(!r)throw new Error('Authentication expired.');const d=await r.json().catch(()=>[]);if(!r.ok)throw new Error(d.error||'Could not load academic years.');const years=Array.isArray(d)?d:(d.academicYears||d.data||[]);gradeYear.innerHTML='<option value="">Select academic year</option>'+years.map(y=>`<option value="${esc(y.id)}">${esc(y.name)}${y.isCurrent?' — Current':''}</option>`).join('');const current=years.find(y=>y.isCurrent);if(current){gradeYear.value=current.id;await loadClassGradeClasses();}}catch(e){gradeYear.innerHTML='<option value="">Unable to load years</option>';if(gradeStatus)gradeStatus.textContent=e.message;}}
+  function refreshClassGradeScales(){if(!gradeScale)return;const selected=gradeScale.value;gradeScale.innerHTML='<option value="">Select a grading system</option>'+scales.map(x=>`<option value="${esc(x.id)}">${esc(x.name)}${x.isDefault?' — School default':''}</option>`).join('');if(scales.some(x=>x.id===selected))gradeScale.value=selected;}
+  async function loadClassGradeClasses(){if(!gradeClass||!gradeYear?.value)return;gradeClass.innerHTML='<option value="">Loading classes…</option>';try{const r=await academicApiFetch('/api/classes?academicYearId='+encodeURIComponent(gradeYear.value));if(!r)throw new Error('Authentication expired.');const d=await r.json().catch(()=>[]);if(!r.ok)throw new Error(d.error||'Could not load classes.');const rows=Array.isArray(d)?d:(d.classes||d.data||[]);gradeClass.innerHTML='<option value="">Select class</option>'+rows.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}${c.section?' — '+esc(c.section):''}</option>`).join('');}catch(e){gradeClass.innerHTML='<option value="">Unable to load classes</option>';if(gradeStatus)gradeStatus.textContent=e.message;}}
+  async function loadClassGradeAssignment(){if(!gradeYear?.value||!gradeClass?.value)return;try{const d=await req('/api/assessment-engine/classes/'+encodeURIComponent(gradeClass.value)+'/grading-scale?academicYearId='+encodeURIComponent(gradeYear.value));if(gradeScale&&d.id)gradeScale.value=d.id;if(gradeStatus)gradeStatus.textContent='Current assignment: '+(d.name||'selected grading system')+'.';}catch(e){if(gradeStatus)gradeStatus.textContent=e.message.includes('No default grading system')?'No class override or school default exists yet. Create a grading system and explicitly mark one as default.':'No class override found; the explicit school default will be used when available.';}}
+  gradeYear?.addEventListener('change',async()=>{await loadClassGradeClasses();if(gradeClass)gradeClass.value='';if(gradeStatus)gradeStatus.textContent='Choose a class to inspect its grading assignment.';});
+  gradeClass?.addEventListener('change',loadClassGradeAssignment);
+  document.getElementById('csSaveClassGradeScale')?.addEventListener('click',async()=>{if(!gradeYear?.value||!gradeClass?.value||!gradeScale?.value){if(gradeStatus)gradeStatus.textContent='Select an academic year, class and grading system first.';return;}const b=document.getElementById('csSaveClassGradeScale');b.disabled=true;try{await req('/api/assessment-engine/classes/'+encodeURIComponent(gradeClass.value)+'/grading-scale',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({academicYearId:gradeYear.value,gradingScaleId:gradeScale.value})});if(gradeStatus)gradeStatus.textContent='Class grading system saved. Teachers’ report cards for this class will use this scale.';if(typeof toast==='function')toast('Class grading system saved successfully.');}catch(e){if(gradeStatus)gradeStatus.textContent=e.message;if(typeof toast==='function')toast(e.message);}finally{b.disabled=false;}});
+  document.getElementById('csAddGradingScale')?.addEventListener('click',()=>openScale(null));
+  document.getElementById('csCloseGradingModal')?.addEventListener('click',closeScale);
+  document.getElementById('csAddGradeBand')?.addEventListener('click',()=>{const x=bands();x.push({label:'',minPercentage:0,maxPercentage:0,remark:''});renderBands(x);});
+  document.getElementById('csGradeBands')?.addEventListener('click',e=>{if(e.target.closest('[data-remove-grade]'))e.target.closest('.cs-grade-band')?.remove();});
+  list?.addEventListener('click',e=>{const b=e.target.closest('[data-edit-grade]');if(b)openScale(scales.find(x=>x.id===b.dataset.editGrade));});
+  document.getElementById('csGradingScaleList')?.addEventListener('click',async e=>{const b=e.target.closest('[data-delete-grade]');if(!b)return;const scale=scales.find(x=>x.id===b.dataset.deleteGrade);if(!scale)return;if(scale.isDefault){if(typeof toast==='function')toast('Set another grading system as the default before deleting this one.');else alert('Set another grading system as the default before deleting this one.');return;}if(!confirm(`Permanently delete grading system “${scale.name}”? This cannot be undone.`))return;b.disabled=true;try{await req('/api/assessment-engine/grading-scales/'+encodeURIComponent(scale.id),{method:'DELETE'});await loadScales();if(typeof toast==='function')toast('Grading system permanently deleted.');}catch(err){if(typeof toast==='function')toast(err.message);else alert(err.message);}finally{b.disabled=false;}});
+  form?.addEventListener('submit',async ev=>{ev.preventDefault();const payload={name:document.getElementById('csGradeScaleName').value.trim(),description:document.getElementById('csGradeScaleDescription').value.trim(),isDefault:document.getElementById('csGradeScaleDefault').checked,bands:bands()};try{await req(editingId?`/api/assessment-engine/grading-scales/${encodeURIComponent(editingId)}`:'/api/assessment-engine/grading-scales',{method:editingId?'PATCH':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});closeScale();await loadScales();if(typeof toast==='function')toast('Grading system saved successfully.');}catch(e){if(typeof toast==='function')toast(e.message);else alert(e.message);}});
+  if(panel){loadScales();loadClassGradeYears();}
+});
+</script>
+
+
+      <!-- CONNECTSUKUU_HEAD_TEACHER_ACADEMIC_OVERSIGHT -->
+      <section class="ht-academic-oversight" id="ht-academic-oversight" aria-hidden="true">
+        <div class="ht-academic-oversight-head">
+          <div>
+            <div class="ht-academic-kicker">Head Teacher oversight</div>
+            <h2>Academic readiness</h2>
+            <p>Monitor the school's academic structure and teaching coverage from one place. Existing configuration permissions remain unchanged.</p>
+          </div>
+          <span class="ht-academic-scope">Head Teacher</span>
+        </div>
+        <div class="ht-academic-stats">
+          <div class="ht-academic-stat"><div class="ht-academic-stat-label">Classes</div><div class="ht-academic-stat-value" id="htAcademicClasses">—</div><div class="ht-academic-stat-note">Current academic year</div></div>
+          <div class="ht-academic-stat"><div class="ht-academic-stat-label">Subjects</div><div class="ht-academic-stat-value" id="htAcademicSubjects">—</div><div class="ht-academic-stat-note">School subjects</div></div>
+          <div class="ht-academic-stat"><div class="ht-academic-stat-label">Assignments</div><div class="ht-academic-stat-value" id="htAcademicAssignments">—</div><div class="ht-academic-stat-note">Teacher coverage</div></div>
+          <div class="ht-academic-stat"><div class="ht-academic-stat-label">Scheduled lessons</div><div class="ht-academic-stat-value" id="htAcademicTimetable">—</div><div class="ht-academic-stat-note">Current term</div></div>
+        </div>
+        <div class="ht-academic-detail">
+          <div class="ht-academic-panel">
+            <div class="ht-academic-panel-head"><strong>Teaching coverage</strong><span id="htAcademicCoverageLabel">Checking…</span></div>
+            <div class="ht-academic-list" id="htAcademicCoverage"><div class="ht-academic-loading">Checking current academic structure…</div></div>
+          </div>
+          <div class="ht-academic-panel">
+            <div class="ht-academic-panel-head"><strong>Current period</strong><span>Academic context</span></div>
+            <div class="ht-academic-list">
+              <div class="ht-academic-row"><strong>Academic year</strong><span id="htAcademicYearName">—</span></div>
+              <div class="ht-academic-row"><strong>Current term</strong><span id="htAcademicTermName">—</span></div>
+              <div class="ht-academic-row"><strong>Readiness</strong><span class="ht-academic-status empty" id="htAcademicReadiness">Checking…</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="ht-academic-actions">
+          <a class="ht-academic-action primary" href="/roles/headteacher/headteacher-teaching-assignments.html">Review Teaching Assignments</a>
+          <a class="ht-academic-action" href="/roles/headteacher/headteacher-timetable.html">Review Timetable</a>
+          <a class="ht-academic-action" href="/roles/headteacher/headteacher-attendance.html">Review Attendance</a>
+          <a class="ht-academic-action" href="/roles/headteacher/headteacher-students.html">Review Students</a>
+        </div>
+      </section>
+
+      <section class="cs-academic-af-scale" id="connectsukuu-academic-default-af-scale" hidden aria-live="polite"><div class="cs-academic-af-scale-head"><div><h2 class="cs-academic-af-scale-title" id="csSelectedDefaultScaleTitle">Selected default grading system</h2><p class="cs-academic-af-scale-subtitle" id="csSelectedDefaultScaleDescription"></p></div><span class="count">School default</span></div><div class="cs-academic-af-scale-bands" id="csSelectedDefaultScaleBands"></div></section>
+
+<section class="card">
+        <div class="card-header">
+          <div><h2>Academic Years</h2><p>Manage the school's academic-year structure.</p></div>
+          <span class="count" id="yearCount">0 years</span>
+        </div>
+        <div id="yearsContainer"><div class="loading">Loading academic years...</div></div>
+
+        <div class="panel" id="termsPanel" style="display:none">
+          <div class="panel-head">
+            <div><h3 id="termsPanelTitle">Terms</h3><p id="termsPanelSubtitle">Manage terms for this academic year.</p></div>
+            <button class="primary-btn" id="addTermBtn" data-academic-permission="canManageCalendar">+ Add Term</button>
+          </div>
+          <div id="termsContainer"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div><h2>Classes</h2><p>Create classes for a selected academic year and manage their subject structure.</p></div>
+          <div class="section-controls">
+            <select class="select" id="classYearSelect" aria-label="Academic year for classes"></select>
+            <span class="count" id="classCount">0 classes</span>
+            <button class="primary-btn" id="addClassBtn" data-academic-permission="canManageClasses">+ Add Class</button>
+          </div>
+        </div>
+        <div id="classesContainer"><div class="loading">Loading classes...</div></div>
+        <div class="panel" id="classSubjectsPanel" style="display:none">
+          <div class="panel-head">
+            <div><h3 id="classSubjectsTitle">Class Subjects</h3><p id="classSubjectsSubtitle">Subjects assigned to this class.</p></div>
+            <div class="section-controls"><button class="secondary-btn" id="toggleClassSubjectsBtn">Hide Subjects</button><button class="primary-btn" id="assignSubjectBtn" data-academic-permission="canManageSubjects">+ Assign Subject</button></div>
+          </div>
+          <div id="classSubjectsContainer"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div><h2>Subjects</h2><p>Define the subjects offered by your school. Subjects can then be assigned to individual classes.</p></div>
+          <div class="section-controls"><span class="count" id="subjectCount">0 subjects</span><button class="primary-btn" id="addSubjectBtn" data-academic-permission="canManageSubjects">+ Add Subject</button></div>
+        </div>
+        <div id="subjectsContainer"><div class="loading">Loading subjects...</div></div>
+      </section>
+    </section>
+  </main>
+</div>
+
+<!-- Academic Year Modal -->
+<div class="modal-backdrop" id="yearModal"><div class="modal">
+  <div class="modal-header"><h2>Add Academic Year</h2><button class="close-btn" id="closeYearModal">&times;</button></div>
+  <form id="yearForm"><div class="modal-body">
+    <div class="form-group"><label for="yearName">Academic Year Name</label><input id="yearName" placeholder="e.g. 2026–2027" required></div>
+    <div class="form-group"><label for="startsAt">Start Date</label><input type="date" id="startsAt" required></div>
+    <div class="form-group"><label for="endsAt">End Date</label><input type="date" id="endsAt" required></div>
+    <label><input type="checkbox" id="isCurrent"> Set this as the current academic year</label>
+  </div><div class="modal-footer"><button type="button" class="secondary-btn" id="cancelYearBtn">Cancel</button><button class="primary-btn" id="saveYearBtn">Save Academic Year</button></div></form>
+</div></div>
+
+<!-- Term Modal -->
+<div class="modal-backdrop" id="termModal"><div class="modal">
+  <div class="modal-header"><h2>Add Academic Term</h2><button class="close-btn" id="closeTermModal">&times;</button></div>
+  <form id="termForm"><div class="modal-body">
+    <div class="form-group"><label for="termName">Term Name</label><input id="termName" placeholder="e.g. Term 1" required></div>
+    <div class="form-group"><label for="termStartsAt">Start Date</label><input type="date" id="termStartsAt" required></div>
+    <div class="form-group"><label for="termEndsAt">End Date</label><input type="date" id="termEndsAt" required></div>
+    <label><input type="checkbox" id="termIsCurrent"> Set this as the current term</label>
+  </div><div class="modal-footer"><button type="button" class="secondary-btn" id="cancelTermBtn">Cancel</button><button class="primary-btn" id="saveTermBtn">Save Term</button></div></form>
+</div></div>
+
+<!-- Class Modal -->
+<div class="modal-backdrop" id="classModal"><div class="modal">
+  <div class="modal-header"><h2>Add Class</h2><button class="close-btn" id="closeClassModal">&times;</button></div>
+  <form id="classForm"><div class="modal-body">
+    <div class="form-group"><label for="classAcademicYear">Academic Year</label><select id="classAcademicYear" required></select></div>
+    <div class="form-group"><label for="className">Class Name</label><input id="className" placeholder="e.g. Class 5A" required></div>
+    <div class="form-group"><label for="classLevel">Level <span class="muted">(optional)</span></label><input id="classLevel" placeholder="e.g. Primary"></div>
+    <div class="form-group"><label for="classSection">Section <span class="muted">(optional)</span></label><input id="classSection" placeholder="e.g. A"></div>
+  </div><div class="modal-footer"><button type="button" class="secondary-btn" id="cancelClassBtn">Cancel</button><button class="primary-btn" id="saveClassBtn">Save Class</button></div></form>
+</div></div>
+
+<!-- Subject Modal -->
+<div class="modal-backdrop" id="subjectModal"><div class="modal">
+  <div class="modal-header"><h2>Add Subject</h2><button class="close-btn" id="closeSubjectModal">&times;</button></div>
+  <form id="subjectForm"><div class="modal-body">
+    <div class="form-group"><label for="subjectName">Subject Name</label><input id="subjectName" placeholder="e.g. Mathematics" required></div>
+    <div class="form-group"><label for="subjectCode">Subject Code <span class="muted">(optional)</span></label><input id="subjectCode" placeholder="e.g. MATH"></div>
+    <div class="hint">The subject will be available for assignment to any class in your school.</div>
+  </div><div class="modal-footer"><button type="button" class="secondary-btn" id="cancelSubjectBtn">Cancel</button><button class="primary-btn" id="saveSubjectBtn">Save Subject</button></div></form>
+</div></div>
+
+<!-- Assign Subject Modal -->
+<div class="modal-backdrop" id="assignModal"><div class="modal">
+  <div class="modal-header"><h2>Assign Subject</h2><button class="close-btn" id="closeAssignModal">&times;</button></div>
+  <form id="assignForm"><div class="modal-body">
+    <div class="form-group"><label for="assignSubjectSelect">Subject</label><select id="assignSubjectSelect" required></select></div>
+    <div class="hint">The selected subject will be added to the selected class for its academic year.</div>
+  </div><div class="modal-footer"><button type="button" class="secondary-btn" id="cancelAssignBtn">Cancel</button><button class="primary-btn" id="saveAssignBtn">Assign Subject</button></div></form>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  const currentUser = requireAuthOrRedirect();
+  const currentRole = currentUser?.role || '';
+
+  const ACADEMIC_VIEW_ROLES = new Set([
+    'HEAD_TEACHER',
+    'ADMINISTRATOR',
+    'HEAD_OF_ACADEMICS',
+    'ACCOUNTANT',
+    'TEACHER'
+  ]);
+
+  if (!ACADEMIC_VIEW_ROLES.has(currentRole)) {
+    window.location.replace('/roles/headteacher/headteacher-dashboard.html');
+    throw new Error('Academic Setup is not available for this role.');
+  }
+
+  const ACADEMIC_PERMISSIONS = {
+    // Academic configuration is delegated to school academic leadership.
+    // OWNER retains visibility/oversight but does not receive these operational controls.
+    canManageCalendar: ['HEAD_TEACHER', 'HEAD_OF_ACADEMICS'],
+    canManageClasses: ['HEAD_TEACHER', 'HEAD_OF_ACADEMICS'],
+    canManageSubjects: ['HEAD_TEACHER', 'HEAD_OF_ACADEMICS']
+  };
+
+  function canAcademic(permission){
+    return ACADEMIC_PERMISSIONS[permission]?.includes(currentRole) === true;
+  }
+
+  function applyRoleVisibility(){
+    document.querySelectorAll('[data-role-nav]').forEach(el=>{
+      const allowed=el.dataset.roleNav.split(',').map(x=>x.trim());
+      if(!allowed.includes(currentRole)) el.classList.add('nav-hidden');
+    });
+
+    document.querySelectorAll('[data-academic-permission]').forEach(el=>{
+      const permission=el.dataset.academicPermission;
+      if(!canAcademic(permission)){
+        el.classList.add('nav-hidden');
+        el.setAttribute('aria-hidden','true');
+      }
+    });
+
+    // OWNER has academic oversight/visibility, not academic configuration authority.
+    if(!canAcademic('canManageCalendar')){
+      $('addYearBtn')?.classList.add('nav-hidden');
+      $('addTermBtn')?.classList.add('nav-hidden');
+    }
+
+    if(!canAcademic('canManageClasses')){
+      $('addClassBtn')?.classList.add('nav-hidden');
+    }
+
+    if(!canAcademic('canManageSubjects')){
+      $('addSubjectBtn')?.classList.add('nav-hidden');
+      $('assignSubjectBtn')?.classList.add('nav-hidden');
+    }
+  }
+
+  // Prevent the Academic Setup page from being trapped in an endless loading state.
+  async function academicApiFetch(path, options={}){
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),15000);
+    try{
+      const base=String(API_BASE||'').replace(/\/$/,'');
+      const clean=String(path||'').startsWith('/')?String(path):'/'+String(path);
+      const response=await fetch(base+clean,{...options,cache:'no-store',signal:controller.signal,headers:{'Content-Type':'application/json',Authorization:`Bearer ${AUTH.getToken()}`,...(options.headers||{})}});
+      if(response.status===401){AUTH.logout();throw new Error('Your session has expired. Please sign in again.');}
+      return response;
+    }catch(error){
+      if(error?.name==='AbortError')throw new Error('The academic service did not respond within 15 seconds. Please check that the ConnectSukuu API is running on port 4000, then retry.');
+      throw error;
+    }finally{clearTimeout(timer);}
+  }
+
+  function logoutFromAcademic(){
+    if(!confirm('Log out of ConnectSukuu?')) return;
+    Object.keys(localStorage).forEach(key=>{
+      if(/token|auth|session|currentuser|user/i.test(key)) localStorage.removeItem(key);
+    });
+    Object.keys(sessionStorage).forEach(key=>{
+      if(/token|auth|session|currentuser|user/i.test(key)) sessionStorage.removeItem(key);
+    });
+    window.location.href='/auth/signin.html';
+  }
+
+  const yearModal=$('yearModal'), termModal=$('termModal'), classModal=$('classModal'), subjectModal=$('subjectModal'), assignModal=$('assignModal');
+  const yearsContainer=$('yearsContainer'), termsContainer=$('termsContainer'), classesContainer=$('classesContainer'), subjectsContainer=$('subjectsContainer'), classSubjectsContainer=$('classSubjectsContainer');
+  let academicYears=[], selectedAcademicYearId=null, selectedClassId=null, classes=[] ,subjects=[];
+  let classSubjectsVisible=false;
+
+  function toast(message){$('toast').textContent=message;$('toast').classList.add('show');clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>$('toast').classList.remove('show'),3500)}
+  function esc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;")}
+  function date(v){if(!v)return '—';const d=new Date(v);return Number.isNaN(d.getTime())?v:d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'})}
+  function open(m){m.classList.add('open')} function close(m){m.classList.remove('open')}
+  function populateYearSelect(select, includeAll=false){
+    select.innerHTML=(includeAll?'<option value="">Select academic year</option>':'')+academicYears.map(y=>`<option value="${esc(y.id)}">${esc(y.name)}${y.isCurrent?' — Current':''}</option>`).join('');
+  }
+
+  async function loadAcademicYears(){
+    yearsContainer.innerHTML='<div class="loading">Loading academic years...</div>';
+    try{
+      const r=await academicApiFetch('/api/academic-years'); if(!r)return;
+      const data=await r.json().catch(()=>[]);
+      if(!r.ok)throw new Error(data.error||data.message||'Could not load academic years.');
+      academicYears=Array.isArray(data) ? data : (Array.isArray(data.academicYears) ? data.academicYears : (Array.isArray(data.data) ? data.data : []));
+      renderYears();
+      populateYearSelect($('classYearSelect')); populateYearSelect($('classAcademicYear'));
+      const current=academicYears.find(y=>y.isCurrent);
+      if(current && !$('classYearSelect').value)$('classYearSelect').value=current.id;
+      if(current && !selectedAcademicYearId)selectedAcademicYearId=current.id;
+      await loadClasses($('classYearSelect').value||current?.id||'');
+    }catch(e){console.error(e);yearsContainer.innerHTML=`<div class="empty"><div class="empty-icon">!</div><h3>Unable to load academic years</h3><p>${esc(e.message)}</p></div>`}
+  }
+
+  function renderYears(){
+    $('yearCount').textContent=`${academicYears.length} ${academicYears.length===1?'year':'years'}`;
+    const current=academicYears.find(y=>y.isCurrent);
+    $('currentYearName').textContent=current?.name||'No academic year selected';
+    $('currentYearDates').textContent=current?`${date(current.startsAt)} — ${date(current.endsAt)}`:'Create an academic year to begin your academic setup.';
+    if(!academicYears.length){yearsContainer.innerHTML='<div class="empty"><div class="empty-icon">📚</div><h3>No academic years yet</h3><p>Create your first academic year to begin.</p></div>';return}
+    yearsContainer.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Academic Year</th><th>Start</th><th>End</th><th>Terms</th><th>Classes</th><th>Enrollments</th><th>Status</th><th>Action</th></tr></thead><tbody>${academicYears.map(y=>`<tr><td class="name">${esc(y.name)}</td><td class="muted">${date(y.startsAt)}</td><td class="muted">${date(y.endsAt)}</td><td><button class="action-btn" data-terms="${esc(y.id)}">${y.terms?.length??0} ${y.terms?.length===1?'Term':'Terms'}</button></td><td>${y._count?.classes??0}</td><td>${y._count?.enrollments??0}</td><td>${y.isCurrent?'<span class="badge current">Current</span>':'<span class="badge inactive">Inactive</span>'}</td><td>${y.isCurrent?'<span class="muted">—</span>':`<button class="action-btn" data-current-year="${esc(y.id)}">Make Current</button>`}</td></tr>`).join('')}</tbody></table></div>`;
+  }
+
+  async function loadTerms(id){
+    selectedAcademicYearId=id; $('termsPanel').style.display='block'; const y=academicYears.find(x=>x.id===id);
+    $('termsPanelTitle').textContent=`${y?.name||'Academic Year'} — Terms`; $('termsPanelSubtitle').textContent=`Manage academic terms for ${y?.name||'this academic year'}.`;
+    termsContainer.innerHTML='<div class="loading">Loading terms...</div>';
+    try{const r=await academicApiFetch(`/api/academic-years/${id}/terms`);if(!r)return;const data=await r.json().catch(()=>[]);if(!r.ok)throw new Error(data.error||'Could not load terms.');renderTerms(data)}catch(e){termsContainer.innerHTML=`<div class="empty"><div class="empty-icon">!</div><h3>Unable to load terms</h3><p>${esc(e.message)}</p></div>`}
+  }
+  function renderTerms(terms){
+    if(!terms.length){termsContainer.innerHTML='<div class="empty"><div class="empty-icon">📚</div><h3>No terms yet</h3><p>No academic terms have been created for this year.</p></div>';return}
+    termsContainer.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Term</th><th>Start</th><th>End</th><th>Status</th><th>Enrollments</th><th>Action</th></tr></thead><tbody>${terms.map(t=>`<tr><td class="name">${esc(t.name)}</td><td>${date(t.startsAt)}</td><td>${date(t.endsAt)}</td><td>${t.isCurrent?'<span class="badge current">Current</span>':'<span class="badge inactive">Not Current</span>'}</td><td>${t._count?.enrollments??0}</td><td>${t.isCurrent?'<span class="muted">Current</span>':`<button class="action-btn" data-current-term="${esc(t.id)}">Set Current</button>`}</td></tr>`).join('')}</tbody></table></div>`;
+  }
+
+  async function loadClasses(yearId){
+    if(!yearId){classesContainer.innerHTML='<div class="empty"><div class="empty-icon">🏫</div><h3>Select an academic year</h3><p>Select an academic year to view its classes.</p></div>';$('classCount').textContent='0 classes';return}
+    classesContainer.innerHTML='<div class="loading">Loading classes...</div>';
+    try{const r=await academicApiFetch(`/api/classes?academicYearId=${encodeURIComponent(yearId)}`);if(!r)return;const data=await r.json().catch(()=>[]);if(!r.ok)throw new Error(data.error||'Could not load classes.');classes=data;$('classCount').textContent=`${classes.length} ${classes.length===1?'class':'classes'}`;renderClasses()}catch(e){classesContainer.innerHTML=`<div class="empty"><div class="empty-icon">!</div><h3>Unable to load classes</h3><p>${esc(e.message)}</p></div>`}
+  }
+  function renderClasses(){
+    if(!classes.length){classesContainer.innerHTML='<div class="empty"><div class="empty-icon">🏫</div><h3>No classes yet</h3><p>Create a class for this academic year to continue.</p></div>';return}
+    classesContainer.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Class</th><th>Level</th><th>Section</th><th>Academic Year</th><th>Students</th><th>Action</th></tr></thead><tbody>${classes.map(c=>`<tr><td class="name">${esc(c.name)}</td><td class="muted">${esc(c.level||'—')}</td><td class="muted">${esc(c.section||'—')}</td><td>${esc(c.academicYear?.name||'—')}</td><td>${c._count?.enrollments??0}</td><td><button class="action-btn" data-class-subjects="${esc(c.id)}">${selectedClassId===c.id && classSubjectsVisible ? "Hide Subjects" : "View Subjects"}</button></td></tr>`).join('')}</tbody></table></div>`;
+  }
+
+  async function loadSubjects(){
+    subjectsContainer.innerHTML='<div class="loading">Loading subjects...</div>';
+    try{const r=await academicApiFetch('/api/subjects');if(!r)return;const data=await r.json().catch(()=>[]);if(!r.ok)throw new Error(data.error||'Could not load subjects.');subjects=data;$('subjectCount').textContent=`${subjects.length} ${subjects.length===1?'subject':'subjects'}`;renderSubjects();populateSubjectSelect()}catch(e){subjectsContainer.innerHTML=`<div class="empty"><div class="empty-icon">!</div><h3>Unable to load subjects</h3><p>${esc(e.message)}</p></div>`}
+  }
+  function renderSubjects(){
+    if(!subjects.length){subjectsContainer.innerHTML='<div class="empty"><div class="empty-icon">📘</div><h3>No subjects yet</h3><p>Add your first subject to begin building the curriculum.</p></div>';return}
+    $('subjectsContainer').innerHTML=`<div class="subject-grid">${subjects.map(s=>`<div class="subject-card"><h3>${esc(s.name)}</h3><div class="subject-code">${esc(s.code||'No code')}</div><div class="subject-meta">${s._count?.classSubjects??0} class${s._count?.classSubjects===1?'':'es'} assigned</div></div>`).join('')}</div>`;
+  }
+  function populateSubjectSelect(){
+    $('assignSubjectSelect').innerHTML='<option value="">Select a subject</option>'+subjects.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}${s.code?` (${esc(s.code)})`:''}</option>`).join('');
+  }
+  function setClassSubjectsVisibility(visible){
+    classSubjectsVisible=visible;
+    $('classSubjectsPanel').style.display=visible?'block':'none';
+    const btn=$('toggleClassSubjectsBtn');
+    if(btn) btn.textContent=visible?'Hide Subjects':'View Subjects';
+  }
+
+  async function loadClassSubjects(classId){
+    selectedClassId=classId; classSubjectsVisible=true; const c=classes.find(x=>x.id===classId); setClassSubjectsVisibility(true);$('classSubjectsTitle').textContent=`${c?.name||'Class'} — Subjects`;$('classSubjectsSubtitle').textContent=`Subjects assigned to ${c?.name||'this class'}.`;
+    classSubjectsContainer.innerHTML='<div class="loading">Loading class subjects...</div>';
+    try{const r=await academicApiFetch(`/api/subjects/class/${classId}`);if(!r)return;const data=await r.json().catch(()=>[]);if(!r.ok)throw new Error(data.error||'Could not load class subjects.');if(!data.length){classSubjectsContainer.innerHTML='<div class="empty"><div class="empty-icon">📘</div><h3>No subjects assigned</h3><p>Assign subjects to this class when you are ready.</p></div>';return}classSubjectsContainer.innerHTML=`<div class="subject-grid">${data.map(x=>`<div class="subject-card"><h3>${esc(x.subject?.name||'Subject')}</h3><div class="subject-code">${esc(x.subject?.code||'No code')}</div><div class="subject-meta">${esc(x.academicYear?.name||'Academic year')}</div></div>`).join('')}</div>`}catch(e){classSubjectsContainer.innerHTML=`<div class="empty"><div class="empty-icon">!</div><h3>Unable to load subjects</h3><p>${esc(e.message)}</p></div>`}
+  }
+
+  $('addYearBtn').onclick=()=>open(yearModal);$('closeYearModal').onclick=()=>close(yearModal);$('cancelYearBtn').onclick=()=>close(yearModal);
+  $('yearForm').onsubmit=async e=>{e.preventDefault();const name=$('yearName').value.trim(),startsAt=$('startsAt').value,endsAt=$('endsAt').value,isCurrent=$('isCurrent').checked;if(!name||!startsAt||!endsAt){toast('Please complete all required fields.');return}if(startsAt>=endsAt){toast('End date must be after the start date.');return}const b=$('saveYearBtn');b.disabled=true;b.textContent='Saving...';try{const r=await academicApiFetch('/api/academic-years',{method:'POST',body:JSON.stringify({name,startsAt,endsAt,isCurrent})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Could not create the academic year.');close(yearModal);$('yearForm').reset();toast('Academic year created successfully.');await loadAcademicYears()}catch(e){toast(e.message)}finally{b.disabled=false;b.textContent='Save Academic Year'}};
+
+  $('addTermBtn').onclick=()=>{if(!selectedAcademicYearId){toast('Please select an academic year first.');return}open(termModal)};$('closeTermModal').onclick=()=>close(termModal);$('cancelTermBtn').onclick=()=>close(termModal);
+  $('termForm').onsubmit=async e=>{e.preventDefault();if(!selectedAcademicYearId){toast('Please select an academic year first.');return}const name=$('termName').value.trim(),startsAt=$('termStartsAt').value,endsAt=$('termEndsAt').value,isCurrent=$('termIsCurrent').checked,b=$('saveTermBtn');if(!name||!startsAt||!endsAt){toast('Please complete all required fields.');return}if(startsAt>=endsAt){toast('End date must be after the start date.');return}b.disabled=true;b.textContent='Saving...';try{const r=await academicApiFetch(`/api/academic-years/${selectedAcademicYearId}/terms`,{method:'POST',body:JSON.stringify({name,startsAt,endsAt,isCurrent})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Could not create the academic term.');close(termModal);$('termForm').reset();toast('Academic term created successfully.');await loadTerms(selectedAcademicYearId);await loadAcademicYears()}catch(e){toast(e.message)}finally{b.disabled=false;b.textContent='Save Term'}};
+
+  $('classYearSelect').onchange=async()=>{selectedAcademicYearId=$('classYearSelect').value;setClassSubjectsVisibility(false);await loadClasses(selectedAcademicYearId)};
+  $('addClassBtn').onclick=()=>{if(!$('classYearSelect').value){toast('Please create or select an academic year first.');return}$('classAcademicYear').value=$('classYearSelect').value;open(classModal)};$('closeClassModal').onclick=()=>close(classModal);$('cancelClassBtn').onclick=()=>close(classModal);
+  $('classForm').onsubmit=async e=>{e.preventDefault();const academicYearId=$('classAcademicYear').value,name=$('className').value.trim(),level=$('classLevel').value.trim(),section=$('classSection').value.trim(),b=$('saveClassBtn');if(!academicYearId||!name){toast('Academic year and class name are required.');return}b.disabled=true;b.textContent='Saving...';try{const r=await academicApiFetch('/api/classes',{method:'POST',body:JSON.stringify({academicYearId,name,level,section})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Could not create the class.');close(classModal);$('classForm').reset();toast('Class created successfully.');$('classYearSelect').value=academicYearId;selectedAcademicYearId=academicYearId;await loadClasses(academicYearId);await loadAcademicYears()}catch(e){toast(e.message)}finally{b.disabled=false;b.textContent='Save Class'}};
+
+  $('addSubjectBtn').onclick=()=>open(subjectModal);$('closeSubjectModal').onclick=()=>close(subjectModal);$('cancelSubjectBtn').onclick=()=>close(subjectModal);
+  $('subjectForm').onsubmit=async e=>{e.preventDefault();const name=$('subjectName').value.trim(),code=$('subjectCode').value.trim(),b=$('saveSubjectBtn');if(!name){toast('Subject name is required.');return}b.disabled=true;b.textContent='Saving...';try{const r=await academicApiFetch('/api/subjects',{method:'POST',body:JSON.stringify({name,code})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Could not create the subject.');close(subjectModal);$('subjectForm').reset();toast('Subject created successfully.');await loadSubjects()}catch(e){toast(e.message)}finally{b.disabled=false;b.textContent='Save Subject'}};
+
+  $('assignSubjectBtn').onclick=()=>{if(!selectedClassId){toast('Please select a class first.');return}populateSubjectSelect();$('assignSubjectSelect').value='';open(assignModal)};$('closeAssignModal').onclick=()=>close(assignModal);$('cancelAssignBtn').onclick=()=>close(assignModal);
+  $('assignForm').onsubmit=async e=>{e.preventDefault();const subjectId=$('assignSubjectSelect').value,b=$('saveAssignBtn');if(!selectedClassId||!subjectId){toast('Please select a subject.');return}b.disabled=true;b.textContent='Assigning...';try{const r=await academicApiFetch(`/api/subjects/class/${selectedClassId}`,{method:'POST',body:JSON.stringify({subjectId})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Could not assign the subject.');close(assignModal);toast('Subject assigned successfully.');await loadClassSubjects(selectedClassId);await loadSubjects()}catch(e){toast(e.message)}finally{b.disabled=false;b.textContent='Assign Subject'}};
+
+  $('toggleClassSubjectsBtn').onclick=()=>{
+    setClassSubjectsVisibility(!classSubjectsVisible);
+    renderClasses();
+  };
+
+  document.addEventListener('click',async e=>{
+    const terms=e.target.closest('[data-terms]'); if(terms){await loadTerms(terms.dataset.terms);return}
+    const cy=e.target.closest('[data-current-year]');if(cy){if(!confirm('Make this academic year the current academic year?'))return;cy.disabled=true;try{const r=await academicApiFetch(`/api/academic-years/${cy.dataset.currentYear}/current`,{method:'PATCH'});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Could not update the academic year.');toast('Current academic year updated successfully.');await loadAcademicYears()}catch(err){toast(err.message)}return}
+    const ct=e.target.closest('[data-current-term]');if(ct){if(!selectedAcademicYearId||!confirm('Make this term the current term?'))return;ct.disabled=true;try{const r=await academicApiFetch(`/api/academic-years/${selectedAcademicYearId}/terms/${ct.dataset.currentTerm}/current`,{method:'PATCH'});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Could not update the current term.');toast('Current term updated successfully.');await loadTerms(selectedAcademicYearId);await loadAcademicYears()}catch(err){toast(err.message)}return}
+    const cs=e.target.closest('[data-class-subjects]');
+    if(cs){
+      const id=cs.dataset.classSubjects;
+      if(selectedClassId===id && classSubjectsVisible){
+        setClassSubjectsVisibility(false);
+        renderClasses();
+      }else{
+        await loadClassSubjects(id);
+        renderClasses();
+      }
+    }
+  });
+  document.querySelectorAll('.modal-backdrop').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)close(m)}));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-backdrop.open').forEach(close)});
+
+  async function initializeAcademicSetup(){
+    /*
+     * The Academic Setup page already contains its canonical shell markup.
+     * Do not call renderAppChrome() here: that shared helper also performs
+     * shell/profile normalisation and can race this page's DOM initialisation.
+     * The race was the source of the '$(...).textContent is null' failure that
+     * left every academic section in a loading/error state.
+     */
+    try{
+      applyRoleVisibility();
+      $('academicLogoutBtn')?.addEventListener('click',logoutFromAcademic);
+
+      const u=currentUser || {};
+      const nameEl=$('userName');
+      const avatarEl=$('userAvatar');
+      if(nameEl) nameEl.textContent=[u.firstName,u.lastName].filter(Boolean).join(' ')||u.email||'User';
+      if(avatarEl) avatarEl.textContent=(u.firstName?.[0]||u.email?.[0]||'U').toUpperCase();
+
+      setClassSubjectsVisibility(false);
+
+      /* Load the independent sections without allowing one failure to abort
+         the rest of the Academic Setup page. */
+      await Promise.allSettled([
+        loadAcademicYears(),
+        loadSubjects()
+      ]);
+    }catch(error){
+      console.error('ConnectSukuu Academic Setup initialization failed:',error);
+      const message=error?.message||'Academic Setup could not be initialized.';
+      if(yearsContainer && yearsContainer.querySelector('.loading'))yearsContainer.innerHTML=`<div class="empty"><div class="empty-icon">!</div><h3>Unable to load academic setup</h3><p>${esc(message)}</p><button type="button" class="secondary-btn" onclick="location.reload()">Retry</button></div>`;
+      if(subjectsContainer && subjectsContainer.querySelector('.loading'))subjectsContainer.innerHTML=`<div class="empty"><div class="empty-icon">!</div><h3>Unable to load subjects</h3><p>${esc(message)}</p><button type="button" class="secondary-btn" onclick="location.reload()">Retry</button></div>`;
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initializeAcademicSetup,{once:true});else initializeAcademicSetup();
+</script>
+
+<script id="connectsukuu-head-teacher-academic-oversight">
+/* CONNECTSUKUU_HEAD_TEACHER_ACADEMIC_OVERSIGHT_CONTROLLER */
+(function(){
+  'use strict';
+
+  function escapeHtml(value){
+    return String(value ?? '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+      .replace(/'/g,'&#039;');
+  }
+
+  async function run(){
+    const user = requireAuthOrRedirect();
+    if(!user || user.role !== 'HEAD_TEACHER') return;
+
+    const panel = document.getElementById('ht-academic-oversight');
+    if(!panel) return;
+    panel.classList.add('show');
+    panel.setAttribute('aria-hidden','false');
+
+    const setText = (id,value) => {
+      const el = document.getElementById(id);
+      if(el) el.textContent = value;
+    };
+    const array = value => Array.isArray(value) ? value : [];
+
+    async function fetchJson(url){
+      const response = await apiFetch(url);
+      if(!response) throw new Error('Authentication response unavailable.');
+      const data = await response.json().catch(() => []);
+      if(!response.ok) throw new Error(data?.error || 'Request failed.');
+      return data;
+    }
+
+    try{
+      const years = array(await fetchJson('/api/academic-years'));
+      const year = years.find(x => x.isCurrent) || years[0];
+
+      if(!year){
+        setText('htAcademicClasses','0');
+        setText('htAcademicSubjects','0');
+        setText('htAcademicAssignments','0');
+        setText('htAcademicTimetable','0');
+        setText('htAcademicYearName','No academic year');
+        setText('htAcademicTermName','No current term');
+        setText('htAcademicCoverageLabel','Not configured');
+        setText('htAcademicReadiness','Not configured');
+        return;
+      }
+
+      setText('htAcademicYearName',year.name || 'Academic year');
+
+      const [classes,subjects,terms,assignments] = await Promise.all([
+        fetchJson(`/api/classes?academicYearId=${encodeURIComponent(year.id)}`),
+        fetchJson('/api/subjects'),
+        fetchJson(`/api/academic-years/${encodeURIComponent(year.id)}/terms`),
+        fetchJson(`/api/teaching-assignments?academicYearId=${encodeURIComponent(year.id)}`)
+      ]);
+
+      const classList = array(classes);
+      const subjectList = array(subjects);
+      const termList = array(terms);
+      const assignmentList = array(assignments);
+      const term = termList.find(x => x.isCurrent) || termList[0];
+
+      setText('htAcademicClasses',classList.length);
+      setText('htAcademicSubjects',subjectList.length);
+      setText('htAcademicAssignments',assignmentList.length);
+      setText('htAcademicTermName',term?.name || 'No current term');
+
+      let timetable = [];
+      if(term){
+        timetable = array(await fetchJson(`/api/timetable?academicYearId=${encodeURIComponent(year.id)}&termId=${encodeURIComponent(term.id)}`));
+      }
+      setText('htAcademicTimetable',timetable.length);
+
+      const assignedClassIds = new Set(
+        assignmentList.map(x => x.classId || x.schoolClass?.id).filter(Boolean)
+      );
+      const withoutAssignments = classList.filter(x => !assignedClassIds.has(x.id));
+
+      const issues = [];
+      if(!classList.length) issues.push('No classes configured');
+      if(!subjectList.length) issues.push('No subjects configured');
+      if(classList.length && !assignmentList.length) issues.push('No teaching assignments');
+      if(withoutAssignments.length) issues.push(`${withoutAssignments.length} class${withoutAssignments.length === 1 ? '' : 'es'} without assignments`);
+      if(!term) issues.push('No academic term available');
+      if(term && !timetable.length) issues.push('No timetable entries for the current term');
+
+      const coverage = document.getElementById('htAcademicCoverage');
+      if(coverage){
+        const rows = [
+          ['Classes with teaching assignments',`${classList.length - withoutAssignments.length} of ${classList.length}`,withoutAssignments.length ? 'attention' : 'ready'],
+          ['Teaching assignments',String(assignmentList.length),assignmentList.length ? 'ready' : 'attention'],
+          ['Current-term timetable entries',String(timetable.length),term && timetable.length ? 'ready' : (term ? 'attention' : 'empty')]
+        ];
+
+        coverage.innerHTML = rows.map(([label,value,status]) =>
+          `<div class="ht-academic-row"><strong>${escapeHtml(label)}</strong><span class="ht-academic-status ${status}">${escapeHtml(value)}</span></div>`
+        ).join('');
+
+        if(withoutAssignments.length){
+          coverage.innerHTML += `<div class="ht-academic-row"><strong>Classes needing assignment review</strong><span>${withoutAssignments.map(x => escapeHtml(x.name || 'Unnamed class')).join(', ')}</span></div>`;
+        }
+      }
+
+      const readiness = document.getElementById('htAcademicReadiness');
+      if(readiness){
+        readiness.className = 'ht-academic-status ' + (issues.length ? 'attention' : 'ready');
+        readiness.textContent = issues.length
+          ? `${issues.length} item${issues.length === 1 ? '' : 's'} need attention`
+          : 'Academic structure ready';
+      }
+      setText('htAcademicCoverageLabel',issues.length ? 'Review needed' : 'On track');
+    }catch(error){
+      console.error('Head Teacher Academic Oversight:',error);
+      setText('htAcademicCoverageLabel','Unavailable');
+      setText('htAcademicReadiness','Unable to load');
+      const readiness = document.getElementById('htAcademicReadiness');
+      if(readiness) readiness.className = 'ht-academic-status attention';
+      const coverage = document.getElementById('htAcademicCoverage');
+      if(coverage) coverage.innerHTML = '<div class="ht-academic-loading">Oversight data could not be loaded. Existing Academic Setup remains available below.</div>';
+    }
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded',run,{once:true});
+  }else{
+    run();
+  }
+});
+</script>
+
+<script id="connectsukuu-teacher-role-runtime">
+(function(){
+'use strict';
+function user(){
+ try{if(typeof AUTH!=='undefined'&&AUTH&&typeof AUTH.getUser==='function')return AUTH.getUser()||{};}catch(_){}
+ try{return JSON.parse(localStorage.getItem('cs_user')||'null')||{};}catch(_){return {};}
+}
+function apply(){
+ var u=user(),role=String(u.role||'').toUpperCase();
+ document.querySelectorAll('[data-role-nav]').forEach(function(el){
+   var allowed=(el.getAttribute('data-role-nav')||'').split(',').map(function(x){return x.trim()});
+   el.style.display=allowed.includes(role)?'':'none';
+ });
+ var roleEl=document.getElementById('userRole')||document.getElementById('app-role');
+ if(roleEl&&role==='TEACHER')roleEl.textContent='Teacher';
+ var emailEl=document.getElementById('userName')||document.getElementById('app-who');
+ if(emailEl&&role==='TEACHER')emailEl.textContent=u.email||((u.firstName||'')+' '+(u.lastName||'')).trim()||'Teacher';
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply,{once:true});else apply();
+setTimeout(apply,300);
+})();
+</script>
+<script id="connectsukuu-teacher-academic-setup-guard">
+(function(){
+  'use strict';
+
+  function getUser(){
+    try{
+      if(typeof AUTH!=='undefined' && AUTH && typeof AUTH.getUser==='function'){
+        return AUTH.getUser() || {};
+      }
+    }catch(_){}
+    try{
+      return JSON.parse(localStorage.getItem('cs_user')||'null') || {};
+    }catch(_){
+      return {};
+    }
+  }
+
+  function apply(){
+    var role=String(getUser().role||'').toUpperCase();
+
+    document.querySelectorAll('[data-role-exclude]').forEach(function(el){
+      var excluded=(el.getAttribute('data-role-exclude')||'')
+        .split(',')
+        .map(function(x){return x.trim().toUpperCase()})
+        .filter(Boolean);
+
+      var hidden=excluded.includes(role);
+      el.style.display=hidden?'none':'';
+      el.setAttribute('aria-hidden',hidden?'true':'false');
+    });
+
+    if(role==='TEACHER' && /(^|\/)app-academic\.html$/i.test(location.pathname)){
+      location.replace('/roles/headteacher/headteacher-dashboard.html');
+    }
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',apply,{once:true});
+  }else{
+    apply();
+  }
+
+  setTimeout(apply,250);
+})();
+</script>
+
+
+
+
+
+<style id="connectsukuu-ht-shell-refinement-style">
+/* FINAL HT SHELL REFINEMENT — keep business UI intact */
+:root{
+  --csk-ht-sidebar:255px!important;
+  --csk-ht-header:58px!important;
+}
+
+/* One consistent dark HT sidebar, including Finance. */
+body .csk-ht-sidebar-final{
+  display:flex!important;
+  position:fixed!important;
+  left:0!important;
+  top:0!important;
+  bottom:0!important;
+  width:255px!important;
+  min-width:255px!important;
+  max-width:255px!important;
+  height:100vh!important;
+  background:linear-gradient(180deg,#0b1730 0%,#101d38 100%)!important;
+  color:#fff!important;
+  border-right:1px solid rgba(255,255,255,.08)!important;
+  z-index:5000!important;
+}
+body .csk-ht-sidebar-final .csk-ht-brand-final{
+  flex:0 0 58px!important;
+  height:58px!important;
+  min-height:58px!important;
+}
+body .csk-ht-sidebar-final .csk-ht-nav-final{
+  flex:1 1 auto!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+}
+body .csk-ht-sidebar-final .csk-ht-logout-final{
+  flex:0 0 auto!important;
+}
+
+/* Header stays exactly fixed and aligned to the sidebar. */
+body .csk-ht-header-final{
+  position:fixed!important;
+  left:255px!important;
+  right:0!important;
+  top:0!important;
+  height:58px!important;
+  min-height:58px!important;
+  z-index:4900!important;
+}
+
+/* Remove the second centered 1180px frame that caused the large blank band. */
+body .csk-ht-main-final{
+  margin-left:255px!important;
+  width:calc(100% - 255px)!important;
+  min-width:0!important;
+  padding-top:58px!important;
+}
+body .csk-ht-main-final > .app-content,
+body .csk-ht-main-final > .content,
+body .csk-ht-main-final > .page,
+body .csk-ht-main-final > section.content,
+body .csk-ht-content{
+  width:100%!important;
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  box-sizing:border-box!important;
+}
+
+/* Neutralize common legacy page-width wrappers without changing their contents. */
+body .csk-ht-content > .page-container,
+body .csk-ht-content > .container,
+body .csk-ht-content > .content-container,
+body .csk-ht-content > .page-shell,
+body .csk-ht-content > .main-content,
+body .csk-ht-content > .dashboard-content,
+body .csk-ht-content > .finance-content{
+  width:100%!important;
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+}
+
+/* Keep readable inner cards while allowing the shell itself to use the screen. */
+body .csk-ht-content .page-title,
+body .csk-ht-content .page-header,
+body .csk-ht-content .hero,
+body .csk-ht-content .heading,
+body .csk-ht-content .team-hero{
+  max-width:100%!important;
+}
+
+/* Prevent any old sidebar from becoming visible on Finance after renderAppChrome(). */
+body .csk-ht-sidebar-final ~ .layout > .sidebar,
+body .csk-ht-sidebar-final ~ .app-shell > .app-sidebar,
+body .csk-ht-sidebar-final ~ .app > .sidebar,
+body .csk-ht-sidebar-final ~ .sidebar,
+body .csk-ht-sidebar-final ~ .cs-assessment-sidebar{
+  display:none!important;
+}
+
+/* Mobile keeps the existing responsive behavior. */
+@media(max-width:900px){
+  :root{--csk-ht-sidebar:0px!important;}
+  body .csk-ht-sidebar-final{
+    position:relative!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    height:auto!important;
+    min-height:0!important;
+  }
+  body .csk-ht-header-final{
+    left:0!important;
+    right:0!important;
+  }
+  body .csk-ht-main-final{
+    margin-left:0!important;
+    width:100%!important;
+    padding-top:58px!important;
+  }
+  body .csk-ht-content{
+    padding:20px 16px 34px!important;
+  }
+}
+</style>
+
+
+<script id="connectsukuu-headteacher-final-shell-runtime">
+(function(){
+'use strict';
+var ROLE='HEAD_TEACHER';
+var PAGES={
+ dashboard:{title:'Dashboard',file:'/roles/headteacher/headteacher-dashboard.html'},
+ team:{title:'Team & Roles',file:'/roles/headteacher/headteacher-team.html'},
+ academic:{title:'Academic Setup',file:'/roles/headteacher/headteacher-academic.html'},
+ students:{title:'Students',file:'/roles/headteacher/headteacher-students.html'},
+ attendance:{title:'Attendance',file:'/roles/headteacher/headteacher-attendance.html'},
+ 'security-logs':{title:'Security Logs',file:'/roles/headteacher/headteacher-security-logs.html'},
+ 'teaching-assignments':{title:'Teaching Assignments',file:'/roles/headteacher/headteacher-teaching-assignments.html'},
+ timetable:{title:'Timetable',file:'/roles/headteacher/headteacher-timetable.html'},
+ assessments:{title:'Assessments & Report Cards',file:'/roles/headteacher/headteacher-assessments.html'},
+ finance:{title:'Finance',file:'/roles/headteacher/headteacher-finance.html'},
+ announcements:{title:'Announcements',file:'/roles/headteacher/headteacher-announcements.html'},
+ messages:{title:'Messages',file:'/roles/headteacher/headteacher-messages.html'},
+ notifications:{title:'Notifications',file:'/roles/headteacher/headteacher-notifications.html'},
+ support:{title:'Support',file:'/roles/headteacher/headteacher-support.html'},
+ settings:{title:'Settings',file:'/roles/headteacher/headteacher-settings.html'}
+};
+function currentKey(){var p=(location.pathname.split('/').pop()||'headteacher-dashboard').toLowerCase().replace(/\.html$/,'');for(var k in PAGES){if(k===p||PAGES[k].file.toLowerCase().replace(/\.html$/,'')===p)return k;}return 'dashboard';}
+var pageKey=currentKey();
+function getUser(){try{if(window.AUTH&&typeof AUTH.getUser==='function'){var u=AUTH.getUser();if(u)return u;}}catch(e){}try{return JSON.parse(localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user')||'null')||{};}catch(e){return {};}}
+function isHT(){return String(getUser().role||document.body.dataset.role||'').toUpperCase()===ROLE;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function initials(u){var n=[u.firstName,u.lastName].filter(Boolean).join(' ').trim()||u.email||'Head Teacher';return n.split(/\s+/).map(function(x){return x.charAt(0);}).join('').slice(0,2).toUpperCase();}
+var ICONS={
+ dashboard:'<rect x="3" y="3" width="18" height="18" rx="3"></rect><path d="M8 8h3v3H8zM13 8h3v3h-3zM8 13h3v3H8zM13 13h3v3h-3z"></path>',
+ team:'<path d="M16 20v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V20"></path><circle cx="9.5" cy="7" r="3"></circle><path d="M16 8a3 3 0 0 1 0 6M19 20v-1.5a4 4 0 0 0-3-3.87"></path>',
+ academic:'<path d="M3 9l9-5 9 5-9 5-9-5z"></path><path d="M7 11.5V16c2.8 2 7.2 2 10 0v-4.5M21 10v6"></path>',
+ students:'<circle cx="9" cy="8" r="3"></circle><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 11a3 3 0 1 0 0-6M17 14a5 5 0 0 1 4 5v1"></path>',
+ attendance:'<path d="M4 5h16v15H4z"></path><path d="M8 3v4M16 3v4M7 11h3M14 11h3M7 15h3"></path>',
+ 'security-logs':'<circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path>',
+ announcements:'<path d="M4 4h16v16H4z"></path><path d="M8 8h8M8 12h8M8 16h5"></path>',
+ messages:'<path d="M4 5h16v12H8l-4 3z"></path><path d="M8 9h8M8 13h5"></path>',
+ notifications:'<path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path>',
+ support:'<circle cx="12" cy="12" r="9"></circle><path d="M9.6 9a2.5 2.5 0 1 1 4.4 1.6c-1.2 1.1-2 1.4-2 3"></path><path d="M12 17h.01"></path>',
+ 'teaching-assignments':'<path d="M4 5h16v14H4z"></path><path d="M8 3v4M16 3v4M7 12h10M7 16h6"></path>',
+ timetable:'<rect x="3" y="4" width="18" height="17" rx="2"></rect><path d="M16 2v4M8 2v4M3 9h18M8 13h.01M12 13h.01M16 13h.01M8 17h.01M12 17h.01"></path>',
+ assessments:'<path d="M5 3h14v18H5z"></path><path d="M8 7h8M8 11h8M8 15h5"></path>',
+ finance:'<circle cx="12" cy="12" r="9"></circle><path d="M15 8.5c-.7-.7-1.7-1.1-3-1.1-1.7 0-3 .8-3 2s1.1 2 3 2 3 .8 3 2-1.3 2-3 2c-1.3 0-2.3-.4-3-1.1M12 6v12"></path>',
+ settings:'<circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.7 1.7-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-2.4v-.2a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1-1.7-1.7.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0 1.6-1h.2v-2.4h-.2a1.7 1.7 0 0 0-1.6-1 1.7 1.7 0 0 0 .3-1.9l-.1-.1 1.7-1.7.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1.9 0 1.7 1.7 0 0 0 1-1.6V4h2.4v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.7 1.7-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0-.1 1.9 1.7 1.7 0 0 0-1.6 1h.2v2.4h-.2a1.7 1.7 0 0 0-1.6 1z"></path>'
+};
+function navHtml(){var h='<div class="nav-label">WORKSPACE</div>';function a(k,label){return '<a href="'+PAGES[k].file+'" data-csk-ht-nav="'+k+'"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true">'+ICONS[k]+'</svg></span><span>'+label+'</span></a>';}h+=a('dashboard','Dashboard')+a('team','Team &amp; Roles')+a('academic','Academic Setup')+a('students','Students')+a('attendance','Attendance')+a('security-logs','Security Logs');h+='<div class="nav-label">TEACHING</div>'+a('teaching-assignments','Teaching Assignments')+a('timetable','Timetable')+a('assessments','Assessments &amp; Reports');h+='<div class="nav-label">FINANCE</div>'+a('finance','Finance');h+='<div class="nav-label">COMMUNICATION</div>'+a('announcements','Announcements')+a('messages','Messages')+a('notifications','Notifications')+a('support','Support');h+='<div class="nav-label">ADMINISTRATION</div>'+a('settings','Settings');return h;}
+function hideLegacy(){document.querySelectorAll('body>.app-shell>.app-sidebar,body>.layout>.sidebar,body>.app>.sidebar,body>.app-sidebar,body>.sidebar,body>.cs-assessment-sidebar').forEach(function(el){el.style.display='none';});document.querySelectorAll('body .app-topbar,body .topbar,body .cs-assessment-topbar,body .app-sidebar-footer,body .sidebar-footer,body .sidebar-bottom,body .academic-sidebar-footer').forEach(function(el){el.style.display='none';});document.querySelectorAll('body>.app-shell,body>.layout,body>.app').forEach(function(el){el.style.display='block';el.style.width='100%';el.style.minWidth='0';el.style.maxWidth='none';});}
+function findMain(){return document.querySelector('main.app-main,main.main,.app-main,.main,.cs-main');}
+function hideHoa(){document.body.classList.add('cs-headteacher-final-shell');document.body.classList.remove('hoa-dashboard');document.querySelectorAll('#csHoaDashboard,#csHoaAcademicIntelligence,.cs-hoa-dashboard,.cs-hoa-intel,.ht-note-panel,.ht-dashboard-pulse,.ht-dashboard-pulse-rail').forEach(function(el){el.style.display='none';el.setAttribute('aria-hidden','true');});}
+function buildSidebar(){var side=document.querySelector('.csk-ht-sidebar-final');if(!side){side=document.createElement('aside');side.className='csk-ht-sidebar-final';side.innerHTML='<div class="csk-ht-brand-final"><span class="brand-mark"><img src="/assets/images/favicon.svg" alt="" aria-hidden="true"></span><span class="brand-connect">Connect<span class="brand-sukuu">Sukuu</span></span></div><nav class="csk-ht-nav-final">'+navHtml()+'</nav><button type="button" class="csk-ht-logout-final" id="cskHtLogoutFinal">↪ Log out</button>';document.body.insertBefore(side,document.body.firstChild);side.querySelector('#cskHtLogoutFinal').addEventListener('click',function(){try{if(window.AUTH&&typeof AUTH.logout==='function'){AUTH.logout();return;}}catch(e){}try{localStorage.removeItem('cs_token');localStorage.removeItem('cs_user');localStorage.removeItem('connectsukuu_user');}catch(e){}location.replace('/auth/signin.html');});}
+ side.querySelectorAll('[data-csk-ht-nav]').forEach(function(a){if(!a.dataset.bound){a.dataset.bound='1';a.addEventListener('click',function(ev){ev.preventDefault();location.assign(a.getAttribute('href'));},true);}});
+ side.querySelectorAll('[data-csk-ht-nav]').forEach(function(a){a.classList.toggle('active',String(a.getAttribute('data-csk-ht-nav'))===pageKey);});
+ return side;}
+function buildHeader(){var h=document.querySelector('.csk-ht-header-final');var u=getUser();if(!h){h=document.createElement('header');h.className='csk-ht-header-final';h.innerHTML='<h1 class="csk-ht-header-title-final"></h1><a class="cs-role-bell" id="cs-bell" href="/roles/headteacher/headteacher-notifications.html" aria-label="Notifications" title="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg><span id="cs-unread-count" class="cs-badge-count cs-hidden">0</span></a><div class="csk-ht-profile-final"><div class="csk-ht-avatar-final" aria-hidden="true"></div><div class="csk-ht-profile-copy-final"><span class="csk-ht-profile-email-final"></span><span class="csk-ht-profile-role-final">Head Teacher</span></div></div>';document.body.appendChild(h);}h.querySelector('.csk-ht-header-title-final').textContent=PAGES[pageKey].title;h.querySelector('.csk-ht-profile-email-final').textContent=[u.firstName,u.lastName].filter(Boolean).join(' ').trim()||u.name||u.email||'Head Teacher';h.querySelector('.csk-ht-avatar-final').textContent=initials(u);return h;}
+function normalizeMain(){var main=findMain();if(!main)return null;main.classList.add('csk-ht-main-final');main.style.removeProperty('grid-column');main.style.removeProperty('grid-row');main.querySelectorAll(':scope > .app-topbar,:scope > .topbar,:scope > .cs-topbar,:scope > .cs-assessment-topbar').forEach(function(el){el.style.setProperty('display','none','important');});return main;}
+function normalizeTitle(){document.title=PAGES[pageKey].title;}
+function normalizeStudentTable(){if(pageKey!=='students')return;var table=document.getElementById('students-table');if(!table)return;table.style.tableLayout='fixed';table.style.width='100%';table.querySelectorAll('th:last-child,td:last-child').forEach(function(c){c.style.width='120px';c.style.minWidth='120px';c.style.maxWidth='120px';c.style.textAlign='center';});}
+function run(){if(!isHT())return;document.body.classList.add('cs-headteacher-final-shell');hideLegacy();hideHoa();normalizeTitle();normalizeMain();buildSidebar();buildHeader();normalizeStudentTable();}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();[80,250,700,1400,2500].forEach(function(ms){setTimeout(run,ms);});try{new MutationObserver(function(){if(isHT())hideLegacy();}).observe(document.body,{childList:true,subtree:true});}catch(e){}
+})();
+</script>
+<script id="connectsukuu-ht-content-polish-runtime">
+(function(){
+  'use strict';
+  function cleanLiteralNewlineArtifacts(){
+    /* The source repair below removes literal \\n       artifacts outside script/style blocks. This runtime is only a safety net. */
+    document.querySelectorAll('.csk-ht-main-final>header.topbar,.csk-ht-main-final>.topbar,.csk-ht-main-final>.app-topbar').forEach(function(el){el.style.display='none';});
+  }
+  function run(){cleanLiteralNewlineArtifacts();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();
+  setTimeout(run,250);setTimeout(run,900);
+})();
+</script>
+<!-- END_CONNECTSUKUU_HT_CONTENT_POLISH_FINAL -->
+
+<style id="connectsukuu-ht-final-three-menus-shell-repair">
+/* Final three-menu presentation repair. Business logic/API/database untouched. */
+body.cs-headteacher-final-shell .csk-ht-main-final{padding-top:0!important;}
+body.cs-headteacher-final-shell .csk-ht-main-final>.app-content,
+body.cs-headteacher-final-shell .csk-ht-main-final>.content,
+body.cs-headteacher-final-shell .csk-ht-main-final>.page,
+body.cs-headteacher-final-shell .csk-ht-main-final>section.content{padding:20px 28px 44px!important;}
+@media(max-width:900px){
+ body.cs-headteacher-final-shell .csk-ht-main-final>.app-content,
+ body.cs-headteacher-final-shell .csk-ht-main-final>.content,
+ body.cs-headteacher-final-shell .csk-ht-main-final>.page,
+ body.cs-headteacher-final-shell .csk-ht-main-final>section.content{padding:18px 18px 34px!important;}
+}
+@media(max-width:600px){
+ body.cs-headteacher-final-shell .csk-ht-main-final>.app-content,
+ body.cs-headteacher-final-shell .csk-ht-main-final>.content,
+ body.cs-headteacher-final-shell .csk-ht-main-final>.page,
+ body.cs-headteacher-final-shell .csk-ht-main-final>section.content{padding:16px 14px 30px!important;}
+}
+</style>
+
+<style id="connectsukuu-ht-final-academic-repair">
+body.cs-headteacher-final-shell #connectsukuuGradingSystemPanel{margin-top:14px!important;}
+body.cs-headteacher-final-shell #connectsukuuGradingSystemPanel>div:first-child{min-height:0!important;padding:16px 20px!important;}
+body.cs-headteacher-final-shell #connectsukuuGradingSystemPanel>#csGradingScaleList{
+ height:auto!important;min-height:0!important;max-height:none!important;padding:8px 20px 12px!important;overflow:visible!important;
+}
+body.cs-headteacher-final-shell #connectsukuuGradingSystemPanel>#csGradingScaleList>div{
+ min-height:0!important;height:auto!important;margin:0!important;padding:10px 0!important;
+}
+body.cs-headteacher-final-shell #connectsukuu-academic-default-af-scale{margin-bottom:16px!important;}
+body.cs-headteacher-final-shell #connectsukuu-academic-default-af-scale .cs-academic-af-scale-head{padding:15px 20px!important;}
+body.cs-headteacher-final-shell #connectsukuu-academic-default-af-scale .cs-academic-af-scale-bands{padding:12px 20px!important;gap:8px!important;}
+body.cs-headteacher-final-shell #connectsukuu-academic-default-af-scale .cs-academic-af-band{padding:10px 8px!important;}
+</style>
+
+<script id="connectsukuu-ht-final-three-menus-runtime">
+(function(){
+ 'use strict';
+ function isHT(){
+  try{
+   var u=(window.AUTH&&typeof AUTH.getUser==='function')?AUTH.getUser():null;
+   if(!u)u=JSON.parse(localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user')||'null')||{};
+   return String(u.role||'').toUpperCase()==='HEAD_TEACHER';
+  }catch(e){return false;}
+ }
+ function repair(){
+  if(!isHT())return;
+  document.body.classList.add('cs-headteacher-final-shell');
+  document.querySelectorAll('main.main>.topbar,main.main>.app-topbar').forEach(function(el){el.remove();});
+  var tools=document.getElementById('feePlanTools');
+  if(tools){tools.style.display='none';tools.setAttribute('aria-hidden','true');}
+  var main=document.querySelector('main.csk-ht-main-final,main.main,.csk-ht-main-final');
+  if(main)main.style.paddingTop='0';
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',repair,{once:true});else repair();
+ [80,250,700,1400,2500].forEach(function(ms){setTimeout(repair,ms);});
+})();
+</script>
+<script src="/assets/js/role-shell-extension.js"></script>
+<link rel="stylesheet" href="/roles/headteacher/headteacher-final-freeze.css">
+</body>
+</html>

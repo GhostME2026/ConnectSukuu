@@ -1,0 +1,5535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Students</title>
+<link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/images/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/images/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+<link rel="shortcut icon" href="/assets/images/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap"></noscript><link rel="stylesheet" href="/assets/css/marketing.css">
+
+<style>
+.students-toolbar{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}
+.students-search{flex:1;min-width:240px;max-width:420px}.students-search input{width:100%}
+.students-actions{display:flex;gap:.65rem;flex-wrap:wrap}
+.student-count{color:var(--slate-light);font-size:.88rem;margin-bottom:1rem}
+.student-avatar{width:36px;height:36px;border-radius:50%;background:var(--primary-tint);color:var(--primary);display:inline-flex;align-items:center;justify-content:center;font-weight:700;overflow:hidden;flex-shrink:0}
+.student-avatar img{width:100%;height:100%;object-fit:cover}.student-name{display:flex;align-items:center;gap:.7rem;font-weight:600}
+.student-admission{font-family:monospace;font-size:.82rem;color:var(--slate-light)}
+.status-badge{display:inline-block;padding:.25rem .55rem;border-radius:999px;font-size:.75rem;font-weight:600;background:var(--green-tint);color:#166534}
+.status-badge.inactive{background:#f1f5f9;color:#475569}.status-badge.transferred{background:#fff7ed;color:#9a3412}
+.status-badge.graduated{background:#eff6ff;color:#1d4ed8}.status-badge.withdrawn{background:#fef2f2;color:#991b1b}
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--slate-light)}.empty-state h3{color:var(--slate);margin-bottom:.45rem}
+.loading-state{text-align:center;padding:2rem 1rem;color:var(--slate-light)}
+.error-state{padding:1rem;border-radius:var(--radius-sm);background:#fef2f2;border:1px solid #fecaca;color:#991b1b;margin-bottom:1rem}
+
+.import-modal{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem}
+.import-modal-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.55)}
+.import-modal-card{position:relative;width:min(960px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:var(--radius);box-shadow:0 20px 60px rgba(15,23,42,.25)}
+.import-modal-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;padding:1.4rem 1.5rem;border-bottom:1px solid #e5e7eb}
+.import-modal-header h2{margin:0 0 .3rem}.import-modal-header p{margin:0;color:var(--slate-light);font-size:.9rem}
+.import-close{border:0;background:transparent;font-size:1.7rem;line-height:1;cursor:pointer;color:var(--slate-light)}
+.import-modal-body{padding:1.5rem}
+.import-dropzone{border:2px dashed #cbd5e1;border-radius:var(--radius-sm);padding:2.5rem 1.5rem;text-align:center;background:#f8fafc;transition:.15s ease}
+.import-dropzone.dragover{border-color:var(--primary);background:var(--primary-tint)}
+.import-icon{width:46px;height:46px;margin:0 auto .8rem;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--primary-tint);color:var(--primary);font-size:1.4rem;font-weight:700}
+.import-dropzone h3{margin:0 0 .4rem}.import-dropzone p{max-width:520px;margin:0 auto 1rem;color:var(--slate-light);font-size:.9rem}
+.import-file-name{margin-top:.9rem;font-size:.85rem;font-weight:600;color:var(--slate);word-break:break-word}
+.import-template{margin-top:1rem;padding:1rem;border-radius:var(--radius-sm);background:#f8fafc}
+.import-template p{margin:.25rem 0 .75rem;font-size:.85rem;color:var(--slate-light)}
+.import-error{margin-top:1rem;padding:.8rem 1rem;border-radius:var(--radius-sm);background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+.import-actions{display:flex;justify-content:flex-end;gap:.65rem;margin-top:1.25rem}
+.import-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1rem}
+.import-summary-card{padding:1rem;border:1px solid #e5e7eb;border-radius:var(--radius-sm)}
+.import-summary-card span{display:block;font-size:.78rem;color:var(--slate-light);margin-bottom:.25rem}.import-summary-card strong{font-size:1.4rem}
+.import-preview-message{margin-bottom:1rem;padding:.8rem 1rem;border-radius:var(--radius-sm);background:#f8fafc;font-size:.9rem}
+.import-preview-table-wrap{overflow-x:auto;border:1px solid #e5e7eb;border-radius:var(--radius-sm)}
+.import-preview-table{min-width:760px}.import-status-valid{color:#166534;font-weight:600}.import-status-invalid{color:#991b1b;font-weight:600}
+.import-result{padding:1.5rem;border-radius:var(--radius-sm);background:#f8fafc}.import-result h3{margin-top:0}
+.import-result.success{background:#f0fdf4;border:1px solid #bbf7d0}.import-result.warning{background:#fff7ed;border:1px solid #fed7aa}
+
+@media(max-width:760px){
+.students-toolbar{align-items:stretch}.students-search{max-width:none}.students-actions{width:100%}.students-actions .btn{flex:1}
+.data-table{display:block;overflow-x:auto;white-space:nowrap}.import-summary{grid-template-columns:1fr}
+.import-modal-card{max-height:95vh}.import-modal-body{padding:1rem}.import-actions{flex-direction:column}.import-actions .btn{width:100%}
+}
+</style>
+
+<style id="connectsukuu-student-final-css">
+/* ==========================================================
+   CONNECTSUKUU — FINAL STUDENT MANAGEMENT UI
+   ========================================================== */
+
+.student-actions,
+.cs-row-actions {
+  display:flex !important;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+  white-space:nowrap;
+}
+
+/* Restore polished buttons */
+.student-action-btn,
+.cs-row-action {
+  appearance:none;
+  border:1px solid #d9e1ec !important;
+  background:#fff !important;
+  color:#334155 !important;
+  min-height:35px;
+  padding:0 12px;
+  border-radius:9px !important;
+  font-family:inherit;
+  font-size:12px;
+  font-weight:650;
+  line-height:1;
+  cursor:pointer;
+  transition:
+    background .18s ease,
+    border-color .18s ease,
+    color .18s ease,
+    transform .18s ease,
+    box-shadow .18s ease;
+}
+
+.student-action-btn:hover,
+.cs-row-action:hover {
+  background:#f8fafc !important;
+  border-color:#b9c6d8 !important;
+  color:#0f172a !important;
+  transform:translateY(-1px);
+  box-shadow:0 3px 8px rgba(15,23,42,.07);
+}
+
+.student-action-btn.primary,
+.cs-row-action.primary {
+  background:#0f172a !important;
+  border-color:#0f172a !important;
+  color:#fff !important;
+}
+
+.student-action-btn.primary:hover,
+.cs-row-action.primary:hover {
+  background:#1e293b !important;
+  border-color:#1e293b !important;
+}
+
+/* Manage wrapper */
+.cs-manage-wrap {
+  position:relative;
+  display:inline-flex;
+}
+
+.cs-manage-trigger {
+  appearance:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  height:35px;
+  padding:0 12px;
+  border:1px solid #d9e1ec;
+  border-radius:9px;
+  background:#fff;
+  color:#334155;
+  font-family:inherit;
+  font-size:12px;
+  font-weight:650;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.cs-manage-trigger:hover,
+.cs-manage-wrap.open .cs-manage-trigger {
+  background:#eff6ff;
+  border-color:#93c5fd;
+  color:#1d4ed8;
+}
+
+.cs-manage-chevron {
+  font-size:10px;
+  transition:transform .18s ease;
+}
+
+.cs-manage-wrap.open .cs-manage-chevron {
+  transform:rotate(180deg);
+}
+
+.cs-manage-menu {
+  position:absolute;
+  top:calc(100% + 7px);
+  right:0;
+  z-index:10000;
+  display:none;
+  min-width:205px;
+  padding:6px;
+  border:1px solid #e2e8f0;
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 16px 40px rgba(15,23,42,.16);
+}
+
+.cs-manage-wrap.open .cs-manage-menu {
+  display:block;
+  animation:csManageIn .14s ease;
+}
+
+@keyframes csManageIn {
+  from {
+    opacity:0;
+    transform:translateY(-4px);
+  }
+  to {
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.cs-manage-item {
+  appearance:none;
+  width:100%;
+  display:flex;
+  align-items:center;
+  border:0;
+  border-radius:8px;
+  padding:10px 11px;
+  background:transparent;
+  color:#334155;
+  text-align:left;
+  font-family:inherit;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.15s ease;
+}
+
+.cs-manage-item:hover {
+  background:#f1f5f9;
+  color:#0f172a;
+}
+
+.cs-manage-item.danger {
+  color:#b91c1c;
+}
+
+.cs-manage-item.danger:hover {
+  background:#fef2f2;
+}
+
+/* Final modal layer */
+.cs-final-modal {
+  position:fixed;
+  inset:0;
+  z-index:12000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(15,23,42,.62);
+  backdrop-filter:blur(7px);
+}
+
+.cs-final-modal.open {
+  display:flex;
+}
+
+.cs-final-card {
+  width:min(760px,100%);
+  max-height:90vh;
+  overflow:auto;
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 30px 90px rgba(15,23,42,.28);
+  animation:csFinalModalIn .18s ease;
+}
+
+@keyframes csFinalModalIn {
+  from {
+    opacity:0;
+    transform:translateY(12px) scale(.985);
+  }
+  to {
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+.cs-final-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:20px;
+  padding:24px 26px;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.cs-final-head h3 {
+  margin:0;
+  color:#0f172a;
+  font-size:20px;
+  line-height:1.2;
+}
+
+.cs-final-head p {
+  margin:5px 0 0;
+  color:#64748b;
+  font-size:13px;
+}
+
+.cs-final-close {
+  width:36px;
+  height:36px;
+  flex:0 0 auto;
+  border:1px solid #dbe3ee;
+  border-radius:10px;
+  background:#fff;
+  color:#475569;
+  font-size:20px;
+  line-height:1;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.cs-final-close:hover {
+  background:#f8fafc;
+  border-color:#94a3b8;
+}
+
+.cs-final-body {
+  padding:25px 26px;
+}
+
+.cs-final-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:15px;
+}
+
+.cs-final-field label {
+  display:block;
+  margin-bottom:6px;
+  color:#334155;
+  font-size:12px;
+  font-weight:700;
+}
+
+.cs-final-field input,
+.cs-final-field select {
+  width:100%;
+  box-sizing:border-box;
+  height:42px;
+  padding:0 12px;
+  border:1px solid #cbd5e1;
+  border-radius:10px;
+  background:#fff;
+  color:#0f172a;
+  font-family:inherit;
+  outline:none;
+  transition:.18s ease;
+}
+
+.cs-final-field input:focus,
+.cs-final-field select:focus {
+  border-color:#2563eb;
+  box-shadow:0 0 0 3px rgba(37,99,235,.1);
+}
+
+.cs-final-full {
+  grid-column:1/-1;
+}
+
+.cs-final-footer {
+  display:flex;
+  justify-content:flex-end;
+  gap:9px;
+  padding:17px 26px;
+  border-top:1px solid #e5e7eb;
+  background:#f8fafc;
+}
+
+.cs-final-btn {
+  appearance:none;
+  min-height:38px;
+  padding:0 14px;
+  border:1px solid #cbd5e1;
+  border-radius:9px;
+  background:#fff;
+  color:#334155;
+  font-family:inherit;
+  font-size:12px;
+  font-weight:650;
+  cursor:pointer;
+}
+
+.cs-final-btn.primary {
+  border-color:#2563eb;
+  background:#2563eb;
+  color:#fff;
+}
+
+.cs-final-btn.primary:hover {
+  background:#1d4ed8;
+}
+
+.cs-final-alert {
+  display:none;
+  margin-bottom:15px;
+  padding:11px 13px;
+  border-radius:10px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.cs-final-alert.show {
+  display:block;
+}
+
+.cs-final-alert.error {
+  color:#991b1b;
+  background:#fee2e2;
+}
+
+.cs-final-alert.success {
+  color:#166534;
+  background:#dcfce7;
+}
+
+/* Guardian presentation */
+.cs-primary-guardian-final {
+  margin-bottom:18px;
+  padding:15px;
+  border:1px solid #bfdbfe;
+  border-radius:13px;
+  background:#eff6ff;
+}
+
+.cs-primary-guardian-final .label {
+  color:#1d4ed8;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+}
+
+.cs-primary-guardian-final .name {
+  margin-top:4px;
+  color:#0f172a;
+  font-size:15px;
+  font-weight:700;
+}
+
+.cs-primary-guardian-final .meta {
+  margin-top:4px;
+  color:#475569;
+  font-size:12px;
+}
+
+@media (max-width:700px) {
+  .cs-final-grid {
+    grid-template-columns:1fr;
+  }
+
+  .cs-final-full {
+    grid-column:auto;
+  }
+
+  .cs-final-head,
+  .cs-final-body,
+  .cs-final-footer {
+    padding:18px;
+  }
+
+  .cs-row-actions {
+    flex-wrap:wrap;
+  }
+
+  .cs-manage-menu {
+    right:auto;
+    left:0;
+  }
+}
+</style>
+
+<style id="connectsukuu-authoritative-add-student-styles">
+.cs-add-student-modal{position:fixed;inset:0;z-index:50000;display:none;align-items:center;justify-content:center;padding:10px}
+.cs-add-student-modal.open{display:flex}
+.cs-add-student-overlay{position:absolute;inset:0;background:rgba(15,23,42,.68);backdrop-filter:blur(7px)}
+.cs-add-student-card{position:relative;width:min(920px,calc(100vw - 20px));max-height:calc(100vh - 20px);overflow:hidden;display:flex;flex-direction:column;background:#fff;border:1px solid #dbe4f0;border-radius:20px;box-shadow:0 30px 90px rgba(15,23,42,.30);animation:cskAddStudentIn .2s ease-out}
+@keyframes cskAddStudentIn{from{opacity:0;transform:translateY(12px) scale(.99)}to{opacity:1;transform:none}}
+.cs-add-student-header{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:15px 24px 12px;border-bottom:1px solid #e2e8f0;background:linear-gradient(135deg,#fff,#f7faff)}
+.cs-add-kicker,.cs-created-kicker{color:#2563eb;font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.cs-add-student-header h3{margin:4px 0 0;color:#0f172a;font-size:23px;line-height:1.15;font-weight:900}
+.cs-add-student-header p{max-width:720px;margin:6px 0 0;color:#5b6b82;font-size:13px;line-height:1.35;font-weight:500}
+.cs-add-close{width:36px;height:36px;flex:0 0 auto;border:1px solid #d8e1ec;border-radius:10px;background:#fff;color:#475569;font-size:20px;cursor:pointer;transition:.15s}
+.cs-add-close:hover{background:#f8fafc;transform:rotate(3deg)}
+.cs-add-student-body{overflow-y:auto;padding:11px 24px}
+.cs-add-section{margin-bottom:8px;padding:11px 15px;border:1px solid #dfe7f1;border-radius:14px;background:#fbfdff}
+.cs-add-section:last-child{margin-bottom:0}
+.cs-add-section-title{display:flex;align-items:center;gap:11px;margin-bottom:8px}
+.cs-add-section-title>span{width:37px;height:37px;display:inline-flex;align-items:center;justify-content:center;border-radius:11px;background:linear-gradient(135deg,#1d4ed8,#60a5fa);color:#fff;box-shadow:0 6px 14px rgba(37,99,235,.22);font-size:12px;font-weight:950;letter-spacing:.04em}
+.cs-add-section-title h4{margin:0;color:#0f172a;font-size:16px;font-weight:900;line-height:1.15}
+.cs-add-section-title p{margin:3px 0 0;color:#5f7088;font-size:11.5px;line-height:1.25;font-weight:500}
+.cs-add-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 13px}
+.cs-add-full{grid-column:1/-1}
+.cs-add-field label{display:block;margin-bottom:4px;color:#344054;font-size:11.5px;font-weight:800}
+.cs-add-field label b{color:#dc2626}
+.cs-add-field input,.cs-add-field select{width:100%;height:37px;box-sizing:border-box;padding:0 10px;border:1px solid #cbd5e1;border-radius:9px;outline:0;background:#fff;color:#0f172a;font:inherit;font-size:12.5px;transition:border-color .15s,box-shadow .15s}
+.cs-add-field input:focus,.cs-add-field select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.09)}
+.cs-add-field input:disabled,.cs-add-field select:disabled{background:#f1f5f9;cursor:not-allowed}
+.cs-add-field small{display:block;margin-top:5px;color:#5f7088;font-size:10.5px;line-height:1.35;font-weight:500}
+.cs-add-feedback{display:none;margin-bottom:8px;padding:9px 11px;border-radius:9px;font-size:11.5px;line-height:1.4}
+.cs-add-feedback.show{display:block}
+.cs-add-feedback.error{border:1px solid #fecaca;background:#fff1f2;color:#991b1b}
+.cs-add-feedback.success{border:1px solid #bbf7d0;background:#f0fdf4;color:#166534}
+.cs-add-student-footer{display:flex;justify-content:flex-end;gap:9px;padding:10px 24px;border-top:1px solid #e2e8f0;background:#f8fafc}
+.cs-add-btn{min-height:37px;padding:0 15px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;color:#334155;font:inherit;font-size:11.5px;font-weight:850;cursor:pointer}
+.cs-add-btn:hover{background:#f8fafc}
+.cs-add-btn.primary{border-color:#2563eb;background:#2563eb;color:#fff;box-shadow:0 5px 14px rgba(37,99,235,.2)}
+.cs-add-btn.primary:hover{background:#1d4ed8}
+.cs-add-btn:disabled{opacity:.65;cursor:wait}
+.cs-created-credentials{margin-top:0;padding:12px;border:1px solid #bfdbfe;border-radius:13px;background:linear-gradient(135deg,#eff6ff,#f8fafc)}
+.cs-created-credentials[hidden]{display:none}
+.cs-created-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.cs-created-heading h4{margin:2px 0 0;color:#1e3a8a;font-size:16px;font-weight:900}
+.cs-created-warning{padding:5px 9px;border-radius:999px;background:#fff7ed;color:#9a3412;font-size:11px;font-weight:950;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.cs-created-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.cs-created-item{padding:9px;border:1px solid #dbeafe;border-radius:10px;background:#fff}
+.cs-created-item small{display:block;margin-bottom:3px;color:#64748b;font-size:9px;font-weight:900;letter-spacing:.07em;text-transform:uppercase}
+.cs-created-item strong{display:block;color:#0f172a;font-size:12.5px;word-break:break-word}
+.cs-created-value{margin-top:5px;padding:6px 7px;border-radius:7px;background:#f8fafc;color:#0f172a;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:12.5px;font-weight:900;letter-spacing:.03em;word-break:break-word}
+.cs-copy-credential{margin-top:5px;padding:5px 8px;border:1px solid #dbe3ee;border-radius:7px;background:#fff;color:#475569;font-size:10px;font-weight:850;cursor:pointer}
+.cs-created-note{margin:7px 0 0;color:#52647c;font-size:11px;line-height:1.35;font-weight:600;max-width:760px}
+@media(max-width:700px){
+.cs-add-student-modal{padding:6px}
+.cs-add-student-card{width:calc(100vw - 12px);max-height:calc(100vh - 12px);border-radius:16px}
+.cs-add-student-header,.cs-add-student-body,.cs-add-student-footer{padding-left:14px;padding-right:14px}
+.cs-add-grid,.cs-created-grid{grid-template-columns:1fr}
+.cs-add-full{grid-column:auto}
+.cs-add-student-footer{flex-direction:column-reverse}
+.cs-add-btn{width:100%}
+}
+</style>
+
+<style id="connectsukuu-student-hoa-ht-view-only-style">
+body.cs-student-hoa-ht-view-only .cs-manage-wrap,
+body.cs-student-hoa-ht-view-only .cs-manage-trigger,
+body.cs-student-hoa-ht-view-only [data-student-action="enrollment"],
+body.cs-student-hoa-ht-view-only [data-student-action="parents"],
+body.cs-student-hoa-ht-view-only [data-student-action="status"],
+body.cs-student-hoa-ht-view-only [data-student-action="delete"],
+body.cs-student-hoa-ht-view-only .student-action-btn:not(.primary),
+body.cs-student-hoa-ht-view-only .cs-row-action:not(.primary){display:none!important}
+body.cs-student-hoa-ht-view-only .student-actions,
+body.cs-student-hoa-ht-view-only .cs-row-actions{justify-content:flex-end!important;gap:0!important}
+body.cs-student-hoa-ht-view-only .student-actions .primary,
+body.cs-student-hoa-ht-view-only .cs-row-actions .primary{display:inline-flex!important;min-width:64px!important;justify-content:center!important}
+</style>
+
+
+<style id="connectsukuu-hoa-students-viewonly-final">body [data-student-action="enrollment"],body [data-student-action="parents"],body [data-student-action="status"],body [data-student-action="delete"],body .cs-manage-wrap,body .cs-manage-trigger,body #add-student-btn,body #import-student-btn{display:none!important}body #students-table input[type="checkbox"],body table[id*="student"] input[type="checkbox"]{display:none!important}</style>
+<style id="connectsukuu-hoa-shell-final">
+:root{--hoa-sidebar:255px;--hoa-header:58px}
+html,body{margin:0!important;width:100%!important;min-width:0!important;background:#f6f8fc!important;color:#172033!important}
+body{overflow:hidden!important}
+.cs-hoa-final-sidebar{position:fixed!important;left:0!important;top:0!important;bottom:0!important;width:var(--hoa-sidebar)!important;height:100vh!important;z-index:5000!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;padding:16px 12px!important;background:#0f172a!important;box-sizing:border-box!important;overflow:hidden!important}
+.cs-hoa-final-brand{height:40px!important;display:flex!important;align-items:center!important;gap:10px!important;padding:0 10px!important;margin:0 0 22px!important;color:#fff!important;text-decoration:none!important}
+.cs-hoa-final-brand img{width:34px!important;height:34px!important}
+.cs-hoa-final-brand>span{font-size:20px!important;font-weight:800!important}
+.cs-hoa-final-brand>span>span{color:#60a5fa!important}
+.cs-hoa-final-nav{display:flex!important;flex-direction:column!important;gap:3px!important;overflow-y:auto!important}
+.cs-hoa-final-section{margin:12px 8px 6px!important;color:#64748b!important;font-size:10px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.08em!important}
+.cs-hoa-final-nav a{display:flex!important;align-items:center!important;gap:10px!important;width:100%!important;min-height:38px!important;padding:9px 12px!important;border-radius:8px!important;color:#94a3b8!important;text-decoration:none!important;font-size:13px!important;font-weight:650!important;box-sizing:border-box!important}
+.cs-hoa-final-nav a:hover{color:#fff!important;background:#17233a!important}.cs-hoa-final-nav a.active{
+  background: rgba(37, 99, 235, .22) !important;
+  color: #fff !important;
+  box-shadow: inset 3px 0 0 #3b82f6 !important;
+}
+.cs-hoa-final-icon{width:17px!important;height:17px!important;display:grid!important;place-items:center!important;flex:0 0 17px!important}
+.cs-hoa-final-icon svg{width:17px!important;height:17px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+.cs-hoa-final-logout button{width:100%!important;min-height:38px!important;border:1px solid #263754!important;background:#16243b!important;color:#f8fafc!important;border-radius:8px!important;font-weight:700!important;cursor:pointer!important}
+.cs-hoa-final-topbar{position:sticky!important;top:0!important;left:auto!important;right:auto!important;z-index:4000!important;height:var(--hoa-header)!important;width:100%!important;margin-left:0!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:0 18px!important;background:#fff!important;border-bottom:1px solid #e5e7eb!important;box-sizing:border-box!important}
+.cs-hoa-final-title{font-size:15px!important;font-weight:750!important}
+.cs-hoa-final-profile{display:flex!important;align-items:center!important;gap:9px!important;margin-left:auto!important}
+.cs-hoa-final-avatar{width:34px!important;height:34px!important;border-radius:9px!important;background:#172033!important;color:#fff!important;display:grid!important;place-items:center!important;font-weight:800!important}
+.cs-hoa-final-profile-copy{display:flex!important;flex-direction:column!important;line-height:1.15!important}
+.cs-hoa-final-profile-copy span:first-child{font-size:12px!important;font-weight:750!important;color:#172033!important}
+.cs-hoa-final-profile-copy span:last-child{font-size:10px!important;color:#64748b!important}
+.layout,.app-shell,.app{display:block!important}
+.app-main,.main,.layout>.main,.app>.main,.app-shell>.app-main,.app-shell>.app-content{margin-left:var(--hoa-sidebar)!important;width:calc(100% - var(--hoa-sidebar))!important;min-width:0!important;max-width:none!important;box-sizing:border-box!important;height:calc(100vh - var(--hoa-header))!important;overflow:auto!important}
+.app-main>.app-content,.main>.content,.main>section.content,.app-content,.content,.main-content,section.content{width:100%!important;max-width:none!important;box-sizing:border-box!important}
+@media(max-width:820px){
+body{overflow:auto!important}
+.cs-hoa-final-sidebar{position:relative!important;width:100%!important;height:auto!important}
+.cs-hoa-final-topbar{width:100%!important;margin-left:0!important}
+.app-main,.main,.layout>.main,.app>.main,.app-shell>.app-main,.app-shell>.app-content{margin-left:0!important;width:100%!important;height:auto!important;overflow:visible!important}
+}
+</style>
+<style id="connectsukuu-hoa-students-actions-center">
+#students-table th[data-student-management-actions],
+#students-table td:last-child{
+  text-align:center!important;
+  vertical-align:middle!important;
+}
+#students-table td:last-child button,
+#students-table td:last-child a{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+</style>
+
+<style id="connectsukuu-hoa-prebaseline-visual-lock">
+/* HoA pre-baseline visual lock: do not rebuild the shell; only restore the agreed dimensions/state. */
+@media (min-width:821px){
+  :root{--hoa-sidebar:255px!important;--hoa-side:255px!important;}
+  body .cs-hoa-final-sidebar{width:255px!important;min-width:255px!important;}
+  body .app-main,body .main,body .layout>.main,body .app>.main,body .app-shell>.app-main,body .app-shell>.app-content{margin-left:255px!important;width:calc(100% - 255px)!important;}
+</style>
+
+
+<style id="connectsukuu-hoa-freeze-visual-polish">
+/* HoA freeze visual polish — shared shell only; page functionality untouched. */
+.cs-hoa-final-profile{padding:5px 9px 5px 7px!important;border:1px solid #e4e9f1!important;border-radius:12px!important;background:#fff!important;box-shadow:0 4px 14px rgba(15,23,42,.04)!important;box-sizing:border-box!important;}
+.cs-hoa-final-profile-copy{align-items:flex-start!important;min-width:0!important;}
+.cs-hoa-final-profile-copy span:first-child{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:220px!important;}
+.cs-hoa-final-profile-copy span:last-child{margin-top:3px!important;font-weight:650!important;}
+.app-main>.app-content,.main>.content,.main>section.content,.app-content,.content,.main-content,section.content{padding:28px 28px 44px!important;}
+body.hoa-dashboard .app-content{padding:28px 26px 44px!important;}
+@media(max-width:820px){.app-main>.app-content,.main>.content,.main>section.content,.app-content,.content,.main-content,section.content{padding:22px 18px 36px!important;}}
+</style>
+
+<style id="connectsukuu-hoa-stabilization-polish">
+/* Shared HoA presentation lock: the body scope class is required by the existing HoA styles. */
+html,body{width:100%;max-width:100%;min-width:0;overflow-x:hidden;box-sizing:border-box}
+*,*:before,*:after{box-sizing:border-box}
+body.hoa-dashboard{background:#f4f7fb!important;color:#172033!important}
+body.hoa-dashboard .cs-hoa-final-sidebar{position:fixed!important;inset:0 auto 0 0!important;height:100vh!important;z-index:5000!important}
+body.hoa-dashboard .app-main{min-width:0!important;width:auto!important;max-width:none!important;margin-left:255px!important;height:100vh!important;min-height:100vh!important;overflow:hidden!important}
+body.hoa-dashboard .cs-hoa-final-topbar{position:sticky!important;top:0!important;z-index:4000!important;min-height:58px!important}
+body.hoa-dashboard .app-content,body.hoa-dashboard .main>.content,body.hoa-dashboard .page{min-width:0!important;max-width:none!important}
+/* Dashboard metric cards */
+body.hoa-dashboard .cs-hoa-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:15px!important}
+body.hoa-dashboard .cs-hoa-card{min-height:118px!important;border-radius:16px!important;box-shadow:0 7px 20px rgba(15,23,42,.045)!important;transition:transform .18s ease,box-shadow .18s ease}
+body.hoa-dashboard .cs-hoa-card:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(15,23,42,.08)!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(1){background:linear-gradient(145deg,#eaf2ff,#fff 82%)!important;border-color:#cfe0ff!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(2){background:linear-gradient(145deg,#e9fbf1,#fff 82%)!important;border-color:#c9eed9!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(3){background:linear-gradient(145deg,#f3eaff,#fff 82%)!important;border-color:#e2d2ff!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(4){background:linear-gradient(145deg,#fff2dc,#fff 82%)!important;border-color:#f4dfb5!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(5){background:linear-gradient(145deg,#e7f8ff,#fff 82%)!important;border-color:#c9edf8!important}
+body.hoa-dashboard .cs-hoa-card:nth-child(6){background:linear-gradient(145deg,#ffedf3,#fff 82%)!important;border-color:#f4d2df!important}
+/* Statistics and academic-context controls on all HoA menus */
+body.hoa-dashboard .stats{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:13px!important}
+body.hoa-dashboard .stat{min-width:0!important;border-radius:14px!important;border:1px solid #e1e8f2!important;box-shadow:0 5px 16px rgba(15,23,42,.035)!important}
+body.hoa-dashboard .stat:nth-child(1){background:linear-gradient(145deg,#edf4ff,#fff)!important;border-top:3px solid #2563eb!important}
+body.hoa-dashboard .stat:nth-child(2){background:linear-gradient(145deg,#edfbf3,#fff)!important;border-top:3px solid #16a34a!important}
+body.hoa-dashboard .stat:nth-child(3){background:linear-gradient(145deg,#f4edff,#fff)!important;border-top:3px solid #8b5cf6!important}
+body.hoa-dashboard .stat:nth-child(4){background:linear-gradient(145deg,#fff6e8,#fff)!important;border-top:3px solid #f59e0b!important}
+body.hoa-dashboard .stat:nth-child(5){background:linear-gradient(145deg,#eafaff,#fff)!important;border-top:3px solid #0891b2!important}
+body.hoa-dashboard .context{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important}
+body.hoa-dashboard .context select,body.hoa-dashboard select,body.hoa-dashboard input{max-width:100%}
+body.hoa-dashboard .hero{gap:20px;align-items:flex-start}
+body.hoa-dashboard .hero>div:first-child{min-width:0}
+body.hoa-dashboard .hero h1{line-height:1.15;letter-spacing:-.025em}
+/* Student view-only: one View button only; remove all administrator-only controls and keep the action cell compact. */
+body.cs-student-hoa-ht-view-only #add-student-btn,body.cs-student-hoa-ht-view-only #import-student-btn,
+body.cs-student-hoa-ht-view-only .student-bulk-actions,body.cs-student-hoa-ht-view-only .student-select-cell,
+body.cs-student-hoa-ht-view-only #enrollment-modal,body.cs-student-hoa-ht-view-only #import-modal,
+body.cs-student-hoa-ht-view-only .cs-add-student-modal,body.cs-student-hoa-ht-view-only [data-student-action="enrollment"],
+body.cs-student-hoa-ht-view-only [data-student-action="parents"],body.cs-student-hoa-ht-view-only [data-student-action="status"],
+body.cs-student-hoa-ht-view-only [data-student-action="delete"],body.cs-student-hoa-ht-view-only .cs-manage-wrap,
+body.cs-student-hoa-ht-view-only .cs-manage-trigger{display:none!important}
+body.cs-student-hoa-ht-view-only .student-actions{display:flex!important;justify-content:flex-end!important;align-items:center!important;gap:0!important;flex-wrap:nowrap!important;min-width:70px!important}
+body.cs-student-hoa-ht-view-only .student-actions [data-student-action="view"]{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-width:64px!important;margin:0!important;white-space:nowrap!important}
+body.cs-student-hoa-ht-view-only [data-student-management-actions]{width:92px!important;min-width:92px!important;text-align:right!important}
+body.cs-student-hoa-ht-view-only .data-table td,body.cs-student-hoa-ht-view-only .data-table th{vertical-align:middle!important}
+body.cs-student-hoa-ht-view-only .data-table{width:100%!important;table-layout:auto!important}
+@media(max-width:1100px){body.hoa-dashboard .cs-hoa-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}body.hoa-dashboard .stats{grid-template-columns:repeat(3,minmax(0,1fr))!important}body.hoa-dashboard .context{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:820px){body.hoa-dashboard .app-main{margin-left:0!important}body.hoa-dashboard .cs-hoa-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}body.hoa-dashboard .cs-hoa-bottom{grid-template-columns:1fr!important}body.hoa-dashboard .cs-hoa-intel-controls{grid-template-columns:repeat(2,minmax(0,1fr))!important}body.hoa-dashboard .cs-hoa-intel-summary{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:560px){body.hoa-dashboard .cs-hoa-grid,body.hoa-dashboard .stats,body.hoa-dashboard .context{grid-template-columns:1fr!important}body.hoa-dashboard .hero{flex-direction:column!important}body.hoa-dashboard .cs-hoa-intel-controls{grid-template-columns:1fr!important}}
+</style>
+
+<style id="connectsukuu-hoa-final-active-nav-and-data-layout">
+/* Let the complete dashboard scroll so Academic intelligence remains below Academic operations. */
+body.hoa-dashboard .app-main{height:100vh!important;min-height:100vh!important;overflow-y:auto!important;overflow-x:hidden!important}
+body.hoa-dashboard .app-content{height:auto!important;min-height:100%!important;overflow:visible!important;padding-bottom:48px!important}
+/* Consistent full-width academic context selectors and metric rows. */
+body.hoa-dashboard .stats,body.hoa-dashboard .hoa-a-grid{width:100%!important;max-width:none!important;grid-template-columns:repeat(4,minmax(0,1fr))!important}
+body.hoa-dashboard .stat{width:100%!important;min-width:0!important;padding:20px 18px!important}
+body.hoa-dashboard .stat-value{font-size:27px!important;line-height:1.15!important;font-weight:800!important}
+body.hoa-dashboard .stat-label{font-size:11px!important;letter-spacing:.06em!important}
+body.hoa-dashboard .filter-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;width:100%!important}
+body.hoa-dashboard .filter-grid .field{min-width:0!important}
+body.hoa-dashboard .hoa-analytics-clean{width:100%!important;max-width:none!important}
+body.hoa-dashboard .hoa-a-grid{gap:12px!important}
+body.hoa-dashboard .hoa-a-card{min-width:0!important}
+@media(max-width:1000px){body.hoa-dashboard .stats,body.hoa-dashboard .hoa-a-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}body.hoa-dashboard .filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:600px){body.hoa-dashboard .stats,body.hoa-dashboard .hoa-a-grid,body.hoa-dashboard .filter-grid{grid-template-columns:1fr!important}}
+</style>
+
+
+<style id="connectsukuu-hoa-frozen-active-nav">
+.cs-hoa-final-nav a:hover:not(.active) { color:#fff !important; background:#17233a !important; }
+</style>
+
+<style id="connectsukuu-hoa-nav-color-consistency">
+/* Keep Communication links visually identical to the existing HoA navigation items. */
+.cs-hoa-final-nav a[data-cs-hoa-nav="announcements"],
+.cs-hoa-final-nav a[data-cs-hoa-nav="messages"],
+.cs-hoa-final-nav a[data-cs-hoa-nav="notifications"]{color:#94a3b8!important;background:transparent!important;box-shadow:none!important}
+.cs-hoa-final-nav a[data-cs-hoa-nav="announcements"]:hover,
+.cs-hoa-final-nav a[data-cs-hoa-nav="messages"]:hover,
+.cs-hoa-final-nav a[data-cs-hoa-nav="notifications"]:hover{color:#fff!important;background:#17233a!important}
+.cs-hoa-final-nav a[data-cs-hoa-nav="announcements"].active,
+.cs-hoa-final-nav a[data-cs-hoa-nav="messages"].active,
+.cs-hoa-final-nav a[data-cs-hoa-nav="notifications"].active{background:rgba(37,99,235,.22)!important;color:#fff!important;box-shadow:inset 3px 0 0 #3b82f6!important}
+</style>
+
+<link rel="stylesheet" href="/assets/css/mobile-shell.css" media="(max-width:820px)"><script src="/assets/js/mobile-shell.js" defer></script></head>
+
+<body class="hoa-dashboard cs-student-hoa-ht-view-only">
+<div class="app-shell">
+
+<aside class="cs-hoa-final-sidebar" aria-label="Head of Academics navigation"><div class="cs-hoa-final-sidebar-inner"><a class="cs-hoa-final-brand" href="/roles/hoa/hoa-dashboard.html"><img src="/assets/images/favicon.svg" alt="ConnectSukuu"><span>Connect<span>Sukuu</span></span></a><nav class="cs-hoa-final-nav">
+<div class="cs-hoa-final-section">Workspace</div>
+<a data-cs-hoa-nav="dashboard" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-dashboard.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg></span><span>Dashboard</span></a>
+<a data-cs-hoa-nav="academic" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-academic.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><path d="M3 6.5 12 3l9 3.5L12 10 3 6.5Z"/><path d="M6 9v5.5c2 1.8 4 2.5 6 2.5s4-.7 6-2.5V9"/><path d="M21 7v7"/></svg></span><span>Academic Setup</span></a>
+<a data-cs-hoa-nav="students" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-students.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2.5 21c.5-4 2.7-6 6.5-6s6 2 6.5 6"/><path d="M16 11a3 3 0 1 0 0-6"/><path d="M17 15c2.5.3 4 2 4.5 5"/></svg></span><span>Students</span></a>
+<a data-cs-hoa-nav="attendance" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-attendance.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h5M8 16h3"/><path d="m14 16 1.5 1.5L19 14"/></svg></span><span>Attendance</span></a>
+<div class="cs-hoa-final-section">Teaching</div>
+<a data-cs-hoa-nav="teaching" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-teaching-assignments.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 9h18M8 13h3M13 13h3M8 17h3"/></svg></span><span>Teaching Assignments</span></a>
+<a data-cs-hoa-nav="timetable" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-timetable.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18M8 13h3M13 13h3M8 17h3"/></svg></span><span>Timetable</span></a>
+<a data-cs-hoa-nav="assessments" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-assessments.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><path d="M5 3h14v18H5z"/><path d="M8 7h8M8 11h8M8 15h5"/><path d="m15 18 1.5 1.5L20 16"/></svg></span><span>Assessments & Reports</span></a>
+<div class="cs-hoa-final-section">Communication</div>
+<a data-cs-hoa-nav="announcements" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-announcements.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><span>Announcements</span></a>
+<a data-cs-hoa-nav="messages" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-messages.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 3z"/><path d="M8 9h8M8 13h5"/></svg></span><span>Messages</span></a>
+<a data-cs-hoa-nav="notifications" data-role-nav="HEAD_OF_ACADEMICS" href="/roles/hoa/hoa-notifications.html"><span class="cs-hoa-final-icon"><svg viewBox="0 0 24 24"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></span><span>Notifications</span></a>
+</nav></div><div class="cs-hoa-final-logout"><button type="button" id="cskHoaFinalLogout">↪ <span>Log out</span></button></div></aside>
+
+<div class="app-main">
+<header class="cs-hoa-final-topbar"><div class="cs-hoa-final-title">Students</div><div class="cs-hoa-final-profile"><div class="cs-hoa-final-avatar" id="cskHoaAvatar">H</div><div class="cs-hoa-final-profile-copy"><span id="cskHoaWho">User</span><span>Head of Academics</span></div></div></header>
+
+
+
+<div class="app-content"><div class="card-panel">
+<div class="students-toolbar">
+<div class="students-search"><input type="search" id="student-search" placeholder="Search by name or admission number…" autocomplete="off"></div>
+<div class="students-actions">
+<button class="btn btn-primary btn-sm" id="add-student-btn">+ Add student</button>
+<button class="btn btn-outline btn-sm" id="import-student-btn">Import students</button>
+</div>
+</div>
+<div class="student-count" id="student-count">Loading students…</div>
+<div id="student-error" class="error-state" style="display:none;"></div>
+<div id="student-loading" class="loading-state">Loading students…</div>
+<div id="student-empty" class="empty-state" style="display:none;"><h3>No students yet</h3><p>Your school does not have any student records yet.</p></div>
+
+<div id="student-bulk-toolbar" class="student-management-toolbar" aria-hidden="true">
+    <div class="student-selection-summary">
+        <span class="student-selection-count" id="student-selection-count">0</span>
+        <span>students selected</span>
+    </div>
+
+    <div class="student-bulk-actions">
+        <button type="button" class="student-bulk-btn" id="bulk-deactivate-btn">
+            Deactivate selected
+        </button>
+
+        <button type="button" class="student-bulk-btn danger" id="bulk-delete-btn">
+            Permanently delete
+        </button>
+    </div>
+</div>
+
+<table class="data-table" id="students-table" style="display:none;">
+<thead><tr><th class="student-select-cell"></th><th>Student</th><th>Admission No.</th><th>Class</th><th>Guardian</th><th>Status</th><th data-student-management-actions>Actions</th></tr></thead>
+<tbody id="students-table-body"></tbody>
+</table>
+</div></div>
+</div>
+</div>
+
+<div id="import-modal" class="import-modal" style="display:none;">
+<div class="import-modal-backdrop"></div>
+<div class="import-modal-card" role="dialog" aria-modal="true" aria-labelledby="import-modal-title">
+<div class="import-modal-header">
+<div><h2 id="import-modal-title">Import students</h2><p>Upload a CSV or Excel file to add multiple students.</p></div>
+<button type="button" class="import-close" id="import-close" aria-label="Close">&times;</button>
+</div>
+<div class="import-modal-body">
+
+<div id="import-upload-step">
+<div class="import-dropzone" id="import-dropzone">
+<div class="import-icon">↑</div><h3>Upload student file</h3>
+<p>Drag and drop your CSV or Excel file here, or choose a file from your computer.</p>
+<label class="btn btn-outline btn-sm">Choose file
+<input type="file" id="student-import-file" accept=".csv,.xlsx,.xls" hidden>
+</label>
+<div class="import-file-name" id="import-file-name"></div>
+</div>
+<div class="import-template"><strong>Need a template?</strong><p>Use the standard ConnectSukuu student import columns.</p>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button type="button" class="btn btn-outline btn-sm" id="download-import-template">Download CSV template</button>
+<button type="button" class="btn btn-outline btn-sm" id="download-import-xlsx-template">Download Excel template</button>
+</div></div>
+<div class="import-error" id="import-error" style="display:none;"></div>
+<div class="import-actions"><button type="button" class="btn btn-primary" id="preview-import-btn" disabled>Preview import</button></div>
+</div>
+
+<div id="import-preview-step" style="display:none;">
+<div class="import-summary">
+<div class="import-summary-card"><span>Total rows</span><strong id="preview-total">0</strong></div>
+<div class="import-summary-card"><span>Valid</span><strong id="preview-valid">0</strong></div>
+<div class="import-summary-card"><span>Invalid</span><strong id="preview-invalid">0</strong></div>
+</div>
+<div id="preview-message" class="import-preview-message"></div>
+<div class="import-preview-table-wrap"><table class="data-table import-preview-table">
+<thead><tr><th>Row</th><th>Admission No.</th><th>Student</th><th>Class</th><th>Status</th><th>Issues</th></tr></thead>
+<tbody id="preview-table-body"></tbody>
+</table></div>
+<div class="import-actions">
+<button type="button" class="btn btn-outline" id="back-to-upload-btn">Back</button>
+<button type="button" class="btn btn-primary" id="confirm-import-btn">Confirm import</button>
+</div>
+</div>
+
+<div id="import-result-step" style="display:none;">
+<div class="import-result" id="import-result"></div>
+<div class="import-actions"><button type="button" class="btn btn-primary" id="finish-import-btn">Done</button></div>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- ConnectSukuu Enrollment Panel -->
+<div id="enrollment-modal" class="enrollment-modal" aria-hidden="true">
+  <div class="enrollment-backdrop" data-close-enrollment></div>
+
+  <section class="enrollment-card" role="dialog" aria-modal="true" aria-labelledby="enrollment-title">
+
+    <div class="enrollment-header">
+      <div>
+        <div class="enrollment-eyebrow">Student placement</div>
+        <h2 id="enrollment-title">Manage Enrollment</h2>
+        <p id="enrollment-student-name">Student</p>
+      </div>
+
+      <button
+        type="button"
+        class="enrollment-close"
+        id="close-enrollment"
+        aria-label="Close enrollment"
+      >&times;</button>
+    </div>
+
+    <div id="enrollment-error" class="enrollment-alert enrollment-alert-error" hidden></div>
+    <div id="enrollment-success" class="enrollment-alert enrollment-alert-success" hidden></div>
+
+    <div class="enrollment-grid">
+
+      <div class="enrollment-section">
+        <div class="enrollment-section-heading">
+          <div>
+            <h3>Current enrollments</h3>
+            <p>Academic placements already recorded for this student.</p>
+          </div>
+        </div>
+
+        <div id="enrollment-list" class="enrollment-list">
+          <div class="enrollment-loading">Loading enrollments…</div>
+        </div>
+      </div>
+
+      <div class="enrollment-section enrollment-form-section">
+        <div class="enrollment-section-heading">
+          <div>
+            <h3>Add enrollment</h3>
+            <p>Place the student into a class for an academic period.</p>
+          </div>
+        </div>
+
+        <form id="enrollment-form">
+
+          <div class="enrollment-field">
+            <label for="enrollment-year">Academic year</label>
+            <select id="enrollment-year" required>
+              <option value="">Select academic year</option>
+            </select>
+          </div>
+
+          <div class="enrollment-field">
+            <label for="enrollment-term">Term</label>
+            <select id="enrollment-term">
+              <option value="">Select term (optional)</option>
+            </select>
+          </div>
+
+          <div class="enrollment-field">
+            <label for="enrollment-class">Class</label>
+            <select id="enrollment-class" required>
+              <option value="">Select class</option>
+            </select>
+          </div>
+
+          <div class="enrollment-field">
+            <label for="enrollment-status">Status</label>
+            <select id="enrollment-status">
+              <option value="ACTIVE">Active</option>
+              <option value="INACTIVE">Inactive</option>
+            </select>
+          </div>
+
+          <div class="enrollment-form-actions">
+            <button
+              type="button"
+              class="secondary-btn"
+              data-close-enrollment
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              class="primary-btn"
+              id="save-enrollment-btn"
+            >
+              Enroll Student
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+
+  </section>
+</div>
+
+<style>
+.enrollment-modal{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:1.25rem;
+}
+
+.enrollment-modal.open{
+  display:flex;
+}
+
+.enrollment-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(15,23,42,.58);
+  backdrop-filter:blur(5px);
+}
+
+.enrollment-card{
+  position:relative;
+  width:min(980px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:20px;
+  box-shadow:0 25px 70px rgba(15,23,42,.24);
+  animation:enrollmentIn .22s ease-out;
+}
+
+@keyframes enrollmentIn{
+  from{
+    opacity:0;
+    transform:translateY(14px) scale(.985);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+.enrollment-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:1rem;
+  padding:1.5rem 1.5rem 1.25rem;
+  border-bottom:1px solid var(--border);
+}
+
+.enrollment-eyebrow{
+  color:#2563eb;
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:.3rem;
+}
+
+.enrollment-header h2{
+  margin:0;
+  font-size:1.35rem;
+  color:var(--slate);
+}
+
+.enrollment-header p{
+  margin:.3rem 0 0;
+  color:var(--slate-light);
+  font-size:.88rem;
+}
+
+.enrollment-close{
+  width:38px;
+  height:38px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#fff;
+  color:var(--slate);
+  font-size:1.45rem;
+  line-height:1;
+  cursor:pointer;
+}
+
+.enrollment-close:hover{
+  background:var(--bg);
+}
+
+.enrollment-grid{
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:1rem;
+  padding:1.25rem;
+}
+
+.enrollment-section{
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:#f8fafc;
+  padding:1rem;
+}
+
+.enrollment-form-section{
+  background:#fff;
+}
+
+.enrollment-section-heading{
+  margin-bottom:1rem;
+}
+
+.enrollment-section-heading h3{
+  margin:0;
+  font-size:1rem;
+  color:var(--slate);
+}
+
+.enrollment-section-heading p{
+  margin:.25rem 0 0;
+  color:var(--slate-light);
+  font-size:.8rem;
+}
+
+.enrollment-list{
+  display:flex;
+  flex-direction:column;
+  gap:.65rem;
+}
+
+.enrollment-item{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:.85rem;
+}
+
+.enrollment-item-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:.75rem;
+}
+
+.enrollment-class{
+  font-weight:700;
+  color:var(--slate);
+}
+
+.enrollment-meta{
+  margin-top:.3rem;
+  color:var(--slate-light);
+  font-size:.78rem;
+  line-height:1.5;
+}
+
+.enrollment-badge{
+  display:inline-flex;
+  align-items:center;
+  padding:.22rem .55rem;
+  border-radius:999px;
+  background:#dcfce7;
+  color:#166534;
+  font-size:.7rem;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.enrollment-badge.inactive{
+  background:#f1f5f9;
+  color:#475569;
+}
+
+.enrollment-empty,
+.enrollment-loading{
+  padding:1.25rem;
+  text-align:center;
+  color:var(--slate-light);
+  font-size:.82rem;
+}
+
+.enrollment-field{
+  margin-bottom:1rem;
+}
+
+.enrollment-field label{
+  display:block;
+  margin-bottom:.4rem;
+  color:var(--slate);
+  font-size:.8rem;
+  font-weight:700;
+}
+
+.enrollment-field select{
+  width:100%;
+  min-height:42px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#fff;
+  padding:.65rem .75rem;
+  color:var(--slate);
+  outline:none;
+}
+
+.enrollment-field select:focus{
+  border-color:#2563eb;
+  box-shadow:0 0 0 3px rgba(37,99,235,.1);
+}
+
+.enrollment-form-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:.65rem;
+  margin-top:1.25rem;
+}
+
+.enrollment-alert{
+  margin:1rem 1.25rem 0;
+  padding:.75rem .9rem;
+  border-radius:10px;
+  font-size:.82rem;
+}
+
+.enrollment-alert-error{
+  background:#fef2f2;
+  border:1px solid #fecaca;
+  color:#991b1b;
+}
+
+.enrollment-alert-success{
+  background:#f0fdf4;
+  border:1px solid #bbf7d0;
+  color:#166534;
+}
+
+@media(max-width:760px){
+  .enrollment-grid{
+    grid-template-columns:1fr;
+  }
+
+  .enrollment-card{
+    max-height:94vh;
+  }
+}
+</style>
+
+<style>
+/* CONNECTSUKUU_STUDENT_BULK_MANAGEMENT */
+
+.student-management-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 0 14px;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #f8fafc;
+    opacity: 0;
+    transform: translateY(-4px);
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+}
+
+.student-management-toolbar.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.student-selection-summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #475569;
+    font-size: .88rem;
+    font-weight: 600;
+}
+
+.student-selection-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 26px;
+    padding: 0 7px;
+    border-radius: 999px;
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.student-bulk-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.student-bulk-btn {
+    min-height: 34px;
+    padding: 0 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #fff;
+    color: #334155;
+    font-size: .82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .18s ease;
+}
+
+.student-bulk-btn:hover {
+    border-color: #94a3b8;
+    background: #f8fafc;
+    transform: translateY(-1px);
+}
+
+.student-bulk-btn.danger {
+    border-color: #fecaca;
+    color: #b91c1c;
+    background: #fff;
+}
+
+.student-bulk-btn.danger:hover {
+    border-color: #fca5a5;
+    background: #fef2f2;
+}
+
+.student-select-cell {
+    width: 40px;
+    text-align: center;
+}
+
+.student-select-cell input,
+.student-select-all {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #2563eb;
+}
+
+.student-row-selected {
+    background: #f8fbff !important;
+}
+
+.student-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.student-action-btn {
+    min-height: 34px;
+    padding: 0 11px;
+    border: 1px solid #dbe2ea;
+    border-radius: 9px;
+    background: #fff;
+    color: #334155;
+    font-size: .8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .18s ease;
+}
+
+.student-action-btn:hover {
+    border-color: #b8c4d3;
+    background: #f8fafc;
+    transform: translateY(-1px);
+}
+
+.student-action-btn.primary {
+    border-color: #172033;
+    background: #172033;
+    color: #fff;
+}
+
+.student-action-btn.primary:hover {
+    background: #0f172a;
+    border-color: #0f172a;
+}
+
+.student-manage-wrap {
+    position: relative;
+    display: inline-flex;
+}
+
+.student-manage-btn {
+    min-height: 34px;
+    padding: 0 11px;
+    border: 1px solid #dbe2ea;
+    border-radius: 9px;
+    background: #fff;
+    color: #334155;
+    font-size: .8rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.student-manage-btn:hover {
+    background: #f8fafc;
+    border-color: #b8c4d3;
+}
+
+.student-manage-menu {
+    position: absolute;
+    z-index: 50;
+    right: 0;
+    top: calc(100% + 6px);
+    min-width: 190px;
+    padding: 6px;
+    border: 1px solid #e2e8f0;
+    border-radius: 11px;
+    background: #fff;
+    box-shadow: 0 16px 35px rgba(15, 23, 42, .14);
+    display: none;
+}
+
+.student-manage-menu.open {
+    display: block;
+    animation: studentMenuIn .15s ease;
+}
+
+.student-manage-menu button {
+    display: block;
+    width: 100%;
+    padding: 9px 10px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: #334155;
+    text-align: left;
+    font-size: .82rem;
+    cursor: pointer;
+}
+
+.student-manage-menu button:hover {
+    background: #f1f5f9;
+}
+
+.student-manage-menu button.danger {
+    color: #b91c1c;
+}
+
+@keyframes studentMenuIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 900px) {
+    .student-management-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .student-bulk-actions {
+        width: 100%;
+    }
+}
+
+@media (max-width: 700px) {
+    .student-actions {
+        justify-content: flex-start;
+    }
+
+    .student-manage-menu {
+        left: 0;
+        right: auto;
+    }
+}
+</style>
+
+<script>
+
+/* CONNECTSUKUU_ENROLLMENT_LOGIC */
+
+let selectedEnrollmentStudentId = null;
+let enrollmentAcademicYears = [];
+let enrollmentTerms = [];
+let enrollmentClasses = [];
+
+function showEnrollmentAlert(type, message) {
+  const error = document.getElementById('enrollment-error');
+  const success = document.getElementById('enrollment-success');
+
+  error.hidden = true;
+  success.hidden = true;
+
+  if (type === 'error') {
+    error.textContent = message;
+    error.hidden = false;
+  } else {
+    success.textContent = message;
+    success.hidden = false;
+  }
+}
+
+function clearEnrollmentAlerts() {
+  document.getElementById('enrollment-error').hidden = true;
+  document.getElementById('enrollment-success').hidden = true;
+}
+
+function openEnrollmentModal(student) {
+  if (!student || !student.id) {
+    return;
+  }
+
+  selectedEnrollmentStudentId = student.id;
+
+  const name =
+    `${student.firstName || ''} ${student.lastName || ''}`.trim()
+    || student.admissionNumber
+    || 'Student';
+
+  document.getElementById('enrollment-student-name').textContent =
+    `${name} · ${student.admissionNumber || 'No admission number'}`;
+
+  clearEnrollmentAlerts();
+
+  document.getElementById('enrollment-modal').classList.add('open');
+  document.getElementById('enrollment-modal').setAttribute('aria-hidden', 'false');
+
+  loadEnrollmentData();
+}
+
+function closeEnrollmentModal() {
+  selectedEnrollmentStudentId = null;
+
+  document.getElementById('enrollment-modal').classList.remove('open');
+  document.getElementById('enrollment-modal').setAttribute('aria-hidden', 'true');
+
+  clearEnrollmentAlerts();
+}
+
+async function loadEnrollmentData() {
+  const list = document.getElementById('enrollment-list');
+
+  list.innerHTML =
+    '<div class="enrollment-loading">Loading enrollment records…</div>';
+
+  try {
+    const [yearsResponse, enrollmentsResponse] = await Promise.all([
+      apiFetch('/api/academic-years'),
+      apiFetch(
+        `/api/students/${encodeURIComponent(selectedEnrollmentStudentId)}/enrollments`
+      )
+    ]);
+
+    if (!yearsResponse || !yearsResponse.ok) {
+      throw new Error('Could not load academic years.');
+    }
+
+    if (!enrollmentsResponse || !enrollmentsResponse.ok) {
+      throw new Error('Could not load student enrollments.');
+    }
+
+    enrollmentAcademicYears = await yearsResponse.json();
+    const enrollments = await enrollmentsResponse.json();
+
+    renderEnrollmentYears();
+    renderEnrollmentList(enrollments);
+
+  } catch (error) {
+    console.error(error);
+
+    list.innerHTML =
+      `<div class="enrollment-empty">${escapeHtml(
+        error.message || 'Could not load enrollment information.'
+      )}</div>`;
+
+    showEnrollmentAlert(
+      'error',
+      error.message || 'Could not load enrollment information.'
+    );
+  }
+}
+
+function renderEnrollmentYears() {
+  const select = document.getElementById('enrollment-year');
+
+  select.innerHTML =
+    '<option value="">Select academic year</option>';
+
+  enrollmentAcademicYears.forEach(year => {
+    const option = document.createElement('option');
+
+    option.value = year.id;
+
+    option.textContent =
+      `${year.name}${year.isCurrent ? ' · Current' : ''}`;
+
+    select.appendChild(option);
+  });
+
+  const currentYear =
+    enrollmentAcademicYears.find(year => year.isCurrent);
+
+  if (currentYear) {
+    select.value = currentYear.id;
+    loadEnrollmentClassesAndTerms(currentYear.id);
+  } else {
+    document.getElementById('enrollment-term').innerHTML =
+      '<option value="">Select term (optional)</option>';
+
+    document.getElementById('enrollment-class').innerHTML =
+      '<option value="">Select class</option>';
+  }
+}
+
+async function loadEnrollmentClassesAndTerms(yearId) {
+  const termSelect = document.getElementById('enrollment-term');
+  const classSelect = document.getElementById('enrollment-class');
+
+  termSelect.innerHTML =
+    '<option value="">Loading terms…</option>';
+
+  classSelect.innerHTML =
+    '<option value="">Loading classes…</option>';
+
+  if (!yearId) {
+    termSelect.innerHTML =
+      '<option value="">Select term (optional)</option>';
+
+    classSelect.innerHTML =
+      '<option value="">Select class</option>';
+
+    return;
+  }
+
+  try {
+    const [termsResponse, classesResponse] = await Promise.all([
+      apiFetch(`/api/academic-years/${encodeURIComponent(yearId)}/terms`),
+      apiFetch(`/api/classes?academicYearId=${encodeURIComponent(yearId)}`)
+    ]);
+
+    if (!termsResponse || !termsResponse.ok) {
+      throw new Error('Could not load academic terms.');
+    }
+
+    if (!classesResponse || !classesResponse.ok) {
+      throw new Error('Could not load classes.');
+    }
+
+    enrollmentTerms = await termsResponse.json();
+    enrollmentClasses = await classesResponse.json();
+
+    termSelect.innerHTML =
+      '<option value="">Select term (optional)</option>';
+
+    enrollmentTerms.forEach(term => {
+      const option = document.createElement('option');
+
+      option.value = term.id;
+
+      option.textContent =
+        `${term.name}${term.isCurrent ? ' · Current' : ''}`;
+
+      termSelect.appendChild(option);
+    });
+
+    const currentTerm =
+      enrollmentTerms.find(term => term.isCurrent);
+
+    if (currentTerm) {
+      termSelect.value = currentTerm.id;
+    }
+
+    classSelect.innerHTML =
+      '<option value="">Select class</option>';
+
+    enrollmentClasses.forEach(schoolClass => {
+      const option = document.createElement('option');
+
+      option.value = schoolClass.id;
+
+      const details = [
+        schoolClass.name,
+        schoolClass.level,
+        schoolClass.section
+      ]
+        .filter(Boolean)
+        .join(' · ');
+
+      option.textContent = details;
+
+      classSelect.appendChild(option);
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    termSelect.innerHTML =
+      '<option value="">Unable to load terms</option>';
+
+    classSelect.innerHTML =
+      '<option value="">Unable to load classes</option>';
+
+    showEnrollmentAlert(
+      'error',
+      error.message || 'Could not load classes and terms.'
+    );
+  }
+}
+
+function renderEnrollmentList(enrollments) {
+  const list = document.getElementById('enrollment-list');
+
+  if (!Array.isArray(enrollments) || !enrollments.length) {
+    list.innerHTML =
+      '<div class="enrollment-empty">No enrollment records yet.</div>';
+
+    return;
+  }
+
+  list.innerHTML = enrollments.map(enrollment => {
+    const yearName =
+      enrollment.academicYear?.name ||
+      enrollment.academicYearName ||
+      'Academic year';
+
+    const termName =
+      enrollment.term?.name ||
+      enrollment.termName ||
+      'No term';
+
+    const className =
+      enrollment.schoolClass?.name ||
+      enrollment.class?.name ||
+      enrollment.className ||
+      'Class';
+
+    const status =
+      String(enrollment.status || 'ACTIVE').toUpperCase();
+
+    const badgeClass =
+      status === 'ACTIVE'
+        ? ''
+        : ' inactive';
+
+    return `
+      <div class="enrollment-item">
+        <div class="enrollment-item-top">
+
+          <div>
+            <div class="enrollment-class">
+              ${escapeHtml(className)}
+            </div>
+
+            <div class="enrollment-meta">
+              ${escapeHtml(yearName)}
+              ·
+              ${escapeHtml(termName)}
+            </div>
+          </div>
+
+          <span class="enrollment-badge${badgeClass}">
+            ${escapeHtml(status)}
+          </span>
+
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function saveStudentEnrollment(event) {
+  event.preventDefault();
+
+  if (!selectedEnrollmentStudentId) {
+    showEnrollmentAlert('error', 'No student was selected.');
+    return;
+  }
+
+  const yearId =
+    document.getElementById('enrollment-year').value;
+
+  const termId =
+    document.getElementById('enrollment-term').value;
+
+  const classId =
+    document.getElementById('enrollment-class').value;
+
+  const status =
+    document.getElementById('enrollment-status').value;
+
+  if (!yearId || !classId) {
+    showEnrollmentAlert(
+      'error',
+      'Academic year and class are required.'
+    );
+
+    return;
+  }
+
+  const button =
+    document.getElementById('save-enrollment-btn');
+
+  button.disabled = true;
+  button.textContent = 'Enrolling…';
+
+  try {
+    const payload = {
+      academicYearId: yearId,
+      classId,
+      status
+    };
+
+    if (termId) {
+      payload.termId = termId;
+    }
+
+    const response = await apiFetch(
+      `/api/students/${encodeURIComponent(selectedEnrollmentStudentId)}/enrollments`,
+      {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      }
+    );
+
+    if (!response) {
+      return;
+    }
+
+    const data =
+      await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(
+        data.error ||
+        'Could not create the student enrollment.'
+      );
+    }
+
+    showEnrollmentAlert(
+      'success',
+      'Student enrollment created successfully.'
+    );
+
+    document.getElementById('enrollment-form').reset();
+
+    await loadEnrollmentData();
+
+    if (typeof loadStudents === 'function') {
+      await loadStudents();
+    }
+
+  } catch (error) {
+    console.error(error);
+
+    showEnrollmentAlert(
+      'error',
+      error.message ||
+      'Could not create the student enrollment.'
+    );
+
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Enroll Student';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  const yearSelect =
+    document.getElementById('enrollment-year');
+
+  if (yearSelect) {
+    yearSelect.addEventListener('change', event => {
+      loadEnrollmentClassesAndTerms(event.target.value);
+    });
+  }
+
+  const enrollmentForm =
+    document.getElementById('enrollment-form');
+
+  if (enrollmentForm) {
+    enrollmentForm.addEventListener(
+      'submit',
+      saveStudentEnrollment
+    );
+  }
+
+  document
+    .querySelectorAll('[data-close-enrollment]')
+    .forEach(element => {
+      element.addEventListener(
+        'click',
+        closeEnrollmentModal
+      );
+    });
+
+  document.addEventListener('keydown', event => {
+    const modal =
+      document.getElementById('enrollment-modal');
+
+    if (
+      event.key === 'Escape' &&
+      modal &&
+      modal.classList.contains('open')
+    ) {
+      closeEnrollmentModal();
+    }
+  });
+
+});
+
+</script>
+
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/app.js"></script>
+<script src="/assets/js/role-shell-extension.js"></script>
+<script>
+const user = requireAuthOrRedirect();
+let students = [];
+window.students = students;
+let importFile = null;
+let importPreview = null;
+
+function escapeHtml(value) {
+if (value === null || value === undefined) return '';
+return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+// Resolve backend-hosted student photos from the frontend server (e.g. localhost:5500).
+// Student photo files are served by the API at /uploads/student-profiles/...
+function studentPhotoSource(value) {
+  const url = String(value || '').trim();
+  if (!url) return '';
+  if (/^(https?:\/\/|data:|blob:)/i.test(url)) return url;
+  if (url.startsWith('/uploads/')) {
+    let base = '';
+    try {
+      if (typeof API_BASE !== 'undefined' && API_BASE) base = String(API_BASE).replace(/\/$/, '');
+    } catch (_) {}
+    if (!base) base = String(window.API_BASE || 'http://localhost:4000').replace(/\/$/, '');
+    return base + url;
+  }
+  return url;
+}
+
+function studentInitials(student) {
+const first = student.firstName?.charAt(0) || '';
+const last = student.lastName?.charAt(0) || '';
+return (first + last).toUpperCase() || '?';
+}
+
+function getStatusLabel(status) {
+return {ACTIVE:'Active',INACTIVE:'Inactive',TRANSFERRED:'Transferred',GRADUATED:'Graduated',WITHDRAWN:'Withdrawn'}[status] || status || 'Unknown';
+}
+
+function getStatusClass(status) {
+return {INACTIVE:'inactive',TRANSFERRED:'transferred',GRADUATED:'graduated',WITHDRAWN:'withdrawn'}[status] || '';
+}
+
+function renderStudents(list) {
+const loading=document.getElementById('student-loading');
+const empty=document.getElementById('student-empty');
+const table=document.getElementById('students-table');
+const body=document.getElementById('students-table-body');
+const count=document.getElementById('student-count');
+loading.style.display='none';
+count.textContent=`${list.length} student${list.length===1?'':'s'}`;
+if(!list.length){table.style.display='none';empty.style.display='block';return;}
+empty.style.display='none';table.style.display='table';
+body.innerHTML=list.map(student=>{
+const fullName=`${student.firstName||''} ${student.lastName||''}`.trim();
+const guardian=student.guardianName||student.guardianPhone||'—';
+const photo=student.photoUrl?`<img src="${escapeHtml(studentPhotoSource(student.photoUrl))}" alt="Student profile photo" loading="lazy" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.textContent='${escapeHtml(studentInitials(student))}';">`:studentInitials(student);
+const status=student.status||'ACTIVE';
+return `<tr data-student-id="${escapeHtml(student.id)}"><td><div class="student-name"><div class="student-avatar">${photo}</div><span>${escapeHtml(fullName||'Unnamed student')}</span></div></td>
+<td><span class="student-admission">${escapeHtml(student.admissionNumber||'—')}</span></td>
+<td>${escapeHtml(student.classLevel||'—')}</td>
+<td>${escapeHtml(guardian)}</td>
+<td><span class="status-badge ${getStatusClass(status)}">${escapeHtml(getStatusLabel(status))}</span></td>
+<td data-student-management-actions>
+  <div class="student-actions">
+    <button type="button"
+      class="student-action-btn primary"
+      data-student-action="view"
+      data-student-id="${escapeHtml(student.id)}">
+      View
+    </button>
+
+    <button type="button"
+      class="student-action-btn"
+      data-student-action="enrollment"
+      data-student-id="${escapeHtml(student.id)}">
+      Enrollment
+    </button>
+
+    <button type="button"
+      class="student-action-btn"
+      data-student-action="parents"
+      data-student-id="${escapeHtml(student.id)}">
+      Parents
+    </button>
+
+    <button type="button"
+      class="student-action-btn"
+      data-student-action="status"
+      data-student-id="${escapeHtml(student.id)}">
+      Status
+    </button>
+
+    <button type="button"
+      class="student-action-btn danger"
+      data-student-action="delete"
+      data-student-id="${escapeHtml(student.id)}">
+      Delete
+    </button>
+  </div>
+</td>
+</tr>`;
+}).join('');
+}
+
+function filterStudents() {
+const query=document.getElementById('student-search').value.trim().toLowerCase();
+if(!query){renderStudents(students);return;}
+renderStudents(students.filter(student=>[student.firstName,student.lastName,student.admissionNumber,student.classLevel,student.guardianName,student.guardianPhone].filter(Boolean).join(' ').toLowerCase().includes(query)));
+}
+
+async function loadStudents() {
+  // Keep student action cache current.
+  const studentActionCacheSource = [];
+
+const loading=document.getElementById('student-loading');
+const error=document.getElementById('student-error');
+loading.style.display='block';error.style.display='none';
+try {
+const res=await apiFetch('/api/students');
+if(!res||!res.ok){let message='Could not load students.';if(res){try{const data=await res.json();message=data.error||message;}catch(_){}}throw new Error(message);}
+students=await res.json();window.students=students;renderStudents(students);
+} catch(err) {
+loading.style.display='none';error.textContent=err.message||'Could not load students.';error.style.display='block';document.getElementById('student-count').textContent='Unable to load student records.';
+}
+}
+
+function openImportModal(){document.getElementById('import-modal').style.display='flex';showImportStep('upload');clearImportError();}
+function closeImportModal(){document.getElementById('import-modal').style.display='none';importFile=null;importPreview=null;document.getElementById('student-import-file').value='';document.getElementById('import-file-name').textContent='';document.getElementById('preview-table-body').innerHTML='';document.getElementById('preview-message').textContent='';document.getElementById('preview-import-btn').disabled=true;clearImportError();}
+function showImportStep(step){document.getElementById('import-upload-step').style.display=step==='upload'?'block':'none';document.getElementById('import-preview-step').style.display=step==='preview'?'block':'none';document.getElementById('import-result-step').style.display=step==='result'?'block':'none';}
+function clearImportError(){const el=document.getElementById('import-error');el.textContent='';el.style.display='none';}
+function showImportError(message){const el=document.getElementById('import-error');el.textContent=message;el.style.display='block';}
+
+function handleImportFile(file){
+if(!file)return;
+const allowed=['.csv','.xlsx','.xls'];
+if(!allowed.some(ext=>file.name.toLowerCase().endsWith(ext))){showImportError('Please choose a CSV or Excel file.');return;}
+if(file.size>10*1024*1024){showImportError('The file is larger than the 10 MB limit.');return;}
+clearImportError();importFile=file;document.getElementById('import-file-name').textContent=`Selected: ${file.name}`;document.getElementById('preview-import-btn').disabled=false;
+}
+
+async function previewStudentImport(){
+if(!importFile){showImportError('Please choose a file first.');return;}
+clearImportError();const button=document.getElementById('preview-import-btn');button.disabled=true;button.textContent='Preparing preview…';
+try{
+const formData=new FormData();formData.append('file',importFile);
+const res=await fetch(`${API_BASE}/api/students/import/preview`,{method:'POST',headers:{Authorization:`Bearer ${AUTH.getToken()}`},body:formData});
+if(res.status===401){AUTH.logout();return;}
+const data=await res.json();if(!res.ok)throw new Error(data.error||'Could not preview the import.');
+importPreview=data;renderImportPreview(data);showImportStep('preview');
+}catch(error){showImportError(error.message||'Could not preview the import.');}
+finally{button.disabled=false;button.textContent='Preview import';}
+}
+
+function renderImportPreview(data){
+document.getElementById('preview-total').textContent=data.totalRows||0;
+document.getElementById('preview-valid').textContent=data.validRows||0;
+document.getElementById('preview-invalid').textContent=data.invalidRows||0;
+const body=document.getElementById('preview-table-body');
+body.innerHTML=(data.rows||[]).map(row=>{
+const student=row.data||{};const fullName=`${student.firstName||''} ${student.lastName||''}`.trim();const issues=(row.errors||[]).join(', ')||'—';
+return `<tr><td>${escapeHtml(row.rowNumber)}</td><td><span class="student-admission">${escapeHtml(student.admissionNumber||'—')}</span></td><td>${escapeHtml(fullName||'—')}</td><td>${escapeHtml(student.classLevel||'—')}</td><td class="${row.valid?'import-status-valid':'import-status-invalid'}">${row.valid?'Valid':'Invalid'}</td><td>${escapeHtml(issues)}</td></tr>`;
+}).join('');
+const message=document.getElementById('preview-message');const confirmButton=document.getElementById('confirm-import-btn');
+if(data.invalidRows>0){message.textContent='Some rows need attention. Correct the source file and preview it again before importing.';confirmButton.disabled=true;}
+else{message.textContent='All rows passed validation and are ready to import.';confirmButton.disabled=false;}
+}
+
+async function executeStudentImport(){
+if(!importFile)return;
+const button=document.getElementById('confirm-import-btn');button.disabled=true;button.textContent='Importing…';
+try{
+const formData=new FormData();formData.append('file',importFile);
+const res=await fetch(`${API_BASE}/api/students/import`,{method:'POST',headers:{Authorization:`Bearer ${AUTH.getToken()}`},body:formData});
+if(res.status===401){AUTH.logout();return;}
+const data=await res.json();if(!res.ok)throw new Error(data.error||'Student import failed.');
+renderImportResult(data);showImportStep('result');await loadStudents();
+}catch(error){document.getElementById('preview-message').textContent=error.message||'Student import failed.';}
+finally{button.disabled=false;button.textContent='Confirm import';}
+}
+
+function renderImportResult(data){
+const result=document.getElementById('import-result');const successCount=data.successCount||0;const failedCount=data.failedCount||0;
+result.className=`import-result ${failedCount===0?'success':'warning'}`;
+let html=failedCount===0?`<h3>Import completed</h3><p><strong>${successCount}</strong> student${successCount===1?'':'s'} were imported successfully.</p>`:`<h3>Import completed with issues</h3><p><strong>${successCount}</strong> imported successfully.</p><p><strong>${failedCount}</strong> row${failedCount===1?'':'s'} could not be imported.</p>`;
+if(data.errors?.length){html+='<details><summary>View import errors</summary><ul>'+data.errors.map(item=>`<li>Row ${escapeHtml(item.rowNumber)}: ${escapeHtml(item.error||'Unknown error')}</li>`).join('')+'</ul></details>';}
+if(data.batchId)html+=`<p>Import batch: <strong>${escapeHtml(data.batchId)}</strong></p>`;
+result.innerHTML=html;
+}
+
+function downloadImportTemplate(){
+const headers=['admissionNumber','firstName','lastName','classLevel','guardianName','guardianPhone','branchId'];
+const blob=new Blob([`${headers.join(',')}\n`],{type:'text/csv;charset=utf-8;'});
+const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='connectsukuu-student-import-template.csv';document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+renderAppChrome('students');loadStudents();
+document.getElementById('student-search').addEventListener('input',filterStudents);
+
+document.getElementById('import-student-btn').addEventListener('click',openImportModal);
+document.getElementById('import-close').addEventListener('click',closeImportModal);
+document.querySelector('.import-modal-backdrop').addEventListener('click',closeImportModal);
+document.getElementById('student-import-file').addEventListener('change',event=>handleImportFile(event.target.files[0]));
+const dropzone=document.getElementById('import-dropzone');
+['dragenter','dragover'].forEach(name=>dropzone.addEventListener(name,event=>{event.preventDefault();dropzone.classList.add('dragover');}));
+['dragleave','drop'].forEach(name=>dropzone.addEventListener(name,event=>{event.preventDefault();dropzone.classList.remove('dragover');}));
+dropzone.addEventListener('drop',event=>handleImportFile(event.dataTransfer.files[0]));
+document.getElementById('preview-import-btn').addEventListener('click',previewStudentImport);
+document.getElementById('back-to-upload-btn').addEventListener('click',()=>showImportStep('upload'));
+document.getElementById('confirm-import-btn').addEventListener('click',executeStudentImport);
+document.getElementById('finish-import-btn').addEventListener('click',closeImportModal);
+document.getElementById('download-import-template').addEventListener('click',downloadImportTemplate);
+document.getElementById('download-import-xlsx-template').addEventListener('click',async function(){
+  const button=this;
+  const original=button.textContent;
+  button.disabled=true;
+  button.textContent='Preparing Excel…';
+  try{
+    const response=await fetch('connectsukuu-student-import-template.xlsx',{cache:'no-store'});
+    if(!response.ok) throw new Error('Excel template file is not available beside hoa-students.html.');
+    const blob=await response.blob();
+    const url=URL.createObjectURL(blob);
+    const link=document.createElement('a');
+    link.href=url;
+    link.download='connectsukuu-student-import-template.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }catch(error){
+    showImportError(error.message||'Unable to download the Excel template.');
+  }finally{
+    button.disabled=false;
+    button.textContent=original;
+  }
+});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&document.getElementById('import-modal').style.display!=='none')closeImportModal();});
+});
+</script>
+
+<!-- CONNECTSUKUU_STUDENT_MANAGEMENT_REBUILD -->
+
+<style>
+.cs-student-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, .62);
+  backdrop-filter: blur(6px);
+}
+
+.cs-student-modal.is-open {
+  display: flex;
+}
+
+.cs-student-modal-card {
+  width: min(880px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 30px 80px rgba(15,23,42,.28);
+  animation: csStudentModalIn .2s ease;
+}
+
+@keyframes csStudentModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.cs-student-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 24px 26px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.cs-student-modal-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #0f172a;
+}
+
+.cs-student-modal-header p {
+  margin: 5px 0 0;
+  color: #64748b;
+  font-size: .84rem;
+}
+
+.cs-student-close {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  color: #475569;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.cs-student-close:hover {
+  background: #f8fafc;
+}
+
+.cs-student-modal-body {
+  padding: 26px;
+}
+
+.cs-student-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 14px;
+}
+
+.cs-student-field {
+  padding: 14px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  border-radius: 12px;
+}
+
+.cs-student-field small {
+  display: block;
+  margin-bottom: 5px;
+  color: #64748b;
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.cs-student-field strong {
+  color: #0f172a;
+  font-size: .9rem;
+  word-break: break-word;
+}
+
+.cs-student-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 14px;
+}
+
+.cs-student-form-group.full {
+  grid-column: 1 / -1;
+}
+
+.cs-student-form label {
+  display: block;
+  margin-bottom: 5px;
+  color: #334155;
+  font-size: .78rem;
+  font-weight: 650;
+}
+
+.cs-student-form input,
+.cs-student-form select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  outline: none;
+  background: #fff;
+  color: #0f172a;
+}
+
+.cs-student-form input:focus,
+.cs-student-form select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+}
+
+.cs-student-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  padding: 18px 26px;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.cs-student-btn {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #334155;
+  border-radius: 9px;
+  padding: 9px 13px;
+  font-size: .78rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.cs-student-btn:hover {
+  transform: translateY(-1px);
+}
+
+.cs-student-btn.primary {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #fff;
+}
+
+.cs-student-btn.danger {
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.cs-student-parent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 13px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 9px;
+}
+
+.cs-student-parent strong {
+  display: block;
+  color: #0f172a;
+}
+
+.cs-student-parent span {
+  display: block;
+  color: #64748b;
+  font-size: .78rem;
+  margin-top: 3px;
+}
+
+.cs-student-status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 10px;
+}
+
+.cs-student-status {
+  padding: 15px;
+  text-align: left;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.cs-student-status:hover {
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+
+.cs-student-status strong {
+  display: block;
+  color: #0f172a;
+}
+
+.cs-student-status span {
+  display: block;
+  margin-top: 3px;
+  color: #64748b;
+  font-size: .76rem;
+}
+
+.cs-student-empty {
+  padding: 25px;
+  text-align: center;
+  color: #64748b;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.cs-student-alert {
+  display: none;
+  margin-bottom: 15px;
+  padding: 11px 13px;
+  border-radius: 10px;
+  font-size: .8rem;
+  font-weight: 600;
+}
+
+.cs-student-alert.show {
+  display: block;
+}
+
+.cs-student-alert.error {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+.cs-student-alert.success {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.cs-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.cs-row-action {
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #334155;
+  border-radius: 8px;
+  padding: 7px 9px;
+  font-size: .73rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.cs-row-action:hover {
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+
+.cs-row-action.primary {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #fff;
+}
+
+.cs-row-action.delete {
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+
+.cs-select-student {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.cs-bulk-bar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 12px 0;
+  padding: 10px 13px;
+  border: 1px solid #dbeafe;
+  border-radius: 11px;
+  background: #eff6ff;
+}
+
+.cs-bulk-bar.show {
+  display: flex;
+}
+
+.cs-bulk-actions {
+  display: flex;
+  gap: 7px;
+}
+
+@media (max-width: 700px) {
+  .cs-student-grid,
+  .cs-student-form,
+  .cs-student-status-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cs-student-modal-header,
+  .cs-student-modal-body,
+  .cs-student-modal-footer {
+    padding: 18px;
+  }
+
+  .cs-student-parent {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .cs-bulk-bar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+</style>
+
+<!-- Student Details -->
+<div id="cs-student-details-modal" class="cs-student-modal">
+  <div class="cs-student-modal-card">
+    <div class="cs-student-modal-header">
+      <div>
+        <h3 id="cs-details-title">Student Details</h3>
+        <p id="cs-details-subtitle">Student information</p>
+      </div>
+      <button type="button" class="cs-student-close" data-cs-close="cs-student-details-modal">×</button>
+    </div>
+    <div id="cs-details-body" class="cs-student-modal-body"></div>
+  </div>
+</div>
+
+<!-- Parents -->
+<div id="cs-student-parents-modal" class="cs-student-modal">
+  <div class="cs-student-modal-card">
+    <div class="cs-student-modal-header">
+      <div>
+        <h3 id="cs-parents-title">Parents & Guardians</h3>
+        <p id="cs-parents-subtitle">Linked relationships</p>
+      </div>
+      <button type="button" class="cs-student-close" data-cs-close="cs-student-parents-modal">×</button>
+    </div>
+
+    <div class="cs-student-modal-body">
+      <div id="cs-primary-guardian" class="cs-primary-guardian" style="display:none"></div>
+
+      <div id="cs-parents-alert" class="cs-student-alert"></div>
+      <div id="cs-parents-list"></div>
+
+      <hr style="border:0;border-top:1px solid #e2e8f0;margin:22px 0">
+
+      <h4 style="margin:0 0 5px;color:#0f172a;font-size:17px;font-weight:900">Add Parent / Guardian</h4><p style="margin:0 0 12px;color:#64748b;font-size:12px;line-height:1.4">Create a new guardian account and link it to this student. Leave the temporary password blank to generate one automatically.</p>
+
+      <form id="cs-parent-form" class="cs-student-form">
+        <input type="hidden" id="cs-parent-student-id">
+
+        <div>
+          <label>First name</label>
+          <input id="cs-parent-first-name" required>
+        </div>
+
+        <div>
+          <label>Last name</label>
+          <input id="cs-parent-last-name" required>
+        </div>
+
+        <div>
+          <label>Phone</label>
+          <input id="cs-parent-phone">
+        </div>
+
+        <div>
+          <label>Email</label>
+          <input id="cs-parent-email" type="email">
+        </div>
+
+        <div>
+          <label>Relationship</label>
+          <select id="cs-parent-relationship">
+            <option value="PARENT">Parent</option>
+            <option value="FATHER">Father</option>
+            <option value="MOTHER">Mother</option>
+            <option value="GUARDIAN">Guardian</option>
+            <option value="OTHER">Other</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Temporary password</label>
+          <input id="cs-parent-password" type="password" minlength="8">
+        </div>
+
+        <div class="cs-student-form-group full">
+          <button class="cs-student-btn primary" type="submit">
+            Add parent
+          </button>
+        </div>
+      </form>
+      <div id="cs-parent-created-credentials" style="display:none;margin-top:14px;padding:12px;border:1px solid #bfdbfe;border-radius:12px;background:#eff6ff"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Student Status -->
+<div id="cs-student-status-modal" class="cs-student-modal">
+  <div class="cs-student-modal-card">
+    <div class="cs-student-modal-header">
+      <div>
+        <h3>Change Student Status</h3>
+        <p id="cs-status-subtitle">Update student lifecycle status</p>
+      </div>
+      <button type="button" class="cs-student-close" data-cs-close="cs-student-status-modal">×</button>
+    </div>
+
+    <div class="cs-student-modal-body">
+      <div id="cs-status-alert" class="cs-student-alert"></div>
+
+      <div class="cs-student-status-grid">
+        <button class="cs-student-status" data-cs-status="ACTIVE">
+          <strong>Active</strong>
+          <span>Currently active at the school.</span>
+        </button>
+
+        <button class="cs-student-status" data-cs-status="INACTIVE">
+          <strong>Inactive</strong>
+          <span>Keep the record but mark the student inactive.</span>
+        </button>
+
+        <button class="cs-student-status" data-cs-status="TRANSFERRED">
+          <strong>Transferred</strong>
+          <span>Student has transferred elsewhere.</span>
+        </button>
+
+        <button class="cs-student-status" data-cs-status="WITHDRAWN">
+          <strong>Withdrawn</strong>
+          <span>Student has withdrawn from school.</span>
+        </button>
+
+        <button class="cs-student-status" data-cs-status="GRADUATED">
+          <strong>Graduated</strong>
+          <span>Student has completed their school programme.</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONNECTSUKUU_AUTHORITATIVE_ADD_STUDENT_MODAL -->
+<div id="cs-authoritative-add-student-modal"
+     class="cs-add-student-modal"
+     aria-hidden="true">
+  <div class="cs-add-student-overlay" data-cs-add-close></div>
+
+  <div class="cs-add-student-card"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="cs-add-title">
+
+    <div class="cs-add-student-header">
+      <div>
+        <div class="cs-add-kicker">Student registration</div>
+        <h3 id="cs-add-title">Add student</h3>
+        <p>Create the student, initial academic enrollment and optional parent portal access together.</p>
+      </div>
+      <button type="button" class="cs-add-close" id="cs-add-close" aria-label="Close">×</button>
+    </div>
+
+    <form id="cs-authoritative-add-student-form">
+      <div class="cs-add-student-body">
+
+        <div id="cs-add-feedback" class="cs-add-feedback" role="alert" aria-live="polite"></div>
+
+        <section class="cs-add-section">
+          <div class="cs-add-section-title">
+            <span>01</span>
+            <div>
+              <h4>Student information</h4>
+              <p>Basic identification and guardian details.</p>
+            </div>
+          </div>
+
+          <div class="cs-add-grid">
+            <div class="cs-add-field">
+              <label for="csk-add-first-name">First name <b>*</b></label>
+              <input id="csk-add-first-name" name="firstName" required autocomplete="given-name">
+            </div>
+            <div class="cs-add-field">
+              <label for="csk-add-last-name">Last name <b>*</b></label>
+              <input id="csk-add-last-name" name="lastName" required autocomplete="family-name">
+            </div>
+            <div class="cs-add-field">
+              <label for="csk-add-admission">Admission number <b>*</b></label>
+              <input id="csk-add-admission" name="admissionNumber" required autocomplete="off" placeholder="e.g. CSK-2026-001">
+            </div>
+            <div class="cs-add-field">
+              <label for="csk-add-guardian-name">Guardian name</label>
+              <input id="csk-add-guardian-name" name="guardianName" autocomplete="name">
+            </div>
+            <div class="cs-add-field">
+              <label for="csk-add-guardian-phone">Guardian phone</label>
+              <input id="csk-add-guardian-phone" name="guardianPhone" type="tel" autocomplete="tel" placeholder="+233...">
+            </div>
+          </div>
+        </section>
+
+        <section class="cs-add-section">
+          <div class="cs-add-section-title">
+            <span>02</span>
+            <div>
+              <h4>Academic enrollment</h4>
+              <p>Select the academic year and class for the student's initial enrollment.</p>
+            </div>
+          </div>
+
+          <div class="cs-add-grid">
+            <div class="cs-add-field">
+              <label for="csk-add-academic-year">Academic year <b>*</b></label>
+              <select id="csk-add-academic-year" name="academicYearId" required>
+                <option value="">Loading academic years...</option>
+              </select>
+            </div>
+            <div class="cs-add-field">
+              <label for="csk-add-class">Class <b>*</b></label>
+              <select id="csk-add-class" name="classId" required disabled>
+                <option value="">Select academic year first</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section class="cs-add-section">
+          <div class="cs-add-section-title">
+            <span>03</span>
+            <div>
+              <h4>Parent portal</h4>
+              <p>Optional. An email creates or links a parent portal account for this student.</p>
+            </div>
+          </div>
+
+          <div class="cs-add-grid">
+            <div class="cs-add-field">
+              <label for="csk-add-parent-email">Parent portal email</label>
+              <input id="csk-add-parent-email" name="guardianEmail" type="email" autocomplete="email" placeholder="parent@example.com">
+            </div>
+            <div class="cs-add-field">
+              <label for="csk-add-parent-relationship">Relationship</label>
+              <select id="csk-add-parent-relationship" name="parentRelationship">
+                <option value="">Select relationship</option>
+                <option value="Father">Father</option>
+                <option value="Mother">Mother</option>
+                <option value="Guardian">Guardian</option>
+                <option value="Custodian">Custodian</option>
+                <option value="Parent">Parent</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="cs-add-field cs-add-full">
+              <label for="csk-add-parent-password">Temporary parent password</label>
+              <input id="csk-add-parent-password"
+                     name="parentPassword"
+                     type="text"
+                     minlength="8"
+                     autocomplete="off"
+                     placeholder="Leave blank to generate automatically">
+              <small>
+                Existing parent accounts are linked instead of creating another account.
+                New parent accounts must change the temporary password after first login.
+              </small>
+            </div>
+          </div>
+        </section>
+
+        <section id="cs-created-credentials" class="cs-created-credentials" hidden>
+          <div class="cs-created-heading">
+            <div>
+              <span class="cs-created-kicker">Created successfully</span>
+              <h4>Temporary credentials</h4>
+            </div>
+            <span class="cs-created-warning">Shown once</span>
+          </div>
+          <div id="cs-created-credential-grid" class="cs-created-grid"></div>
+          <p class="cs-created-note">
+            Save or deliver these credentials securely. Passwords and PINs are not stored in plaintext.
+          </p>
+        </section>
+
+      </div>
+
+      <div class="cs-add-student-footer">
+        <button type="button" class="cs-add-btn secondary" id="cs-add-cancel">Cancel</button>
+        <button type="submit" class="cs-add-btn primary" id="cs-add-submit">Create student</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+/* CONNECTSUKUU_STUDENT_MANAGEMENT_REBUILD */
+
+(function () {
+  'use strict';
+
+  let selectedStudent = null;
+
+  const studentCache = new Map();
+
+  function escape(value) {
+    if (typeof escapeHtml === 'function') {
+      return escapeHtml(value ?? '');
+    }
+
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function nameOf(student) {
+    return `${student?.firstName || ''} ${student?.lastName || ''}`
+      .trim() || 'Unnamed student';
+  }
+
+  function openModal(id) {
+    const modal = document.getElementById(id);
+
+    if (!modal) return;
+
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeModal(id) {
+    const modal = document.getElementById(id);
+
+    if (!modal) return;
+
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  function showAlert(id, message, type) {
+    const element = document.getElementById(id);
+
+    if (!element) return;
+
+    element.textContent = message;
+    element.className = `cs-student-alert show ${type || 'success'}`;
+  }
+
+  function cacheStudent(student) {
+    if (student?.id) {
+      studentCache.set(String(student.id), student);
+    }
+  }
+
+  async function getStudent(id) {
+    const cached = studentCache.get(String(id));
+
+    if (cached) {
+      return cached;
+    }
+
+    const response = await apiFetch(
+      `/api/students/${encodeURIComponent(id)}`
+    );
+
+    if (!response) return null;
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(
+        data?.message ||
+        data?.error ||
+        'Unable to load student.'
+      );
+    }
+
+    const student =
+      data?.student ||
+      data?.data ||
+      data;
+
+    cacheStudent(student);
+
+    return student;
+  }
+
+  function renderDetails(student) {
+    const title = document.getElementById('cs-details-title');
+    const subtitle = document.getElementById('cs-details-subtitle');
+    const body = document.getElementById('cs-details-body');
+
+    if (!body) return;
+
+    const name = nameOf(student);
+    const status =
+      String(student?.status || 'ACTIVE').toUpperCase();
+
+    title.textContent = name;
+    subtitle.textContent =
+      `${student?.admissionNumber || 'No admission number'} · ${status}`;
+
+    const fields = [
+      ['First name', student?.firstName],
+      ['Last name', student?.lastName],
+      ['Admission number', student?.admissionNumber],
+      ['Class', student?.classLevel],
+      ['Guardian', student?.guardianName],
+      ['Guardian phone', student?.guardianPhone],
+      ['Status', status],
+      ['Branch', student?.branch?.name || student?.branchName],
+      ['Student ID', student?.id]
+    ];
+
+    body.innerHTML = `
+      <div class="cs-student-grid">
+        ${fields.map(([label, value]) => `
+          <div class="cs-student-field">
+            <small>${escape(label)}</small>
+            <strong>${escape(value || '—')}</strong>
+          </div>
+        `).join('')}
+      </div>
+    `;
+
+    openModal('cs-student-details-modal');
+  }
+
+  async function openDetails(studentId) {
+    const student = await getStudent(studentId);
+
+    if (student) {
+      selectedStudent = student;
+      renderDetails(student);
+    }
+  }
+
+  async function openParents(studentId) {
+    const parentCredentialBox = document.getElementById('cs-parent-created-credentials');
+    if (parentCredentialBox) { parentCredentialBox.style.display = 'none'; parentCredentialBox.innerHTML = ''; }
+    const student = await getStudent(studentId);
+
+    if (!student) return;
+
+    selectedStudent = student;
+
+    document.getElementById('cs-parent-student-id').value =
+      student.id;
+
+    document.getElementById('cs-parents-title').textContent =
+      `${nameOf(student)} — Parents & Guardians`;
+
+    document.getElementById('cs-parents-subtitle').textContent =
+      student.admissionNumber || 'Parent relationships';
+
+    const list = document.getElementById('cs-parents-list');
+
+    list.innerHTML =
+      '<div class="cs-student-empty">Loading relationships…</div>';
+
+    /*
+     * Show the guardian already stored on the student separately
+     * from portal parent relationships.
+     */
+    const existingGuardian =
+      document.getElementById('cs-primary-guardian');
+
+    if (existingGuardian) {
+      const guardianName =
+        student?.guardianName || '';
+
+      const guardianPhone =
+        student?.guardianPhone || '';
+
+      if (guardianName || guardianPhone) {
+        existingGuardian.innerHTML = `
+          <p class="cs-primary-guardian-title">
+            Primary guardian
+          </p>
+          <p class="cs-primary-guardian-name">
+            ${escape(guardianName || 'Guardian')}
+          </p>
+          <div class="cs-primary-guardian-meta">
+            ${escape(guardianPhone || 'No phone number recorded')}
+          </div>
+        `;
+
+        existingGuardian.style.display = 'block';
+      } else {
+        existingGuardian.style.display = 'none';
+      }
+    }
+
+    openModal('cs-student-parents-modal');
+
+    try {
+      const response = await apiFetch(
+        `/api/students/${encodeURIComponent(student.id)}/parents`
+      );
+
+      if (!response) return;
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(
+          data?.message ||
+          data?.error ||
+          'Unable to load parent relationships.'
+        );
+      }
+
+      const parents =
+        Array.isArray(data)
+          ? data
+          : (
+              data?.parents ||
+              data?.data ||
+              []
+            );
+
+      if (!parents.length) {
+        list.innerHTML =
+          '<div class="cs-student-empty">No parent or guardian relationship has been added yet.</div>';
+        return;
+      }
+
+      list.innerHTML = parents.map((relationship) => {
+        const user =
+          relationship?.parent?.user ||
+          relationship?.user ||
+          relationship?.parent ||
+          relationship;
+
+        const parentName =
+          `${user?.firstName || relationship?.firstName || ''} ` +
+          `${user?.lastName || relationship?.lastName || ''}`
+        .trim() || 'Parent / Guardian';
+
+        const phone =
+          user?.phone ||
+          relationship?.phone ||
+          'No phone';
+
+        const email =
+          user?.email ||
+          relationship?.email ||
+          'No email';
+
+        const relationshipName =
+          relationship?.relationship ||
+          relationship?.parentRelationship ||
+          'Parent';
+
+        return `
+          <div class="cs-student-parent">
+            <div>
+              <strong>${escape(parentName)}</strong>
+              <span>${escape(relationshipName)}</span>
+              <span>${escape(phone)} · ${escape(email)}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+    } catch (error) {
+      console.error(error);
+
+      list.innerHTML =
+        '<div class="cs-student-empty">Unable to load parent relationships.</div>';
+
+      showAlert(
+        'cs-parents-alert',
+        error.message || 'Unable to load parents.',
+        'error'
+      );
+    }
+  }
+
+  async function addParent(event) {
+    event.preventDefault();
+
+    const studentId =
+      document.getElementById('cs-parent-student-id').value;
+
+    const payload = {
+      firstName:
+        document.getElementById('cs-parent-first-name').value.trim(),
+      lastName:
+        document.getElementById('cs-parent-last-name').value.trim(),
+      phone:
+        document.getElementById('cs-parent-phone').value.trim(),
+      email:
+        document.getElementById('cs-parent-email').value.trim().toLowerCase(),
+      relationship:
+        document.getElementById('cs-parent-relationship').value,
+      parentPassword:
+        document.getElementById('cs-parent-password').value.trim()
+    };
+
+    if (!payload.firstName || !payload.lastName) {
+      showAlert('cs-parents-alert','First name and last name are required.','error');
+      return;
+    }
+
+    if (!payload.relationship) {
+      showAlert('cs-parents-alert','Please select the guardian relationship.','error');
+      return;
+    }
+
+    if (!payload.email && !payload.phone) {
+      showAlert('cs-parents-alert','Provide an email address or phone number for the guardian.','error');
+      return;
+    }
+
+    if (payload.parentPassword && payload.parentPassword.length < 8) {
+      showAlert('cs-parents-alert','The temporary password must be at least 8 characters.','error');
+      return;
+    }
+
+    const submit =
+      document.querySelector('#cs-parent-form button[type="submit"]');
+
+    if (submit) {
+      submit.disabled = true;
+      submit.textContent = 'Adding guardian…';
+    }
+
+    try {
+      const response = await apiFetch(
+        `/api/students/${encodeURIComponent(studentId)}/parents`,
+        {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        }
+      );
+
+      if (!response) return;
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(
+          data?.message ||
+          data?.error ||
+          `Unable to add guardian (HTTP ${response.status}).`
+        );
+      }
+
+      showAlert(
+        'cs-parents-alert',
+        'Parent/guardian added successfully.',
+        'success'
+      );
+
+      const credentials =
+        document.getElementById('cs-parent-created-credentials');
+
+      if (credentials && data?.credentials) {
+        const c = data.credentials;
+        credentials.style.display = 'block';
+        credentials.innerHTML = `
+          <div style="font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#2563eb">Created successfully</div>
+          <div style="margin-top:3px;font-size:14px;font-weight:900;color:#1e3a8a">Guardian portal credentials</div>
+          <div style="margin-top:7px;color:#334155;font-size:12px;line-height:1.5">
+            <strong>${escape(c.email || 'Guardian account')}</strong>
+            ${c.temporaryPassword ? `<div style="margin-top:4px"><strong>Temporary password:</strong> <code>${escape(c.temporaryPassword)}</code></div>` : '<div style="margin-top:4px">Existing parent account linked. No new password was generated.</div>'}
+          </div>
+          <div style="margin-top:6px;color:#52647c;font-size:10.5px;line-height:1.35">Save or deliver the temporary credential securely. A new parent account must change it after first login.</div>
+        `;
+      }
+
+      document.getElementById('cs-parent-form').reset();
+      await openParents(studentId);
+
+      if (typeof loadStudents === 'function') {
+        await loadStudents();
+      }
+
+    } catch (error) {
+      console.error('ConnectSukuu add parent:', error);
+      showAlert(
+        'cs-parents-alert',
+        error.message || 'Unable to add parent/guardian.',
+        'error'
+      );
+    } finally {
+      if (submit) {
+        submit.disabled = false;
+        submit.textContent = 'Add parent';
+      }
+    }
+  }
+
+  function openStatus(studentId) {
+    const student = studentCache.get(String(studentId));
+
+    const alert = document.getElementById('cs-status-alert');
+
+    /*
+     * Always clear the previous student's status message.
+     */
+    if (alert) {
+      alert.textContent = '';
+      alert.className = 'cs-student-alert';
+    }
+
+    if (!student) {
+      getStudent(studentId)
+        .then((loaded) => {
+          if (!loaded) return;
+
+          selectedStudent = loaded;
+
+          const subtitle =
+            document.getElementById('cs-status-subtitle');
+
+          if (subtitle) {
+            subtitle.textContent =
+              `${nameOf(loaded)} · ${loaded.admissionNumber || ''}`;
+          }
+
+          openModal('cs-student-status-modal');
+        })
+        .catch((error) => {
+          window.alert(
+            error.message ||
+            'Unable to load student.'
+          );
+        });
+
+      return;
+    }
+
+    selectedStudent = student;
+
+    const subtitle =
+      document.getElementById('cs-status-subtitle');
+
+    if (subtitle) {
+      subtitle.textContent =
+        `${nameOf(student)} · ${student.admissionNumber || ''}`;
+    }
+
+    openModal('cs-student-status-modal');
+  }
+  async function changeStatus(status) {
+    if (!selectedStudent?.id) return;
+
+    const response = await apiFetch(
+      `/api/students/${encodeURIComponent(selectedStudent.id)}/status`,
+      {
+        method: 'PATCH',
+        body: JSON.stringify({ status })
+      }
+    );
+
+    if (!response) return;
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(
+        data?.message ||
+        data?.error ||
+        'Unable to update student status.'
+      );
+    }
+
+    selectedStudent.status = status;
+    cacheStudent(selectedStudent);
+
+    showAlert(
+      'cs-status-alert',
+      `Student status changed to ${status}.`,
+      'success'
+    );
+
+    if (typeof loadStudents === 'function') {
+      await loadStudents();
+    }
+
+    setTimeout(() => {
+      closeModal('cs-student-status-modal');
+    }, 600);
+  }
+
+  async function deleteStudent(studentId) {
+    const student = await getStudent(studentId);
+
+    if (!student) return;
+
+    const confirmed = window.confirm(
+      `Deactivate ${nameOf(student)} (${student.admissionNumber || 'no admission number'})?\n\n` +
+      `The student record will be retained. For safety, normal deletion is treated as deactivation.`
+    );
+
+    if (!confirmed) return;
+
+    const response = await apiFetch(
+      `/api/students/${encodeURIComponent(student.id)}`,
+      {
+        method: 'DELETE'
+      }
+    );
+
+    if (!response) return;
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(
+        data?.message ||
+        data?.error ||
+        'Unable to deactivate student.'
+      );
+    }
+
+    if (typeof loadStudents === 'function') {
+      await loadStudents();
+    }
+
+    window.alert(
+      data?.message ||
+      'Student deactivated successfully.'
+    );
+  }
+
+  function openAddStudent() {
+    document.getElementById('cs-add-student-form')?.reset();
+
+    document.getElementById(
+      'cs-add-status'
+    ).value = 'ACTIVE';
+
+    openModal('cs-add-student-modal');
+  }
+
+  async function addStudent(event) {
+    event.preventDefault();
+
+    const payload = {
+      firstName:
+        document.getElementById('cs-add-first-name').value.trim(),
+
+      lastName:
+        document.getElementById('cs-add-last-name').value.trim(),
+
+      admissionNumber:
+        document.getElementById('cs-add-admission-number').value.trim(),
+
+      classLevel:
+        document.getElementById('cs-add-class-level').value.trim(),
+
+      guardianName:
+        document.getElementById('cs-add-guardian-name').value.trim(),
+
+      guardianPhone:
+        document.getElementById('cs-add-guardian-phone').value.trim(),
+
+      status:
+        document.getElementById('cs-add-status').value
+    };
+
+    Object.keys(payload).forEach((key) => {
+      if (!payload[key]) {
+        delete payload[key];
+      }
+    });
+
+    try {
+      const response = await apiFetch(
+        '/api/students',
+        {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        }
+      );
+
+      if (!response) return;
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(
+          data?.message ||
+          data?.error ||
+          'Unable to create student.'
+        );
+      }
+
+      showAlert(
+        'cs-add-student-alert',
+        'Student created successfully.',
+        'success'
+      );
+
+      if (typeof loadStudents === 'function') {
+        await loadStudents();
+      }
+
+      setTimeout(() => {
+        closeModal('cs-add-student-modal');
+      }, 500);
+
+    } catch (error) {
+      showAlert(
+        'cs-add-student-alert',
+        error.message || 'Unable to create student.',
+        'error'
+      );
+    }
+  }
+
+  function wireExistingStudents() {
+    /*
+     * The existing renderer creates rows dynamically.
+     * We therefore use delegated events instead of binding
+     * listeners to individual rows.
+     */
+
+    document.addEventListener('click', async (event) => {
+      /*
+       * Manage dropdown trigger.
+       */
+      const manageTrigger =
+        event.target.closest('[data-student-manage-toggle]');
+
+      if (manageTrigger) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const wrapper =
+          manageTrigger.closest('.cs-manage-wrap');
+
+        document
+          .querySelectorAll('.cs-manage-wrap.open')
+          .forEach((element) => {
+            if (element !== wrapper) {
+              element.classList.remove('open');
+            }
+          });
+
+        wrapper?.classList.toggle('open');
+        return;
+      }
+
+      /*
+       * Close all open Manage menus when clicking elsewhere.
+       */
+      if (!event.target.closest('.cs-manage-wrap')) {
+        document
+          .querySelectorAll('.cs-manage-wrap.open')
+          .forEach((element) => {
+            element.classList.remove('open');
+          });
+      }
+
+      /*
+       * Student action.
+       */
+      const actionButton =
+        event.target.closest('[data-student-action]');
+
+      if (!actionButton) return;
+
+      event.preventDefault();
+
+      const action =
+        actionButton.dataset.studentAction;
+
+      const id =
+        actionButton.dataset.studentId;
+
+      if (!id) return;
+
+      actionButton
+        .closest('.cs-manage-wrap')
+        ?.classList.remove('open');
+
+      try {
+        if (action === 'view') {
+          await openDetails(id);
+        }
+
+        if (action === 'enrollment') {
+          const student = await getStudent(id);
+
+          if (
+            student &&
+            typeof openEnrollmentModal === 'function'
+          ) {
+            openEnrollmentModal(student);
+          }
+        }
+
+        if (action === 'parents') {
+          await openParents(id);
+        }
+
+        if (action === 'status') {
+          openStatus(id);
+        }
+
+        if (action === 'delete') {
+          await deleteStudent(id);
+        }
+
+      } catch (error) {
+        console.error(
+          'ConnectSukuu student action error:',
+          error
+        );
+
+        window.alert(
+          error.message ||
+          'Unable to complete this action.'
+        );
+      }
+    });
+    document.addEventListener('click', (event) => {
+      const close =
+        event.target.closest('[data-cs-close]');
+
+      if (close) {
+        closeModal(close.dataset.csClose);
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+
+      document
+        .querySelectorAll('.cs-student-modal.is-open')
+        .forEach((modal) => {
+          closeModal(modal.id);
+        });
+
+      /*
+       * Explicitly close the existing enrollment modal too.
+       */
+      const enrollment =
+        document.getElementById('enrollment-modal');
+
+      if (
+        enrollment &&
+        typeof closeEnrollmentModal === 'function'
+      ) {
+        try {
+          closeEnrollmentModal();
+        } catch (_) {}
+      }
+    });
+
+    document
+      .querySelectorAll('.cs-student-modal')
+      .forEach((modal) => {
+        modal.addEventListener('click', (event) => {
+          if (event.target === modal) {
+            closeModal(modal.id);
+          }
+        });
+      });
+
+    document
+      .getElementById('cs-parent-form')
+      ?.addEventListener('submit', addParent);
+document
+      .querySelectorAll('[data-cs-status]')
+      .forEach((button) => {
+        button.addEventListener('click', async () => {
+          try {
+            await changeStatus(
+              button.dataset.csStatus
+            );
+          } catch (error) {
+            showAlert(
+              'cs-status-alert',
+              error.message ||
+              'Unable to update status.',
+              'error'
+            );
+          }
+        });
+      });
+  }
+
+  /*
+   * Keep a copy of students whenever the existing page
+   * renderer makes them available.
+   */
+  window.ConnectSukuuStudentManagement = {
+    cacheStudent,
+    cacheStudents(students) {
+      if (!Array.isArray(students)) return;
+
+      students.forEach(cacheStudent);
+    }
+  };
+
+  document.addEventListener(
+    'DOMContentLoaded',
+    wireExistingStudents
+  );
+
+})();
+</script>
+
+<script>
+/* CONNECTSUKUU_ENROLLMENT_CLOSE_CONTROLLER */
+
+(function () {
+  'use strict';
+
+  function forceCloseEnrollment() {
+    const modal =
+      document.getElementById('enrollment-modal');
+
+    if (!modal) return;
+
+    /*
+     * Prefer the original close function when available.
+     */
+    if (typeof closeEnrollmentModal === 'function') {
+      try {
+        closeEnrollmentModal();
+      } catch (error) {
+        console.warn(
+          'Existing enrollment close failed:',
+          error
+        );
+      }
+    }
+
+    /*
+     * Also force the visual state closed.
+     */
+    modal.classList.remove('open');
+    modal.classList.remove('is-open');
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+
+    /*
+     * Prevent stale focus/interaction.
+     */
+    modal.blur?.();
+  }
+
+  document.addEventListener('click', function (event) {
+    const modal =
+      document.getElementById('enrollment-modal');
+
+    if (!modal) return;
+
+    /*
+     * X / close controls inside the enrollment modal.
+     */
+    const closeButton =
+      event.target.closest(
+        '#enrollment-modal [data-close], ' +
+        '#enrollment-modal [data-dismiss], ' +
+        '#enrollment-modal .modal-close, ' +
+        '#enrollment-modal .close, ' +
+        '#enrollment-modal button[aria-label*="Close" i]'
+      );
+
+    if (closeButton) {
+      event.preventDefault();
+      event.stopPropagation();
+      forceCloseEnrollment();
+      return;
+    }
+  }, true);
+
+  /*
+   * Escape should also close Enrollment.
+   */
+  document.addEventListener('keydown', function (event) {
+    if (event.key !== 'Escape') return;
+
+    const modal =
+      document.getElementById('enrollment-modal');
+
+    if (!modal) return;
+
+    const visible =
+      modal.classList.contains('open') ||
+      modal.classList.contains('is-open') ||
+      modal.style.display === 'flex' ||
+      modal.style.display === 'block';
+
+    if (visible) {
+      forceCloseEnrollment();
+    }
+  }, true);
+
+  window.ConnectSukuuEnrollmentClose =
+    forceCloseEnrollment;
+
+})();
+</script>
+
+<script>
+/* CONNECTSUKUU_STUDENT_MANAGEMENT_FINAL_CONTROLLER */
+
+(function () {
+    'use strict';
+
+    /*
+     * ---------------------------------------------------------
+     * Utilities
+     * ---------------------------------------------------------
+     */
+
+    function escapeValue(value) {
+        if (typeof escapeHtml === 'function') {
+            return escapeHtml(value ?? '');
+        }
+
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function studentName(student) {
+        return (
+            `${student?.firstName || ''} ${student?.lastName || ''}`
+                .trim()
+            || 'Unnamed student'
+        );
+    }
+
+    function getStudentFromCache(id) {
+        const key = String(id);
+
+        if (
+            typeof studentCache !== 'undefined' &&
+            studentCache instanceof Map
+        ) {
+            return studentCache.get(key) || null;
+        }
+
+        return null;
+    }
+
+    async function fetchStudent(id) {
+        const cached = getStudentFromCache(id);
+
+        if (cached) {
+            return cached;
+        }
+
+        const response = await apiFetch(
+            `/api/students/${encodeURIComponent(id)}`
+        );
+
+        if (!response) {
+            return null;
+        }
+
+        const data =
+            await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+            throw new Error(
+                data?.message ||
+                data?.error ||
+                'Unable to load student.'
+            );
+        }
+
+        return data.student || data;
+    }
+
+    async function refreshStudents() {
+        if (typeof loadStudents === 'function') {
+            await loadStudents();
+        }
+
+        /*
+         * Give the existing renderer time to rebuild the table.
+         */
+        setTimeout(() => {
+            if (
+                window.ConnectSukuuStudentBulk &&
+                typeof window.ConnectSukuuStudentBulk
+                    .addCheckboxesToRenderedRows === 'function'
+            ) {
+                window.ConnectSukuuStudentBulk
+                    .addCheckboxesToRenderedRows();
+            }
+        }, 100);
+    }
+
+    /*
+     * ---------------------------------------------------------
+     * Individual permanent deletion
+     * ---------------------------------------------------------
+     */
+
+    async function permanentlyDeleteStudent(id) {
+        const student =
+            await fetchStudent(id);
+
+        if (!student) {
+            return;
+        }
+
+        const name =
+            studentName(student);
+
+        const confirmed =
+            window.confirm(
+                `Permanently delete ${name}?\n\n` +
+                `This will remove the student's record and student-owned records including enrolments, fees, payments, scholarships, portal access and parent relationships.\n\n` +
+                `The action cannot be undone.`
+            );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            const response =
+                await apiFetch(
+                    `/api/students/${encodeURIComponent(id)}`,
+                    {
+                        method: 'DELETE'
+                    }
+                );
+
+            if (!response) {
+                return;
+            }
+
+            const data =
+                await response
+                    .json()
+                    .catch(() => ({}));
+
+            if (!response.ok) {
+                throw new Error(
+                    data?.message ||
+                    data?.error ||
+                    'Unable to permanently delete student.'
+                );
+            }
+
+            await refreshStudents();
+
+            window.alert(
+                `${name} was permanently deleted.`
+            );
+
+        } catch (error) {
+            console.error(
+                'Permanent student deletion failed:',
+                error
+            );
+
+            window.alert(
+                error.message ||
+                'Unable to permanently delete student.'
+            );
+        }
+    }
+
+    /*
+     * ---------------------------------------------------------
+     * Improve the existing Delete/Deactivate action
+     * ---------------------------------------------------------
+     */
+
+    document.addEventListener(
+        'click',
+        function (event) {
+
+            const button =
+                event.target.closest(
+                    '[data-student-action="delete"]'
+                );
+
+            if (!button) {
+                return;
+            }
+
+            /*
+             * Existing action delegation may also be listening.
+             * Capture phase + stopImmediatePropagation ensures
+             * this becomes the authoritative handler.
+             */
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            const id =
+                button.dataset.studentId;
+
+            if (!id) {
+                return;
+            }
+
+            permanentlyDeleteStudent(id);
+        },
+        true
+    );
+
+    /*
+     * ---------------------------------------------------------
+     * Status freshness
+     * ---------------------------------------------------------
+     *
+     * Clear every old alert before opening a new student's
+     * status dialog.
+     */
+
+    document.addEventListener(
+        'click',
+        function (event) {
+
+            const button =
+                event.target.closest(
+                    '[data-student-action="status"]'
+                );
+
+            if (!button) {
+                return;
+            }
+
+            const alert =
+                document.getElementById(
+                    'cs-status-alert'
+                );
+
+            if (alert) {
+                alert.textContent = '';
+                alert.className =
+                    'cs-student-alert';
+            }
+
+            /*
+             * Also clear any generic status-message elements
+             * that may have been created by the previous action.
+             */
+            document
+                .querySelectorAll(
+                    '#student-status-alert, ' +
+                    '#status-alert, ' +
+                    '[data-status-alert]'
+                )
+                .forEach((element) => {
+                    element.textContent = '';
+                    element.classList.remove(
+                        'show',
+                        'error',
+                        'success'
+                    );
+                });
+
+        },
+        true
+    );
+
+    /*
+     * ---------------------------------------------------------
+     * Status update → refresh table
+     * ---------------------------------------------------------
+     *
+     * Wrap the existing changeStatus function rather than
+     * replacing its backend behavior.
+     */
+
+    function wrapStatusFunction() {
+        if (
+            typeof window.changeStatus !==
+                'function'
+        ) {
+            return false;
+        }
+
+        if (
+            window.changeStatus
+                .__connectSukuuWrapped
+        ) {
+            return true;
+        }
+
+        const original =
+            window.changeStatus;
+
+        async function wrappedStatus(...args) {
+            const result =
+                await original.apply(
+                    this,
+                    args
+                );
+
+            /*
+             * Refresh the main student list so the lifecycle
+             * status changes immediately in the table.
+             */
+            try {
+                await refreshStudents();
+            } catch (error) {
+                console.warn(
+                    'Unable to refresh students after status update:',
+                    error
+                );
+            }
+
+            return result;
+        }
+
+        wrappedStatus
+            .__connectSukuuWrapped = true;
+
+        window.changeStatus =
+            wrappedStatus;
+
+        return true;
+    }
+
+    /*
+     * The existing page defines functions asynchronously.
+     * Try immediately and then briefly retry.
+     */
+    wrapStatusFunction();
+
+    setTimeout(
+        wrapStatusFunction,
+        250
+    );
+
+    setTimeout(
+        wrapStatusFunction,
+        750
+    );
+
+    setTimeout(
+        wrapStatusFunction,
+        1500
+    );
+
+    /*
+     * ---------------------------------------------------------
+     * Existing guardian display
+     * ---------------------------------------------------------
+     */
+
+    async function enhanceParentPanel(studentId) {
+        const student =
+            await fetchStudent(studentId);
+
+        if (!student) {
+            return;
+        }
+
+        const panel =
+            document.getElementById(
+                'cs-primary-guardian'
+            );
+
+        if (!panel) {
+            return;
+        }
+
+        const guardianName =
+            student.guardianName || '';
+
+        const guardianPhone =
+            student.guardianPhone || '';
+
+        if (!guardianName && !guardianPhone) {
+            panel.style.display = 'none';
+            return;
+        }
+
+        panel.style.display = 'block';
+
+        panel.innerHTML = `
+            <div class="cs-primary-guardian-final">
+                <div class="label">
+                    Primary guardian
+                </div>
+
+                <div class="name">
+                    ${escapeValue(
+                        guardianName ||
+                        'Guardian'
+                    )}
+                </div>
+
+                <div class="meta">
+                    ${escapeValue(
+                        guardianPhone ||
+                        'No phone number recorded'
+                    )}
+                </div>
+            </div>
+        `;
+    }
+
+    document.addEventListener(
+        'click',
+        function (event) {
+
+            const button =
+                event.target.closest(
+                    '[data-student-action="parents"]'
+                );
+
+            if (!button) {
+                return;
+            }
+
+            const id =
+                button.dataset.studentId;
+
+            if (!id) {
+                return;
+            }
+
+            /*
+             * Let the existing parent modal open first.
+             */
+            setTimeout(
+                () => {
+                    enhanceParentPanel(id)
+                        .catch((error) => {
+                            console.warn(
+                                'Guardian display enhancement failed:',
+                                error
+                            );
+                        });
+                },
+                50
+            );
+        }
+    );
+
+    /*
+     * ---------------------------------------------------------
+     * Enrollment close
+     * ---------------------------------------------------------
+     */
+
+    function closeEnrollmentModalFinally() {
+        const modal =
+            document.getElementById(
+                'enrollment-modal'
+            );
+
+        if (!modal) {
+            return;
+        }
+
+        if (
+            typeof window.closeEnrollmentModal ===
+                'function'
+        ) {
+            try {
+                window.closeEnrollmentModal();
+            } catch (error) {
+                console.warn(
+                    'Existing enrollment close failed:',
+                    error
+                );
+            }
+        }
+
+        modal.classList.remove(
+            'open',
+            'is-open',
+            'active'
+        );
+
+        modal.style.display = 'none';
+
+        modal.setAttribute(
+            'aria-hidden',
+            'true'
+        );
+
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener(
+        'click',
+        function (event) {
+
+            const modal =
+                document.getElementById(
+                    'enrollment-modal'
+                );
+
+            if (!modal) {
+                return;
+            }
+
+            if (!modal.contains(event.target)) {
+                return;
+            }
+
+            const button =
+                event.target.closest(
+                    'button'
+                );
+
+            if (!button) {
+                return;
+            }
+
+            const label =
+                (
+                    button.getAttribute(
+                        'aria-label'
+                    ) ||
+                    button.title ||
+                    button.textContent ||
+                    ''
+                )
+                    .trim()
+                    .toLowerCase();
+
+            const isClose =
+                label === 'x' ||
+                label === '×' ||
+                label.includes('close') ||
+                button.classList.contains(
+                    'close'
+                ) ||
+                button.classList.contains(
+                    'modal-close'
+                );
+
+            if (!isClose) {
+                return;
+            }
+
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            closeEnrollmentModalFinally();
+        },
+        true
+    );
+
+    /*
+     * ---------------------------------------------------------
+     * Responsive loading indicator
+     * ---------------------------------------------------------
+     */
+
+    function createLoadingIndicator() {
+        if (
+            document.getElementById(
+                'cs-student-loading'
+            )
+        ) {
+            return;
+        }
+
+        const element =
+            document.createElement('div');
+
+        element.id =
+            'cs-student-loading';
+
+        element.innerHTML = `
+            <span></span>
+            Loading students…
+        `;
+
+        element.style.cssText = `
+            position:fixed;
+            right:20px;
+            bottom:20px;
+            z-index:15000;
+            display:none;
+            align-items:center;
+            gap:8px;
+            padding:9px 12px;
+            border:1px solid #dbe3ee;
+            border-radius:10px;
+            background:#fff;
+            color:#475569;
+            font:600 12px/1.2 inherit;
+            box-shadow:0 8px 25px rgba(15,23,42,.12);
+        `;
+
+        document.body.appendChild(
+            element
+        );
+    }
+
+    createLoadingIndicator();
+
+})();
+</script>
+
+\n
+
+<script>
+/* CONNECTSUKUU_STUDENT_BULK_MANAGEMENT_LOGIC */
+
+(function () {
+    const selectedStudentIds = new Set();
+
+    function selectedCount() {
+        return selectedStudentIds.size;
+    }
+
+    function getRows() {
+        return Array.from(
+            document.querySelectorAll(
+                '#students-table-body tr'
+            )
+        );
+    }
+
+    function getStudentCheckboxes() {
+        return Array.from(
+            document.querySelectorAll(
+                '#students-table-body input[data-student-select]'
+            )
+        );
+    }
+
+    function updateBulkToolbar() {
+        const toolbar =
+            document.getElementById('student-bulk-toolbar');
+
+        const count =
+            document.getElementById('student-selection-count');
+
+        const selectAll =
+            document.querySelector('.student-select-all');
+
+        const checkboxes = getStudentCheckboxes();
+
+        const countValue = selectedCount();
+
+        if (count) {
+            count.textContent = String(countValue);
+        }
+
+        if (toolbar) {
+            toolbar.classList.toggle(
+                'visible',
+                countValue > 0
+            );
+
+            toolbar.setAttribute(
+                'aria-hidden',
+                countValue > 0 ? 'false' : 'true'
+            );
+        }
+
+        if (selectAll) {
+            const checkedCount =
+                checkboxes.filter((box) => box.checked).length;
+
+            selectAll.checked =
+                checkboxes.length > 0 &&
+                checkedCount === checkboxes.length;
+
+            selectAll.indeterminate =
+                checkedCount > 0 &&
+                checkedCount < checkboxes.length;
+        }
+    }
+
+    function clearSelection() {
+        selectedStudentIds.clear();
+
+        getStudentCheckboxes().forEach((checkbox) => {
+            checkbox.checked = false;
+
+            const row = checkbox.closest('tr');
+
+            if (row) {
+                row.classList.remove(
+                    'student-row-selected'
+                );
+            }
+        });
+
+        updateBulkToolbar();
+    }
+
+    function selectedIds() {
+        return Array.from(selectedStudentIds);
+    }
+
+    async function performBulkDelete() {
+        const ids = selectedIds();
+
+        if (!ids.length) {
+            return;
+        }
+
+        const confirmed = window.confirm(
+            `Permanently delete ${ids.length} selected student${ids.length === 1 ? '' : 's'}?\n\n` +
+            `This removes their student records, enrolments, fees, payments, scholarships, portal access and parent relationships.\n\n` +
+            `This action cannot be undone.`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        const button =
+            document.getElementById('bulk-delete-btn');
+
+        const originalText =
+            button?.textContent || 'Permanently delete';
+
+        if (button) {
+            button.disabled = true;
+            button.textContent = 'Deleting...';
+        }
+
+        try {
+            const response = await apiFetch(
+                '/api/students/bulk',
+                {
+                    method: 'DELETE',
+                    body: JSON.stringify({
+                        studentIds: ids,
+                    }),
+                }
+            );
+
+            if (!response) {
+                return;
+            }
+
+            const data =
+                await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message ||
+                    data.error ||
+                    'Failed to delete selected students.'
+                );
+            }
+
+            clearSelection();
+
+            if (typeof loadStudents === 'function') {
+                await loadStudents();
+            }
+
+            window.alert(
+                data.message ||
+                `${data.count || ids.length} students permanently deleted.`
+            );
+        } catch (error) {
+            console.error(
+                'ConnectSukuu bulk student deletion error:',
+                error
+            );
+
+            window.alert(
+                error.message ||
+                'Unable to permanently delete selected students.'
+            );
+        } finally {
+            if (button) {
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        }
+    }
+
+    async function performBulkDeactivate() {
+        const ids = selectedIds();
+
+        if (!ids.length) {
+            return;
+        }
+
+        const confirmed = window.confirm(
+            `Deactivate ${ids.length} selected student${ids.length === 1 ? '' : 's'}?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        const button =
+            document.getElementById('bulk-deactivate-btn');
+
+        const originalText =
+            button?.textContent || 'Deactivate selected';
+
+        if (button) {
+            button.disabled = true;
+            button.textContent = 'Updating...';
+        }
+
+        try {
+            /*
+             * Use the existing status endpoint for each student.
+             * Promise.all keeps the UI responsive while the backend
+             * remains responsible for authorization and school scope.
+             */
+            const results = await Promise.all(
+                ids.map(async (id) => {
+                    const response = await apiFetch(
+                        `/api/students/${encodeURIComponent(id)}/status`,
+                        {
+                            method: 'PATCH',
+                            body: JSON.stringify({
+                                status: 'INACTIVE',
+                            }),
+                        }
+                    );
+
+                    if (!response) {
+                        throw new Error(
+                            'Authentication expired.'
+                        );
+                    }
+
+                    const data =
+                        await response.json().catch(() => ({}));
+
+                    if (!response.ok) {
+                        throw new Error(
+                            data.message ||
+                            data.error ||
+                            'Failed to deactivate a student.'
+                        );
+                    }
+
+                    return data;
+                })
+            );
+
+            clearSelection();
+
+            if (typeof loadStudents === 'function') {
+                await loadStudents();
+            }
+
+            window.alert(
+                `${results.length} student${results.length === 1 ? '' : 's'} deactivated.`
+            );
+        } catch (error) {
+            console.error(
+                'ConnectSukuu bulk student deactivation error:',
+                error
+            );
+
+            window.alert(
+                error.message ||
+                'Unable to deactivate selected students.'
+            );
+
+            if (typeof loadStudents === 'function') {
+                await loadStudents();
+            }
+        } finally {
+            if (button) {
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        }
+    }
+
+    function wireSelection() {
+        const selectAll =
+            document.querySelector('.student-select-all');
+
+        if (selectAll && !selectAll.dataset.bound) {
+            selectAll.dataset.bound = 'true';
+
+            selectAll.addEventListener(
+                'change',
+                () => {
+                    const checked = selectAll.checked;
+
+                    getStudentCheckboxes().forEach(
+                        (checkbox) => {
+                            checkbox.checked = checked;
+
+                            const id =
+                                checkbox.dataset.studentSelect;
+
+                            const row =
+                                checkbox.closest('tr');
+
+                            if (checked) {
+                                selectedStudentIds.add(id);
+
+                                if (row) {
+                                    row.classList.add(
+                                        'student-row-selected'
+                                    );
+                                }
+                            } else {
+                                selectedStudentIds.delete(id);
+
+                                if (row) {
+                                    row.classList.remove(
+                                        'student-row-selected'
+                                    );
+                                }
+                            }
+                        }
+                    );
+
+                    updateBulkToolbar();
+                }
+            );
+        }
+
+        getStudentCheckboxes().forEach(
+            (checkbox) => {
+                if (checkbox.dataset.bound) {
+                    return;
+                }
+
+                checkbox.dataset.bound = 'true';
+
+                checkbox.addEventListener(
+                    'change',
+                    () => {
+                        const id =
+                            checkbox.dataset.studentSelect;
+
+                        const row =
+                            checkbox.closest('tr');
+
+                        if (checkbox.checked) {
+                            selectedStudentIds.add(id);
+
+                            if (row) {
+                                row.classList.add(
+                                    'student-row-selected'
+                                );
+                            }
+                        } else {
+                            selectedStudentIds.delete(id);
+
+                            if (row) {
+                                row.classList.remove(
+                                    'student-row-selected'
+                                );
+                            }
+                        }
+
+                        updateBulkToolbar();
+                    }
+                );
+            }
+        );
+
+        updateBulkToolbar();
+    }
+
+    function addCheckboxesToRenderedRows() {
+        getRows().forEach((row) => {
+            if (
+                row.querySelector(
+                    '[data-student-select]'
+                )
+            ) {
+                return;
+            }
+
+            const studentId =
+                row.dataset.studentId ||
+                row.querySelector(
+                    '[data-student-id]'
+                )?.dataset.studentId ||
+                row.querySelector(
+                    '[data-student-action][data-student-id]'
+                )?.dataset.studentId;
+
+            if (!studentId) {
+                return;
+            }
+
+            const cell =
+                document.createElement('td');
+
+            cell.className = 'student-select-cell';
+
+            const checkbox =
+                document.createElement('input');
+
+            checkbox.type = 'checkbox';
+            checkbox.dataset.studentSelect =
+                studentId;
+            checkbox.setAttribute(
+                'aria-label',
+                'Select student'
+            );
+
+            cell.appendChild(checkbox);
+
+            row.insertBefore(
+                cell,
+                row.firstElementChild
+            );
+        });
+
+        wireSelection();
+    }
+
+    /*
+     * loadStudents() replaces the table body, so observe it and
+     * reattach selection controls whenever fresh data arrives.
+     */
+    const tableBody =
+        document.getElementById('students-table-body');
+
+    if (tableBody) {
+        const observer =
+            new MutationObserver(() => {
+                addCheckboxesToRenderedRows();
+            });
+
+        observer.observe(
+            tableBody,
+            {
+                childList: true,
+                subtree: true,
+            }
+        );
+    }
+
+    document.addEventListener(
+        'DOMContentLoaded',
+        () => {
+            addCheckboxesToRenderedRows();
+
+            document
+                .getElementById('bulk-delete-btn')
+                ?.addEventListener(
+                    'click',
+                    performBulkDelete
+                );
+
+            document
+                .getElementById('bulk-deactivate-btn')
+                ?.addEventListener(
+                    'click',
+                    performBulkDeactivate
+                );
+        }
+    );
+
+    /*
+     * Expose only the small integration surface needed by the
+     * existing student renderer.
+     */
+    window.ConnectSukuuStudentBulk = {
+        addCheckboxesToRenderedRows,
+        clearSelection,
+        selectedIds,
+    };
+})();
+</script>
+
+<style id="csk-authoritative-add-student-styles">
+.csk-add-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, .68);
+  backdrop-filter: blur(7px);
+}
+.csk-add-modal.open { display: flex; }
+.csk-add-card {
+  width: min(900px, 100%);
+  max-height: 92vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 22px;
+  box-shadow: 0 30px 90px rgba(15,23,42,.30);
+  animation: cskAddIn .2s ease-out;
+}
+@keyframes cskAddIn {
+  from { opacity: 0; transform: translateY(16px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.csk-add-head {
+  display:flex; justify-content:space-between; gap:18px; align-items:flex-start;
+  padding:24px 28px; border-bottom:1px solid #e2e8f0;
+  background:linear-gradient(135deg,#fff,#f8fbff);
+}
+.csk-add-kicker { margin-bottom:5px; color:#2563eb; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.1em; }
+.csk-add-head h2 { margin:0; color:#0f172a; font-size:23px; line-height:1.2; }
+.csk-add-head p { margin:7px 0 0; color:#64748b; font-size:13px; line-height:1.5; }
+.csk-add-close { width:38px; height:38px; border:1px solid #dbe3ee; border-radius:11px; background:#fff; color:#475569; font-size:22px; cursor:pointer; }
+.csk-add-close:hover { background:#f8fafc; }
+.csk-add-body { overflow-y:auto; padding:24px 28px; }
+.csk-add-section { margin-bottom:18px; padding:19px; border:1px solid #e2e8f0; border-radius:16px; background:#fbfdff; }
+.csk-add-section:last-child { margin-bottom:0; }
+.csk-add-section-title { display:flex; align-items:center; gap:11px; margin-bottom:16px; }
+.csk-add-number { width:29px; height:29px; display:inline-flex; align-items:center; justify-content:center; border-radius:9px; background:#eff6ff; color:#2563eb; font-size:12px; font-weight:800; }
+.csk-add-section-title h3 { margin:0; color:#0f172a; font-size:15px; }
+.csk-add-section-title p { margin:2px 0 0; color:#64748b; font-size:11px; }
+.csk-add-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.csk-add-field.full { grid-column:1/-1; }
+.csk-add-field label { display:block; margin-bottom:6px; color:#334155; font-size:12px; font-weight:750; }
+.csk-add-required { color:#dc2626; }
+.csk-add-field input, .csk-add-field select { width:100%; box-sizing:border-box; padding:11px 12px; border:1px solid #cbd5e1; border-radius:10px; outline:none; background:#fff; color:#0f172a; font:inherit; font-size:13px; }
+.csk-add-field input:focus, .csk-add-field select:focus { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,.10); }
+.csk-add-field input:disabled, .csk-add-field select:disabled { background:#f1f5f9; cursor:not-allowed; }
+.csk-add-help { margin-top:6px; color:#64748b; font-size:11px; line-height:1.45; }
+.cs-add-feedback { display:none; margin-bottom:17px; padding:12px 14px; border-radius:11px; font-size:12px; line-height:1.45; }
+.cs-add-feedback.show { display:block; }
+.cs-add-feedback.error { border:1px solid #fecaca; background:#fff1f2; color:#991b1b; }
+.cs-add-feedback.success { border:1px solid #bbf7d0; background:#f0fdf4; color:#166534; }
+.csk-add-foot { display:flex; justify-content:flex-end; gap:10px; padding:17px 28px; border-top:1px solid #e2e8f0; background:#f8fafc; }
+.csk-add-btn { min-height:40px; padding:0 17px; border:1px solid #cbd5e1; border-radius:10px; background:#fff; color:#334155; font-weight:750; cursor:pointer; }
+.csk-add-btn:hover { background:#f8fafc; }
+.csk-add-btn.primary { border-color:#2563eb; background:#2563eb; color:#fff; box-shadow:0 6px 16px rgba(37,99,235,.20); }
+.csk-add-btn.primary:hover { background:#1d4ed8; }
+.csk-add-btn:disabled { opacity:.62; cursor:wait; }
+#cs-created-credentials { margin-top:18px; padding:18px; border:1px solid #bfdbfe; border-radius:15px; background:linear-gradient(135deg,#eff6ff,#f8fafc); }
+.csk-created-title { margin-bottom:13px; color:#1e3a8a; font-size:15px; font-weight:800; }
+#cs-created-credential-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.cs-created-item { padding:13px; border:1px solid #dbeafe; border-radius:12px; background:#fff; }
+.cs-created-item small { display:block; margin-bottom:5px; color:#64748b; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; }
+.cs-created-item strong { display:block; color:#0f172a; font-size:14px; word-break:break-word; }
+.cs-created-value { margin-top:6px; padding:8px 9px; border-radius:8px; background:#f8fafc; color:#0f172a; font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; font-size:13px; font-weight:800; letter-spacing:.04em; word-break:break-word; }
+.cs-copy-credential { margin-top:9px; padding:7px 9px; border:1px solid #dbe3ee; border-radius:8px; background:#fff; color:#475569; font-size:11px; font-weight:700; cursor:pointer; }
+@media (max-width:680px) {
+  .csk-add-modal { padding:10px; }
+  .csk-add-card { max-height:96vh; border-radius:17px; }
+  .csk-add-head,.csk-add-body,.csk-add-foot { padding-left:17px; padding-right:17px; }
+  .csk-add-grid,#cs-created-credential-grid { grid-template-columns:1fr; }
+  .csk-add-field.full { grid-column:auto; }
+  .csk-add-foot { flex-direction:column-reverse; }
+  .csk-add-btn { width:100%; }
+}
+</style>
+
+<script>
+/* CONNECTSUKUU_AUTHORITATIVE_ADD_STUDENT_CONTROLLER */
+(function () {
+  'use strict';
+
+  const MODAL_ID = 'cs-authoritative-add-student-modal';
+  const FORM_ID = 'cs-authoritative-add-student-form';
+
+  function byId(id) { return document.getElementById(id); }
+
+  function esc(value) {
+    if (typeof escapeHtml === 'function') return escapeHtml(value ?? '');
+    return String(value ?? '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+      .replace(/'/g,'&#039;');
+  }
+
+  function setFeedback(message, type) {
+    const box = byId('cs-add-feedback');
+    if (!box) return;
+    box.textContent = message || '';
+    box.className =
+      'cs-add-feedback' +
+      (message ? ` show ${type || 'error'}` : '');
+  }
+
+  function resetState() {
+    const form = byId(FORM_ID);
+    if (form) form.reset();
+
+    const year = byId('csk-add-academic-year');
+    const cls = byId('csk-add-class');
+
+    if (year) {
+      year.disabled = true;
+      year.innerHTML =
+        '<option value="">Loading academic years...</option>';
+    }
+
+    if (cls) {
+      cls.disabled = true;
+      cls.innerHTML =
+        '<option value="">Select academic year first</option>';
+    }
+
+    const panel = byId('cs-created-credentials');
+    const grid = byId('cs-created-credential-grid');
+
+    if (panel) panel.hidden = true;
+    if (grid) grid.innerHTML = '';
+
+    document
+      .querySelectorAll(
+        '#' + FORM_ID + ' .cs-add-section'
+      )
+      .forEach(section => {
+        section.hidden = false;
+      });
+
+    setFeedback('', '');
+
+    const submitButton = byId('cs-add-submit');
+
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.textContent = 'Create student';
+    }
+  }
+
+  function close() {
+    const modal = byId(MODAL_ID);
+    if (!modal) return;
+
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+    resetState();
+  }
+
+  function collection(data, key) {
+    if (Array.isArray(data)) return data;
+    if (key && Array.isArray(data?.[key])) return data[key];
+    if (Array.isArray(data?.data)) return data.data;
+    return [];
+  }
+
+  async function loadYears() {
+    const select = byId('csk-add-academic-year');
+    if (!select) return;
+
+    select.disabled = true;
+    select.innerHTML =
+      '<option value="">Loading academic years...</option>';
+
+    try {
+      const response =
+        await apiFetch('/api/academic-years');
+
+      if (!response) return;
+
+      const data =
+        await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(
+          data.error ||
+          data.message ||
+          'Unable to load academic years.'
+        );
+      }
+
+      const years =
+        collection(data,'academicYears');
+
+      if (!years.length) {
+        select.innerHTML =
+          '<option value="">No academic years found</option>';
+        return;
+      }
+
+      select.innerHTML =
+        '<option value="">Select academic year</option>' +
+        years.map(year =>
+          `<option value="${esc(year.id)}">${
+            esc(year.name || 'Academic year')
+          }${year.isCurrent ? ' — Current' : ''}</option>`
+        ).join('');
+
+      select.disabled = false;
+
+      const current =
+        years.find(year => year.isCurrent);
+
+      if (current) {
+        select.value = current.id;
+        await loadClasses(current.id);
+      }
+    } catch (error) {
+      select.innerHTML =
+        '<option value="">Unable to load academic years</option>';
+
+      setFeedback(
+        error.message ||
+        'Unable to load academic years.',
+        'error'
+      );
+    }
+  }
+
+  async function loadClasses(yearId) {
+    const select = byId('csk-add-class');
+    if (!select) return;
+
+    select.disabled = true;
+
+    if (!yearId) {
+      select.innerHTML =
+        '<option value="">Select academic year first</option>';
+      return;
+    }
+
+    select.innerHTML =
+      '<option value="">Loading classes...</option>';
+
+    try {
+      const response =
+        await apiFetch(
+          '/api/classes?academicYearId=' +
+          encodeURIComponent(yearId)
+        );
+
+      if (!response) return;
+
+      const data =
+        await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(
+          data.error ||
+          data.message ||
+          'Unable to load classes.'
+        );
+      }
+
+      const classes =
+        collection(data,'classes');
+
+      if (!classes.length) {
+        select.innerHTML =
+          '<option value="">No classes found for this year</option>';
+        return;
+      }
+
+      select.innerHTML =
+        '<option value="">Select class</option>' +
+        classes.map(item =>
+          `<option value="${esc(item.id)}">${
+            esc(
+              item.name ||
+              item.classLevel ||
+              item.title ||
+              'Class'
+            )
+          }${item.section ? ' — ' + esc(item.section) : ''}</option>`
+        ).join('');
+
+      select.disabled = false;
+    } catch (error) {
+      select.innerHTML =
+        '<option value="">Unable to load classes</option>';
+
+      setFeedback(
+        error.message ||
+        'Unable to load classes.',
+        'error'
+      );
+    }
+  }
+
+  function credential(label, display, secret) {
+    return `
+      <div class="cs-created-item">
+        <small>${esc(label)}</small>
+        <strong>${esc(display)}</strong>
+        ${secret ? `
+          <div class="cs-created-value">${esc(secret)}</div>
+          <button
+            type="button"
+            class="cs-copy-credential"
+            data-copy-credential="${esc(secret)}">
+            Copy
+          </button>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  function showCredentials(data) {
+    const student = data?.credentials?.student;
+    const parent = data?.credentials?.parent;
+    const grid = byId('cs-created-credential-grid');
+    const panel = byId('cs-created-credentials');
+
+    if (!grid || !panel) return;
+
+    let markup = '';
+
+    if (student) {
+      markup += credential(
+        'Student username',
+        student.username || '—',
+        student.username || ''
+      );
+
+      markup += credential(
+        'Student temporary PIN',
+        'Temporary PIN',
+        student.temporaryPin || ''
+      );
+    }
+
+    if (parent) {
+      markup += credential(
+        'Parent portal email',
+        parent.email || '—',
+        parent.email || ''
+      );
+
+      markup += parent.temporaryPassword
+        ? credential(
+            'Parent temporary password',
+            'Temporary password',
+            parent.temporaryPassword
+          )
+        : credential(
+            'Parent account',
+            'Existing parent account linked',
+            ''
+          );
+    }
+
+    if (!markup) {
+      markup =
+        '<div class="cs-created-item">' +
+        '<small>Account status</small>' +
+        '<strong>Student created successfully.</strong>' +
+        '</div>';
+    }
+
+    grid.innerHTML = markup;
+    panel.hidden = false;
+
+    grid
+      .querySelectorAll('[data-copy-credential]')
+      .forEach(button => {
+        button.addEventListener('click', async () => {
+          const value =
+            button.dataset.copyCredential || '';
+
+          try {
+            await navigator.clipboard.writeText(value);
+            const old = button.textContent;
+            button.textContent = 'Copied';
+
+            setTimeout(() => {
+              button.textContent = old;
+            }, 1200);
+          } catch (_) {
+            window.prompt('Copy this value:', value);
+          }
+        });
+      });
+  }
+
+  function admissionAlreadyExists(admissionNumber) {
+    const list =
+      Array.isArray(window.students)
+        ? window.students
+        : [];
+
+    const needle =
+      String(admissionNumber || '')
+        .trim()
+        .toLowerCase();
+
+    return list.some(student =>
+      String(student?.admissionNumber || '')
+        .trim()
+        .toLowerCase() === needle
+    );
+  }
+
+  async function submit(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    setFeedback('', '');
+
+    const value = id =>
+      byId(id)?.value?.trim() || '';
+
+    const firstName =
+      value('csk-add-first-name');
+
+    const lastName =
+      value('csk-add-last-name');
+
+    const admissionNumber =
+      value('csk-add-admission');
+
+    const academicYearId =
+      byId('csk-add-academic-year')?.value || '';
+
+    const classId =
+      byId('csk-add-class')?.value || '';
+
+    const guardianName =
+      value('csk-add-guardian-name');
+
+    const guardianPhone =
+      value('csk-add-guardian-phone');
+
+    const guardianEmail =
+      value('csk-add-parent-email')
+        .toLowerCase();
+
+    const parentRelationship =
+      byId('csk-add-parent-relationship')
+        ?.value || '';
+
+    const parentPassword =
+      value('csk-add-parent-password');
+
+    if (!firstName || !lastName || !admissionNumber) {
+      setFeedback(
+        'First name, last name and admission number are required.',
+        'error'
+      );
+      return;
+    }
+
+    if (admissionAlreadyExists(admissionNumber)) {
+      setFeedback(
+        `Admission number "${admissionNumber}" already exists in this school. Please use a different admission number.`,
+        'error'
+      );
+      byId('csk-add-admission')?.focus();
+      return;
+    }
+
+    if (!academicYearId || !classId) {
+      setFeedback(
+        'Please select an academic year and class.',
+        'error'
+      );
+      return;
+    }
+
+    if (guardianEmail && !parentRelationship) {
+      setFeedback(
+        'Please select the parent relationship when a parent email is provided.',
+        'error'
+      );
+      return;
+    }
+
+    if (
+      parentPassword &&
+      parentPassword.length < 8
+    ) {
+      setFeedback(
+        'The temporary parent password must be at least 8 characters.',
+        'error'
+      );
+      return;
+    }
+
+    const button =
+      byId('cs-add-submit');
+
+    if (button) {
+      button.disabled = true;
+      button.textContent =
+        'Creating student…';
+    }
+
+    const controller =
+      new AbortController();
+
+    const timeout =
+      setTimeout(
+        () => controller.abort(),
+        20000
+      );
+
+    try {
+      const response =
+        await apiFetch(
+          '/api/students',
+          {
+            method: 'POST',
+            signal: controller.signal,
+            body: JSON.stringify({
+              firstName,
+              lastName,
+              admissionNumber,
+              academicYearId,
+              classId,
+              guardianName:
+                guardianName || undefined,
+              guardianPhone:
+                guardianPhone || undefined,
+              guardianEmail:
+                guardianEmail || undefined,
+              parentRelationship:
+                parentRelationship || undefined,
+              parentPassword:
+                parentPassword || undefined
+            })
+          }
+        );
+
+      if (!response) return;
+
+      const data =
+        await response
+          .json()
+          .catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(
+          data.error ||
+          data.message ||
+          `Unable to create student (HTTP ${response.status}).`
+        );
+      }
+
+      setFeedback(
+        'Student created successfully.',
+        'success'
+      );
+
+      document
+        .querySelectorAll(
+          '#' + FORM_ID + ' .cs-add-section'
+        )
+        .forEach(section => {
+          section.hidden = true;
+        });
+
+      showCredentials(data);
+
+      if (typeof loadStudents === 'function') {
+        await loadStudents();
+      }
+
+      if (button) {
+        button.textContent =
+          'Student created';
+        button.disabled = true;
+      }
+    } catch (error) {
+      console.error(
+        'ConnectSukuu Add Student:',
+        error
+      );
+
+      if (error?.name === 'AbortError') {
+        setFeedback(
+          'The server did not respond within 20 seconds. The request was stopped so the form cannot remain stuck. Check the backend terminal for the POST /api/students request.',
+          'error'
+        );
+      } else {
+        setFeedback(
+          error.message ||
+          'Unable to create student.',
+          'error'
+        );
+      }
+
+      if (button) {
+        button.disabled = false;
+        button.textContent =
+          'Create student';
+      }
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  function open() {
+    const modal = byId(MODAL_ID);
+
+    if (!modal) {
+      console.error(
+        'ConnectSukuu: Add Student modal is missing.'
+      );
+      return;
+    }
+
+    resetState();
+
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+
+    loadYears();
+
+    setTimeout(() => {
+      byId('csk-add-first-name')?.focus();
+    }, 40);
+  }
+
+  function bind() {
+    const form = byId(FORM_ID);
+    const trigger = byId('add-student-btn');
+    const modal = byId(MODAL_ID);
+
+    if (!form || !trigger || !modal) {
+      console.error(
+        'ConnectSukuu: Add Student controls are missing.'
+      );
+      return;
+    }
+
+    const cleanTrigger =
+      trigger.cloneNode(true);
+
+    trigger.replaceWith(cleanTrigger);
+
+    cleanTrigger.addEventListener(
+      'click',
+      event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        open();
+      },
+      true
+    );
+
+    form.addEventListener(
+      'submit',
+      submit
+    );
+
+    byId('cs-add-close')
+      ?.addEventListener('click', close);
+
+    byId('cs-add-cancel')
+      ?.addEventListener('click', close);
+
+    byId('csk-add-academic-year')
+      ?.addEventListener(
+        'change',
+        event =>
+          loadClasses(event.target.value)
+      );
+
+    modal.addEventListener(
+      'click',
+      event => {
+        if (
+          event.target === modal ||
+          event.target.closest(
+            '[data-cs-add-close]'
+          )
+        ) {
+          close();
+        }
+      }
+    );
+
+    document.addEventListener(
+      'keydown',
+      event => {
+        if (
+          event.key === 'Escape' &&
+          modal.classList.contains('open')
+        ) {
+          close();
+        }
+      },
+      true
+    );
+
+    console.log(
+      'ConnectSukuu: authoritative Add Student workflow ready.'
+    );
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener(
+      'DOMContentLoaded',
+      bind,
+      { once: true }
+    );
+  } else {
+    bind();
+  }
+})();
+</script>
+
+<script id="connectsukuu-student-role-view-only">
+(function(){
+  'use strict';
+  function apply(){
+    var u=null;
+    try{u=JSON.parse(localStorage.getItem('cs_user')||'null')}catch(_){u=null}
+    var role=u&&u.role||'';
+    var canManage=role==='ADMINISTRATOR';
+    ['add-student-btn','import-student-btn','student-bulk-toolbar'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el) el.style.display=canManage ? '' : 'none';
+    });
+    var modal=document.getElementById('import-modal');
+    if(!canManage && modal) modal.style.display='none';
+    var addModal=document.getElementById('cs-add-student-modal');
+    if(!canManage && addModal) addModal.classList.remove('open');
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply,{once:true});
+  else apply();
+  setTimeout(apply,300);
+  setTimeout(apply,1000);
+})();
+</script>
+
+
+<script id="connectsukuu-hoa-shell-final-runtime">
+(function(){
+'use strict';
+var EXPECTED_ROLE='HEAD_OF_ACADEMICS';
+var PAGE_KEY='students';
+var TITLES={dashboard:'Dashboard',academic:'Academic Setup',students:'Students',attendance:'Attendance',teaching:'Teaching Assignments',timetable:'Timetable',assessments:'Assessments & Report Cards'};
+
+function getUser(){
+  try{
+    if(window.AUTH&&typeof AUTH.getUser==='function'){
+      var u=AUTH.getUser();
+      if(u) return u;
+    }
+  }catch(_){}
+  try{
+    return JSON.parse(localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user')||'null')||{};
+  }catch(_){return {};}
+}
+
+var user=getUser();
+
+// Role guard
+try{
+  if(user&&user.role&&String(user.role).toUpperCase()!==EXPECTED_ROLE){
+    location.replace('/auth/signin.html');
+    return;
+  }
+}catch(_){}
+
+// Active nav state
+try{
+  document.querySelectorAll('.cs-hoa-final-nav a[data-cs-hoa-nav]').forEach(function(a){
+    if(a.getAttribute('data-cs-hoa-nav')===PAGE_KEY){ a.classList.add('active'); }
+    else { a.classList.remove('active'); }
+  });
+}catch(_){}
+
+// Header title (authoritative, independent of static markup)
+try{
+  var titleEl=document.querySelector('.cs-hoa-final-title');
+  if(titleEl&&TITLES[PAGE_KEY]) titleEl.textContent=TITLES[PAGE_KEY];
+  if(TITLES[PAGE_KEY]) document.title=TITLES[PAGE_KEY];
+}catch(_){}
+
+// Profile
+try{
+  var email=(user&&user.email)||'';
+  var whoEl=document.getElementById('cskHoaWho');
+  if(whoEl) whoEl.textContent=email||'User';
+  var avatarEl=document.getElementById('cskHoaAvatar');
+  if(avatarEl) avatarEl.textContent=(email||'H').trim().charAt(0).toUpperCase()||'H';
+}catch(_){}
+
+// Logout
+try{
+  var logoutBtn=document.getElementById('cskHoaFinalLogout');
+  if(logoutBtn){
+    logoutBtn.addEventListener('click',function(){
+      try{
+        if(window.AUTH&&typeof AUTH.logout==='function'){ AUTH.logout(); return; }
+      }catch(_){}
+      try{
+        localStorage.removeItem('cs_user');
+        localStorage.removeItem('cs_token');
+        localStorage.removeItem('connectsukuu_user');
+      }catch(_){}
+      location.href='/auth/signin.html';
+    });
+  }
+}catch(_){}
+})();
+</script>
+<script id="connectsukuu-hoa-stabilization-runtime">
+(function(){
+  'use strict';
+  function activateCurrentMenu(){
+    var file=(location.pathname.split('/').pop()||'hoa-dashboard').toLowerCase();
+    file=file.replace(/\.html$/,'');
+    var map={'hoa-dashboard':'dashboard','hoa-academic':'academic','hoa-students':'students','hoa-attendance':'attendance','hoa-teaching-assignments':'teaching','hoa-timetable':'timetable','hoa-assessments':'assessments'};
+    var key=map[file];
+    document.querySelectorAll('[data-cs-hoa-nav]').forEach(function(a){
+      var active=!!key&&a.getAttribute('data-cs-hoa-nav')===key;
+      a.classList.toggle('active',active);
+      if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
+    });
+  }
+  function enforceStudentViewOnly(){
+    if(!document.body.classList.contains('cs-student-hoa-ht-view-only'))return;
+    var selectors=['[data-student-action="enrollment"]','[data-student-action="parents"]','[data-student-action="status"]','[data-student-action="delete"]','#add-student-btn','#import-student-btn','.student-bulk-actions','.cs-manage-trigger','.cs-manage-wrap'];
+    selectors.forEach(function(sel){document.querySelectorAll(sel).forEach(function(el){el.remove();});});
+    document.querySelectorAll('.student-actions').forEach(function(box){
+      box.querySelectorAll('button,a').forEach(function(btn){if(btn.getAttribute('data-student-action')!=='view')btn.remove();});
+      box.style.setProperty('display','flex','important');box.style.setProperty('justify-content','flex-end','important');box.style.setProperty('gap','0','important');
+    });
+    document.querySelectorAll('#students-table [data-student-management-actions]').forEach(function(cell){cell.style.setProperty('width','92px','important');cell.style.setProperty('text-align','right','important');});
+  }
+  function run(){activateCurrentMenu();enforceStudentViewOnly();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
+  var observer=new MutationObserver(function(){activateCurrentMenu();enforceStudentViewOnly();});
+  observer.observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+</body>
+</html>

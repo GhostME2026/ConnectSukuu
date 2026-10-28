@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attendance</title>
+<link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
+<style>
+:root{
+  --blue:#2563eb;--blue2:#1d4ed8;--ink:#172033;--muted:#667085;--soft:#f5f7fb;
+  --card:#fff;--line:#e5e9f2;--green:#15803d;--green-bg:#ecfdf3;
+  --red:#b91c1c;--red-bg:#fef2f2;--amber:#b45309;--amber-bg:#fffbeb;
+  --purple:#6d28d9;--purple-bg:#f5f3ff;--shadow:0 10px 30px rgba(15,23,42,.055);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--soft);color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.layout{min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:255px;background:#fff;border-right:1px solid var(--line);padding:20px 13px;display:flex;flex-direction:column;z-index:30}
+.brand{display:flex;align-items:center;gap:10px;padding:8px 10px 26px;text-decoration:none;color:var(--ink);font-size:20px;font-weight:850;letter-spacing:-.02em}
+.brand-mark{width:32px;height:32px;border-radius:10px;background:#eff6ff;color:var(--blue);display:grid;place-items:center;box-shadow:0 5px 14px rgba(37,99,235,.13)}
+.nav{display:flex;flex-direction:column;gap:4px}
+.nav-section{padding:14px 11px 7px;color:#98a2b3;font-size:9px;text-transform:uppercase;letter-spacing:.12em;font-weight:900}
+.nav a{display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:10px;text-decoration:none;color:#667085;font-size:12px;font-weight:750;transition:.18s ease}
+.nav a:hover{background:#f5f8ff;color:#2563eb;transform:translateX(2px)}
+.nav a.active{background:#eef5ff;color:#2563eb;box-shadow:inset 3px 0 0 #2563eb}
+.sidebar-bottom{margin-top:auto;padding-top:14px}
+.logout{width:100%;border:0;background:#172033;color:#fff;padding:12px;border-radius:10px;font-size:12px;font-weight:800;transition:.18s ease}
+.logout:hover{background:#0f172a;transform:translateY(-1px);box-shadow:0 8px 18px rgba(15,23,42,.16)}
+
+.main{margin-left:255px;width:calc(100% - 250px);min-width:0}
+.topbar{height:54px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:10}
+.topbar-title{font-size:15px;font-weight:750}
+.user{display:flex;align-items:center;gap:9px;color:#667085;font-size:13px;}
+.avatar{width:32px;height:32px;border-radius:50%;background:#dbeafe;color:#1d4ed8;display:grid;place-items:center;font-weight:800}
+.content{padding:32px;max-width:1450px;margin:0 auto}
+
+.eyebrow{font-size:10px;color:var(--blue);text-transform:uppercase;letter-spacing:.13em;font-weight:900;margin-bottom:6px}
+h1{margin:0;font-size:30px;letter-spacing:-.035em}
+.subtitle{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.55}
+.user-card{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:9px 12px;box-shadow:0 3px 12px rgba(15,23,42,.025)}
+.avatar{width:34px;height:34px;border-radius:10px;background:#172033;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:850}
+.uname{font-size:12px;font-weight:800}.urole{font-size:10px;color:#98a2b3;margin-top:2px}
+
+.hero{background:linear-gradient(135deg,#fff 0%,#f8fbff 100%);border:1px solid var(--line);border-radius:18px;padding:19px 20px;box-shadow:var(--shadow);margin-bottom:16px;animation:rise .45s ease both}
+.hero-row{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.hero h2{margin:0;font-size:17px;letter-spacing:-.02em}
+.hero p{margin:5px 0 0;color:var(--muted);font-size:11px;line-height:1.55}
+.role-pill{display:inline-flex;align-items:center;gap:7px;border:1px solid #dbe7ff;background:#f5f8ff;color:#2563eb;padding:7px 10px;border-radius:999px;font-size:10px;font-weight:850;white-space:nowrap}
+.role-pill .dot{width:6px;height:6px;border-radius:50%;background:#2563eb;box-shadow:0 0 0 4px #dbeafe}
+
+.filters{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow);animation:rise .5s ease both}
+.filter-grid{display:grid;grid-template-columns:1.1fr 1.1fr 1.1fr .9fr 1.25fr;gap:11px}
+.field label{display:block;margin:0 0 6px 2px;color:#667085;font-size:9px;text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+.field select,.field input{width:100%;height:39px;border:1px solid #d9e0eb;background:#fff;color:#172033;border-radius:9px;padding:0 11px;outline:0;font-size:12px;transition:.16s ease}
+.field select:hover,.field input:hover{border-color:#b9c7dc}
+.field select:focus,.field input:focus{border-color:#80a9ff;box-shadow:0 0 0 3px #dbeafe}
+.mode-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding-top:13px;border-top:1px solid #edf0f5}
+.mode-left{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.mode-title{font-size:10px;font-weight:850;margin-right:3px}
+.mode-option{display:inline-flex;align-items:center;gap:6px;border:1px solid #dfe5ef;background:#fff;padding:7px 10px;border-radius:9px;font-size:10px;font-weight:750;color:#475467;transition:.16s ease}
+.mode-option:hover{border-color:#b7c8e8;background:#f8fbff}
+.mode-option.active{border-color:#80a9ff;background:#f5f8ff;color:#2563eb;box-shadow:0 0 0 2px #eff6ff}
+.mode-option input{accent-color:#2563eb}
+.default-note{font-size:9px;color:#98a2b3}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:16px 0;animation:rise .55s ease both}
+.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px 17px;box-shadow:var(--shadow);transition:.2s ease}
+.stat:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(15,23,42,.08)}
+.stat-label{font-size:9px;color:#98a2b3;text-transform:uppercase;letter-spacing:.09em;font-weight:900}
+.stat-value{font-size:26px;font-weight:850;letter-spacing:-.04em;margin-top:5px}
+.stat-sub{font-size:9px;color:#98a2b3;margin-top:3px}
+
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;animation:rise .6s ease both}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 19px;border-bottom:1px solid #edf0f5}
+.panel-title{display:flex;align-items:center;gap:10px}
+.panel-icon{width:34px;height:34px;border-radius:10px;background:#eff6ff;color:#2563eb;display:grid;place-items:center;font-weight:900}
+.panel h2{margin:0;font-size:16px;letter-spacing:-.02em}
+.panel-head p{margin:4px 0 0;color:#98a2b3;font-size:10px}
+.actions{display:flex;gap:8px}
+.btn{border:1px solid #d9e0eb;background:#fff;color:#344054;border-radius:9px;padding:9px 12px;font-size:10px;font-weight:850;transition:.17s ease}
+.btn:hover:not(:disabled){transform:translateY(-1px);border-color:#b9c7dc;background:#f8fbff}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 6px 14px rgba(37,99,235,.18)}
+.btn.primary:hover:not(:disabled){background:var(--blue2);box-shadow:0 9px 20px rgba(37,99,235,.24)}
+.btn.danger{color:#b91c1c;background:#fff;border-color:#fecaca}
+
+.readonly-strip{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 18px;background:#f8fafc;border-bottom:1px solid #edf0f5}
+.readonly-badge{display:inline-flex;align-items:center;gap:6px;color:#475467;background:#fff;border:1px solid #e4e7ec;border-radius:999px;padding:5px 9px;font-size:9px;font-weight:850}
+.readonly-badge .lock{font-size:10px}
+.context{display:flex;gap:17px;flex-wrap:wrap;font-size:9px;color:#98a2b3}
+.context strong{font-size:10px;color:#344054}
+
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th{text-align:left;background:#fafbfc;color:#98a2b3;font-size:9px;text-transform:uppercase;letter-spacing:.08em;padding:11px 18px;border-bottom:1px solid #edf0f5}
+td{padding:12px 18px;border-bottom:1px solid #f0f2f6;font-size:11px;vertical-align:middle}
+tr{transition:.14s ease}
+tbody tr:hover{background:#fbfdff}
+.student{display:flex;align-items:center;gap:10px}
+.student-av{width:35px;height:35px;border-radius:10px;background:#f1f5f9;color:#475569;display:grid;place-items:center;font-size:10px;font-weight:900}
+.name{font-weight:850}.adm{font-size:9px;color:#98a2b3;margin-top:2px}
+.statuses{display:flex;gap:5px;flex-wrap:wrap}
+.status{border:1px solid #dfe4ec;background:#fff;color:#667085;border-radius:8px;padding:6px 9px;font-size:9px;font-weight:850;transition:.14s ease}
+.status:hover{transform:translateY(-1px);border-color:#b9c7dc}
+.status.sel[data-s=PRESENT]{background:var(--green-bg);border-color:#86efac;color:var(--green)}
+.status.sel[data-s=ABSENT]{background:var(--red-bg);border-color:#fca5a5;color:var(--red)}
+.status.sel[data-s=LATE]{background:var(--amber-bg);border-color:#fcd34d;color:var(--amber)}
+.status.sel[data-s=EXCUSED]{background:var(--purple-bg);border-color:#c4b5fd;color:var(--purple)}
+.notes{width:160px;border:1px solid #e1e6ef;border-radius:8px;padding:7px 9px;font-size:10px;outline:0}
+.notes:focus{border-color:#80a9ff;box-shadow:0 0 0 3px #dbeafe}
+.badge{display:inline-flex;align-items:center;border-radius:999px;padding:5px 9px;font-size:9px;font-weight:850}
+.badge.present{background:var(--green-bg);color:var(--green)}
+.badge.absent{background:var(--red-bg);color:var(--red)}
+.badge.late{background:var(--amber-bg);color:var(--amber)}
+.badge.excused{background:var(--purple-bg);color:var(--purple)}
+.badge.none{background:#f8fafc;color:#98a2b3;border:1px solid #e4e7ec}
+.recorded{font-size:9px;color:#667085}.recorded strong{color:#344054}
+
+.empty{padding:58px 20px;text-align:center;color:#98a2b3}
+.empty-icon{width:44px;height:44px;border-radius:14px;background:#f3f7ff;color:#2563eb;display:grid;place-items:center;margin:0 auto 10px;font-size:19px;font-weight:800}
+.empty h3{margin:0 0 5px;color:#344054;font-size:14px}
+.empty p{margin:0 auto;max-width:480px;font-size:10px;line-height:1.6}
+.loading-row{padding:45px;text-align:center;color:#98a2b3;font-size:11px}
+
+.banner{position:fixed;right:25px;bottom:25px;z-index:100;max-width:390px;background:#172033;color:#fff;border-radius:11px;padding:12px 15px;font-size:11px;box-shadow:0 18px 40px rgba(15,23,42,.2);opacity:0;pointer-events:none;transform:translateY(10px);transition:.2s ease}
+.banner.show{opacity:1;transform:none}.banner.success{background:#166534}.banner.error{background:#991b1b}
+
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.48);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:20px;z-index:90}
+.modal.open{display:flex}
+.modal-card{width:min(820px,100%);max-height:88vh;overflow:auto;background:#fff;border-radius:18px;box-shadow:0 30px 80px rgba(15,23,42,.25);animation:modalIn .2s ease}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;padding:19px 20px;border-bottom:1px solid #edf0f5}
+.modal-head h3{margin:0;font-size:16px}.modal-head p{margin:4px 0 0;color:#98a2b3;font-size:10px}
+.close{width:30px;height:30px;border:0;border-radius:9px;background:#f3f5f8;color:#475467;font-size:18px}
+.modal-body{padding:18px 20px}
+.history-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:15px}
+.history-stat{border:1px solid #e6eaf1;border-radius:12px;padding:12px;background:#fafcff}
+.history-stat b{display:block;font-size:19px}.history-stat span{font-size:9px;color:#98a2b3}
+.history-table{max-height:420px;overflow:auto;border:1px solid #edf0f5;border-radius:12px}
+.history-table table{min-width:620px}
+.modal-foot{padding:13px 20px;border-top:1px solid #edf0f5;display:flex;justify-content:flex-end}
+
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes modalIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(max-width:1100px){.filter-grid{grid-template-columns:repeat(3,1fr)}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:820px){.sidebar{width:195px}.main{margin-left:195px;padding:22px 16px}.topbar{flex-direction:column}.user-card{align-self:flex-end}}
+@media(max-width:620px){.sidebar{position:static;width:100%;min-height:auto}.nav{display:none}.sidebar-bottom{margin-top:10px}.main{margin-left:0;padding:17px 13px}.filter-grid,.stats{grid-template-columns:1fr}.hero-row,.mode-row,.panel-head{align-items:flex-start;flex-direction:column}.actions{width:100%}.actions .btn{flex:1}.history-summary{grid-template-columns:repeat(2,1fr)}}
+
+/* CONNECTSUKUU_HOA_ATTENDANCE_ANALYTICS_CLEAN */
+.hoa-analytics-clean{
+  margin-top:16px;
+  border:1px solid #dbe7f7;
+  border-radius:16px;
+  background:linear-gradient(135deg,#f8fbff 0%,#ffffff 74%);
+  box-shadow:0 8px 24px rgba(15,23,42,.05);
+  overflow:hidden;
+}
+.hoa-analytics-clean .hoa-a-head{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:16px 18px;border-bottom:1px solid #e8eef7;
+}
+.hoa-analytics-clean .hoa-a-title{display:flex;align-items:center;gap:10px}
+.hoa-analytics-clean .hoa-a-icon{
+  width:34px;height:34px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;background:#eaf2ff;color:#2563eb;font-weight:800;
+}
+.hoa-analytics-clean h3{margin:0;font-size:15px;color:#172033}
+.hoa-analytics-clean p{margin:3px 0 0;color:#667085;font-size:11px}
+.hoa-analytics-clean .hoa-a-badge{
+  border:1px solid #cfe0ff;background:#f4f8ff;color:#2563eb;border-radius:999px;
+  padding:6px 10px;font-size:10px;font-weight:800;white-space:nowrap;
+}
+.hoa-a-grid{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:14px 18px;
+}
+.hoa-a-card{
+  border:1px solid #e7edf5;border-radius:12px;padding:12px;background:#fff;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+.hoa-a-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,23,42,.07);border-color:#cfe0ff}
+.hoa-a-label{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#667085}
+.hoa-a-value{margin-top:6px;font-size:22px;font-weight:850;color:#172033}
+.hoa-a-sub{margin-top:3px;font-size:10px;color:#98a2b3}
+.hoa-a-progress{height:8px;border-radius:999px;background:#edf2f7;overflow:hidden;margin-top:10px}
+.hoa-a-progress span{
+  display:block;height:100%;width:0;border-radius:inherit;
+  background:linear-gradient(90deg,#2563eb,#14b8a6);transition:width .35s ease;
+}
+.hoa-a-status{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:0 18px 18px;
+}
+.hoa-a-status-card{border-radius:12px;padding:10px 12px;background:#f8fafc;border:1px solid #edf1f6}
+.hoa-a-status-card strong{display:block;font-size:15px;color:#172033}
+.hoa-a-status-card span{display:block;margin-top:2px;font-size:10px;color:#667085}
+@media(max-width:850px){.hoa-a-grid,.hoa-a-status{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.hoa-analytics-clean .hoa-a-head{align-items:flex-start;flex-direction:column}.hoa-a-grid,.hoa-a-status{grid-template-columns:1fr}}
+/* END_CONNECTSUKUU_HOA_ATTENDANCE_ANALYTICS_CLEAN */
+
+</style>
+
+<style id="connectsukuu-global-shell-standard">
+/* ConnectSukuu canonical shell: 255px sidebar, consistent brand and right-pinned profile. */
+.sidebar,.app-sidebar,.cs-assessment-sidebar{width:255px!important;min-width:255px!important;max-width:255px!important;box-sizing:border-box!important}
+.sidebar .brand,.app-sidebar .brand,.cs-assessment-sidebar .brand{display:flex!important;align-items:center!important;gap:10px!important;min-height:40px!important;height:40px!important;padding:0 10px!important;margin:0 0 22px!important;line-height:1!important;white-space:nowrap!important}
+.sidebar .brand img,.app-sidebar .brand img,.cs-assessment-sidebar .brand img{display:block!important;width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;object-fit:contain!important;flex:0 0 34px!important;border-radius:9px!important}
+.sidebar .brand .brand-word,.app-sidebar .brand .brand-word,.cs-assessment-sidebar .brand .brand-word{display:block!important;color:#fff!important;font-size:20px!important;font-weight:800!important;letter-spacing:-.02em!important;line-height:1!important}
+.sidebar .brand .brand-accent,.app-sidebar .brand .brand-accent,.cs-assessment-sidebar .brand .brand-accent{color:#60a5fa!important}
+.sidebar .brand .brand-mark,.app-sidebar .brand .brand-mark,.cs-assessment-sidebar .brand .brand-mark{width:34px!important;height:34px!important;min-width:34px!important;display:grid!important;place-items:center!important;flex:0 0 34px!important;border-radius:9px!important;overflow:hidden!important}
+@media(min-width:821px){
+ body .app-shell{grid-template-columns:255px minmax(0,1fr)!important}
+ body .app-sidebar{width:255px!important;min-width:255px!important;max-width:255px!important}
+ body .app-main{min-width:0!important;width:auto!important}
+ body .main{margin-left:255px!important;width:calc(100% - 255px)!important;min-width:0!important}
+ body .cs-assessment-main-shift{margin-left:255px!important}
+ body .cs-assessment-sidebar{width:255px!important;min-width:255px!important;max-width:255px!important}
+}
+/* Same working analogy as Dashboard + Assessments: header flex, profile margin-left:auto. */
+body .topbar,body .app-topbar{display:flex!important;align-items:center!important;justify-content:flex-start!important;width:100%!important;max-width:none!important;box-sizing:border-box!important;min-height:54px!important;height:54px!important;padding:0 20px!important;position:sticky!important;top:0!important;z-index:120!important}
+body .topbar>.user,body .topbar .user,body .topbar>.topbar-user,body .topbar .topbar-user,body .app-topbar>.user,body .app-topbar .who,body .app-topbar>.topbar-user{margin-left:auto!important;margin-right:0!important;position:static!important;right:auto!important;top:auto!important;transform:none!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:10px!important;flex:0 0 auto!important;white-space:nowrap!important}
+body .app-topbar .who{padding:6px 12px!important;box-sizing:border-box!important}
+body .topbar .user-info,body .topbar .topbar-user .cs-academic-user-copy{display:flex!important;flex-direction:column!important;justify-content:center!important;line-height:1.15!important}
+body .topbar .user-role,body .topbar .topbar-user .cs-academic-role{color:#64748b!important;font-size:11px!important;font-weight:650!important}
+body .topbar .avatar,body .app-topbar .avatar,body .app-topbar .app-avatar{flex:0 0 auto!important}
+body .topbar-title,body .app-topbar h1{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+@media(max-width:820px){body .topbar,body .app-topbar{padding-left:18px!important;padding-right:18px!important}}
+</style>
+
+<script id="connectsukuu-teacher-shared-page-guard">
+(function(){try{var u=window.AUTH&&typeof AUTH.getUser==='function'?AUTH.getUser():JSON.parse(localStorage.getItem('cs_user')||'null');if(u&&String(u.role||'').toUpperCase()==='TEACHER'){var p=(location.pathname.split('/').pop()||'').toLowerCase();var m={'app-dashboard.html':'/roles/teacher/teacher-dashboard.html','app-attendance.html':'/roles/teacher/teacher-attendance.html','app-teaching-assignments.html':'/roles/teacher/teacher-teaching-assignments.html','app-timetable.html':'/roles/teacher/teacher-timetable.html','app-assessments.html':'/roles/teacher/teacher-assessments.html','app-learning.html':'/roles/teacher/teacher-learning.html'};if(m[p]){location.replace(m[p]);}}}catch(_){}})();
+</script>
+<script id="connectsukuu-headteacher-canonical-route-guard">
+(function(){
+  try{
+    var u=window.AUTH&&typeof AUTH.getUser==='function'?AUTH.getUser():JSON.parse(localStorage.getItem('cs_user')||'null');
+    if(!u || String(u.role||'').toUpperCase()!=='HEAD_TEACHER') return;
+    var map={'app-dashboard.html':'/roles/headteacher/headteacher-dashboard.html',
+      'app-team.html':'/roles/headteacher/headteacher-team.html',
+      'app-academic.html':'/roles/headteacher/headteacher-academic.html',
+      'app-students.html':'/roles/headteacher/headteacher-students.html',
+      'app-attendance.html':'/roles/headteacher/headteacher-attendance.html',
+      'app-teaching-assignments.html':'/roles/headteacher/headteacher-teaching-assignments.html',
+      'app-timetable.html':'/roles/headteacher/headteacher-timetable.html',
+      'app-assessments.html':'/roles/headteacher/headteacher-assessments.html',
+      'app-finance.html':'/roles/headteacher/headteacher-finance.html',
+      'app-settings.html':'/roles/headteacher/headteacher-settings.html'};
+    var current=(location.pathname.split('/').pop()||'').toLowerCase();
+    var target=map[current];
+    if(target && current!==target && location.protocol!=='file:') location.replace(target);
+  }catch(_){ }
+})();
+</script>
+<script id="connectsukuu-ht-canonical-route-shim">(function(){try{var u=(window.AUTH&&typeof AUTH.getUser==='function'&&AUTH.getUser())||JSON.parse(localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user')||'null');if(u&&String(u.role||'').toUpperCase()==='HEAD_TEACHER'){location.replace('/roles/headteacher/headteacher-attendance.html');}}catch(_ ){}})();</script>
+<script id="connectsukuu-headteacher-canonical-app-shim">(function(){try{var u=(window.AUTH&&typeof AUTH.getUser==='function'&&AUTH.getUser())||JSON.parse(localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user')||'null');if(u&&String(u.role||'').toUpperCase()==='HEAD_TEACHER'){location.replace('/roles/headteacher/headteacher-attendance.html');}}catch(e){}})();</script>
+
+<script id="connectsukuu-hoa-login-routing">(function(){'use strict';var m={'app-dashboard.html':'/roles/hoa/hoa-dashboard.html','app-academic.html':'/roles/hoa/hoa-academic.html','app-students.html':'/roles/hoa/hoa-students.html','app-attendance.html':'/roles/hoa/hoa-attendance.html','app-teaching-assignments.html':'/roles/hoa/hoa-teaching-assignments.html','app-timetable.html':'/roles/hoa/hoa-timetable.html','app-assessments.html':'/roles/hoa/hoa-assessments.html'};function u(){try{if(window.AUTH&&typeof AUTH.getUser==='function'){var x=AUTH.getUser();if(x)return x}}catch(e){}try{return JSON.parse(localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user')||'null')}catch(e){return null}}var f=(location.pathname.split('/').pop()||'').toLowerCase(),x=u();if(x&&String(x.role||'').toUpperCase()==='HEAD_OF_ACADEMICS'&&m[f])location.replace(m[f])})();</script>
+<script id="connectsukuu-hoa-entry-routing">(function(){try{var u=(window.AUTH&&typeof AUTH.getUser==="function"&&AUTH.getUser())||JSON.parse(localStorage.getItem("cs_user")||localStorage.getItem("connectsukuu_user")||"null")||{};if(String(u.role||"").toUpperCase()==="HEAD_OF_ACADEMICS")location.replace("/roles/hoa/hoa-attendance.html")}catch(_){}})();</script>
+<script id="connectsukuu-administrator-role-guard">(function(){try{var u=(window.AUTH&&typeof AUTH.getUser==='function'&&AUTH.getUser())||JSON.parse(localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user')||'null');if(!u||String(u.role||'').toUpperCase()!=='ADMINISTRATOR'){location.replace('/auth/signin.html');}}catch(e){location.replace('/auth/signin.html');}})();</script>
+<style id="connectsukuu-administrator-shell">
+/* ConnectSukuu Administrator isolated shell; visual reference: frozen Head Teacher shell. */
+:root{--cs-admin-sidebar-width:255px}
+html,body{width:100%!important;min-width:0!important;overflow-x:hidden!important}
+body .app-shell{width:100%!important;min-width:0!important;min-height:100vh!important;display:grid!important;grid-template-columns:255px minmax(0,1fr)!important;grid-template-rows:100vh!important;overflow:hidden!important}
+body .app-sidebar{position:fixed!important;inset:0 auto 0 0!important;width:255px!important;min-width:255px!important;max-width:255px!important;height:100vh!important;min-height:100vh!important;margin:0!important;padding:14px 14px 16px!important;box-sizing:border-box!important;overflow-x:hidden!important;overflow-y:auto!important;z-index:200!important;display:flex!important;flex-direction:column!important;background:linear-gradient(180deg,#0f172a 0%,#111827 58%,#0b1220 100%)!important;color:#cbd5e1!important;border-right:1px solid rgba(255,255,255,.06)!important}
+body .app-sidebar .brand{display:flex!important;align-items:center!important;gap:10px!important;height:48px!important;margin:0 0 18px!important;padding:5px 8px!important;white-space:nowrap!important;overflow:hidden!important;color:#fff!important;text-decoration:none!important}
+body .app-sidebar .brand img{width:34px!important;height:34px!important;flex:0 0 34px!important}
+body .app-sidebar .brand-word{color:#fff!important;font-size:20px!important;line-height:1!important;font-weight:850!important;letter-spacing:-.025em!important;white-space:nowrap!important}
+body .app-sidebar .brand-word .brand-accent,body .app-sidebar .brand-word .accent{color:#2f8cff!important}
+body .app-sidebar .administrator-nav{display:flex!important;flex-direction:column!important;gap:5px!important;width:100%!important;min-width:0!important}
+body .app-sidebar .nav-section{margin:16px 8px 6px!important;color:#8390a6!important;font-size:9px!important;font-weight:800!important;letter-spacing:.12em!important;text-transform:uppercase!important}
+body .app-sidebar .admin-nav-link{display:flex!important;align-items:center!important;gap:10px!important;min-height:38px!important;padding:0 10px!important;border-radius:9px!important;text-decoration:none!important;color:#9aa8bd!important;font-size:12px!important;font-weight:700!important;transition:background .18s ease,color .18s ease,transform .18s ease!important}
+body .app-sidebar .admin-nav-link:hover{background:rgba(255,255,255,.08)!important;color:#fff!important}
+body .app-sidebar .admin-nav-link.active{background:rgba(37,99,235,.22)!important;color:#fff!important;box-shadow:inset 3px 0 0 #3b82f6!important}
+body .app-sidebar .admin-nav-icon{width:20px!important;flex:0 0 20px!important;text-align:center!important;font-size:15px!important;line-height:1!important}
+body .app-sidebar .app-sidebar-footer{margin-top:auto!important;padding-top:18px!important}
+body .app-main{grid-column:2!important;grid-row:1!important;position:relative!important;width:100%!important;min-width:0!important;max-width:none!important;height:100vh!important;min-height:100vh!important;max-height:100vh!important;margin:0!important;padding:0!important;overflow:hidden!important}
+body .app-topbar{position:sticky!important;top:0!important;z-index:100!important;flex:0 0 50px!important;height:50px!important;min-height:50px!important;width:100%!important;max-width:none!important;margin:0!important;padding:0 16px!important;background:#fff!important;border-bottom:1px solid #e5eaf2!important;display:flex!important;align-items:center!important;justify-content:space-between!important;box-sizing:border-box!important}
+body .app-content{height:calc(100vh - 50px)!important;max-height:calc(100vh - 50px)!important;overflow-y:auto!important;overflow-x:hidden!important;width:100%!important;min-width:0!important;max-width:none!important;margin:0!important;padding:24px!important;box-sizing:border-box!important;background:#f4f7fb!important}
+body .app-topbar .who,body .app-topbar .user{margin-left:auto!important}
+.admin-dashboard{max-width:1600px;margin:0 auto;padding-bottom:28px}
+.admin-hero{position:relative;overflow:hidden;padding:28px 30px;border:1px solid #dbe7ff;border-radius:20px;background:linear-gradient(135deg,#eff6ff 0%,#fff 55%,#f5f3ff 100%);box-shadow:0 14px 36px rgba(37,99,235,.08)}
+.admin-kicker{font-size:10px;font-weight:850;letter-spacing:.13em;text-transform:uppercase;color:#2563eb}
+.admin-hero h2{margin:9px 0 8px;font-size:29px;letter-spacing:-.03em;color:#172033}
+.admin-hero p{max-width:760px;margin:0;color:#667085;font-size:13px;line-height:1.65}
+.admin-stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-top:16px}
+.admin-stat{position:relative;overflow:hidden;min-height:112px;padding:19px;border:1px solid #e2e8f0;border-radius:15px;background:#fff;box-shadow:0 7px 20px rgba(15,23,42,.035)}
+.admin-stat:after{content:"";position:absolute;right:-24px;top:-30px;width:82px;height:82px;border-radius:50%;background:rgba(37,99,235,.08)}
+.admin-stat:nth-child(2){border-top:3px solid #16a34a}.admin-stat:nth-child(3){border-top:3px solid #8b5cf6}.admin-stat:nth-child(4){border-top:3px solid #f59e0b}
+.admin-stat small{display:block;color:#718096;font-size:9px;font-weight:850;letter-spacing:.08em;text-transform:uppercase}
+.admin-stat strong{display:block;margin-top:10px;font-size:27px;line-height:1.05;color:#172033}
+.admin-stat span{display:block;margin-top:7px;font-size:10px;color:#98a2b3}
+.admin-work-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:15px;margin-top:16px}
+.admin-panel{min-width:0;padding:20px;border:1px solid #e3e9f2;border-radius:17px;background:#fff;box-shadow:0 7px 22px rgba(15,23,42,.035)}
+.admin-panel h3{margin:0 0 6px;font-size:15px;color:#172033}.admin-panel p{margin:0;color:#7b879a;font-size:11px;line-height:1.6}
+.admin-action-list{display:grid;gap:9px;margin-top:14px}
+.admin-action{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;border:1px solid #e5eaf2;border-radius:11px;text-decoration:none;color:#172033;font-size:12px;font-weight:750;background:#fff;transition:transform .16s ease,border-color .16s ease,background .16s ease}
+.admin-action:hover{transform:translateX(2px);border-color:#bfd4ff;background:#f8fbff}.admin-action em{font-style:normal;color:#2563eb;font-size:17px}
+.admin-checks{display:grid;gap:10px;margin-top:15px}.admin-check{display:flex;align-items:flex-start;gap:10px;padding:12px;border-radius:11px;background:#f8fafc;border:1px solid #edf1f6}.admin-check i{display:grid;place-items:center;width:24px;height:24px;flex:0 0 24px;border-radius:8px;background:#eaf2ff;color:#2563eb;font-style:normal;font-size:12px;font-weight:900}.admin-check strong{display:block;font-size:11px;color:#172033}.admin-check span{display:block;margin-top:4px;color:#7b879a;font-size:10px;line-height:1.5}
+@media(max-width:1050px){.admin-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-work-grid{grid-template-columns:1fr}}
+@media(max-width:760px){body .app-shell{grid-template-columns:1fr!important;grid-template-rows:100vh!important}body .app-sidebar{width:255px!important;min-width:255px!important;transform:translateX(0)}body .app-main{grid-column:1!important;margin-left:255px!important;width:calc(100vw - 255px)!important}body .app-content{padding:16px!important}.admin-hero{padding:22px}.admin-hero h2{font-size:24px}}
+
+/* Legacy source pages are normalized to the same fixed shell. */
+body .layout{display:flex!important;width:100%!important;min-width:0!important;height:100vh!important;min-height:100vh!important;overflow:hidden!important}
+body .sidebar{position:fixed!important;inset:0 auto 0 0!important;width:255px!important;min-width:255px!important;max-width:255px!important;height:100vh!important;min-height:100vh!important;margin:0!important;padding:14px 14px 16px!important;box-sizing:border-box!important;overflow-x:hidden!important;overflow-y:auto!important;z-index:200!important;display:flex!important;flex-direction:column!important;background:linear-gradient(180deg,#0f172a 0%,#111827 58%,#0b1220 100%)!important;color:#cbd5e1!important;border-right:1px solid rgba(255,255,255,.06)!important}
+body .sidebar .administrator-nav{display:flex!important;flex-direction:column!important;gap:5px!important;width:100%!important;min-width:0!important}
+body .sidebar .nav-section{margin:16px 8px 6px!important;color:#8390a6!important;font-size:9px!important;font-weight:800!important;letter-spacing:.12em!important;text-transform:uppercase!important}
+body .sidebar .admin-nav-link{display:flex!important;align-items:center!important;gap:10px!important;min-height:38px!important;padding:0 10px!important;border-radius:9px!important;text-decoration:none!important;color:#9aa8bd!important;font-size:12px!important;font-weight:700!important;transition:background .18s ease,color .18s ease!important}
+body .sidebar .admin-nav-link:hover{background:rgba(255,255,255,.08)!important;color:#fff!important}
+body .sidebar .admin-nav-link.active{background:rgba(37,99,235,.22)!important;color:#fff!important;box-shadow:inset 3px 0 0 #3b82f6!important}
+body .sidebar .admin-nav-icon{width:20px!important;flex:0 0 20px!important;text-align:center!important;font-size:15px!important}
+body .sidebar .sidebar-bottom,body .sidebar .academic-sidebar-footer{margin-top:auto!important;padding-top:18px!important;flex:0 0 auto!important}
+body .main{display:flex!important;flex-direction:column!important;margin-left:255px!important;width:calc(100% - 255px)!important;height:100vh!important;min-height:0!important;max-height:100vh!important;overflow:hidden!important}
+body .topbar{position:relative!important;top:0!important;z-index:100!important;flex:0 0 50px!important;height:50px!important;min-height:50px!important;width:100%!important;max-width:none!important;margin:0!important;padding:0 16px!important;background:#fff!important;border-bottom:1px solid #e5eaf2!important;display:flex!important;align-items:center!important;justify-content:space-between!important;box-sizing:border-box!important}
+body .content{flex:1 1 auto!important;height:calc(100vh - 50px)!important;min-height:0!important;max-height:calc(100vh - 50px)!important;overflow-y:auto!important;overflow-x:hidden!important;width:100%!important;max-width:none!important;margin:0!important;padding:24px!important;box-sizing:border-box!important;background:#f4f7fb!important}
+.cs-administrator-profile{display:flex!important;align-items:center!important;gap:9px!important;margin-left:auto!important;flex:0 0 auto!important;padding:5px 9px!important;border:1px solid #e4eaf3!important;border-radius:12px!important;background:#fff!important;box-shadow:0 3px 12px rgba(15,23,42,.05)!important;max-width:300px!important}
+.cs-administrator-profile-avatar{width:31px!important;height:31px!important;flex:0 0 31px!important;border-radius:9px!important;background:#172033!important;color:#fff!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:12px!important;font-weight:850!important}
+.cs-administrator-profile-copy{min-width:0!important;line-height:1.15!important}
+.cs-administrator-profile-email{font-size:11px!important;font-weight:800!important;color:#172033!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:210px!important}
+.cs-administrator-profile-role{font-size:9px!important;color:#7b879a!important;margin-top:3px!important}
+@media(max-width:760px){body .content{padding:16px!important}.cs-administrator-profile-copy{display:none!important}.cs-administrator-profile{padding:5px!important}}
+</style>
+<style id="administrator-attendance-read-only-polish">
+body .content{font-size:14px!important;padding:22px!important}
+body .hero h2,body .hoa-a-head h2{font-size:21px!important}
+body .hero p,body .hoa-a-head p{font-size:13px!important;line-height:1.55!important}
+body label,body .filter-label{font-size:12px!important}
+body .hoa-a-status-card strong,body .stat-card strong{font-size:20px!important}
+body .hoa-a-status-card span,body .stat-card span{font-size:11px!important}
+body .hoa-a-card h3,body .section-title{font-size:17px!important}
+body .read-only-pill,body .read-only-badge{font-size:11px!important}
+/* Administrator may inspect attendance but cannot mark or save records. */
+body #markAllPresent,body #saveAttendance,body #save-attendance,body [data-attendance-action="save"],body [data-attendance-action="mark"]{display:none!important}
+</style>
+<style id="administrator-attendance-final-polish">
+body{font-size:14px!important}
+body .sidebar{width:255px!important;min-width:255px!important;max-width:255px!important;background:linear-gradient(180deg,#0f172a 0%,#111827 58%,#0b1220 100%)!important;border-right:1px solid rgba(255,255,255,.06)!important;padding:14px 13px!important}
+body .sidebar .brand{color:#fff!important;padding:8px 8px 24px!important;font-size:20px!important}
+body .sidebar .brand-word{color:#fff!important}
+body .sidebar .brand-word .brand-accent{color:#60a5fa!important}
+body .nav a{font-size:13px!important;font-weight:800!important;min-height:40px!important;color:#9aa8bd!important}
+body .nav a.active{background:rgba(37,99,235,.24)!important;color:#fff!important;box-shadow:inset 3px 0 0 #3b82f6!important}
+body .logout{min-height:42px!important;border:1px solid rgba(255,255,255,.14)!important;background:rgba(255,255,255,.06)!important;color:#f8fafc!important;font-size:13px!important;font-weight:800!important}
+body .logout:hover{background:#1e293b!important;border-color:rgba(59,130,246,.45)!important}
+body .main{margin-left:255px!important;width:calc(100% - 255px)!important}
+body .topbar{height:50px!important;padding:0 16px!important}
+body .topbar-title{font-size:15px!important;font-weight:800!important}
+body .content{padding:24px!important;max-width:none!important;width:100%!important}
+body .hero{padding:20px 22px!important;margin-bottom:14px!important}
+body .hero h2{font-size:20px!important;font-weight:850!important}
+body .hero p{font-size:13px!important;line-height:1.55!important}
+body .eyebrow{font-size:11px!important}
+body .field label{font-size:11px!important}
+body .field select,body .field input{font-size:13px!important;height:42px!important}
+body .mode-title,body .mode-option{font-size:12px!important}
+body .stat{padding:18px!important}
+body .stat-label{font-size:10px!important}
+body .stat-value{font-size:28px!important}
+body .stat-sub{font-size:11px!important;line-height:1.45!important}
+body .panel-head{padding:20px 21px!important}
+body .panel-head h2,body .panel-title,body .panel-title strong{font-size:17px!important;font-weight:850!important}
+body .panel-head p{font-size:12px!important;line-height:1.5!important}
+body .ctx,body .readonly-strip,body .badge{font-size:11px!important}
+body .user-card{margin-left:auto!important}
+body .cs-administrator-profile{display:flex!important;margin-left:auto!important}
+@media(max-width:900px){body .filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}body .stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+</style>
+<script id="administrator-attendance-active-navigation">(function(){function a(){var p=(location.pathname.split('/').pop()||'/roles/administrator/administrator-attendance.html');document.querySelectorAll('.nav a').forEach(function(n){var h=(n.getAttribute('href')||'').split('/').pop();var on=h===p||h.replace(/\.html$/,'')===p.replace(/\.html$/,'');n.classList.toggle('active',on);if(on)n.setAttribute('aria-current','page');else n.removeAttribute('aria-current')})}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',a);else a()})();</script>
+
+<style id="administrator-attendance-readonly-final">
+body .sidebar .administrator-nav a.admin-nav-link{font-size:13px!important;font-weight:800!important}
+body .content{padding:20px!important}
+body .content>.heading{margin:0 0 12px!important;padding:0!important;min-height:0!important}
+body .hero{margin:0 0 12px!important;padding:18px 20px!important}
+body .hero h2{font-size:20px!important;font-weight:850!important}
+body .hero p{font-size:13px!important;line-height:1.5!important}
+body .filter-card,body .filters,body .filter-panel{margin:0 0 12px!important}
+body .stats{gap:12px!important;margin:0 0 12px!important}
+body .stat{padding:17px!important;min-height:92px!important}
+body .stat-label{font-size:10px!important}
+body .stat-value{font-size:28px!important}
+body .stat-sub{font-size:11px!important;line-height:1.45!important}
+body .panel{margin:0!important;min-height:0!important}
+body .panel-head{padding:18px 20px!important}
+body .panel-head h2,body .panel-title,body .panel-title strong{font-size:17px!important;font-weight:850!important}
+body .panel-head p{font-size:12px!important;line-height:1.5!important}
+body .empty-state h3,body .attendance-empty h3{font-size:15px!important}
+body .empty-state p,body .attendance-empty p{font-size:12px!important}
+</style>
+<script id="administrator-attendance-active-nav-final">(function(){function apply(){var path=(location.pathname.split('/').pop()||'administrator-attendance').replace(/\.html$/,'');document.querySelectorAll('.administrator-nav .admin-nav-link').forEach(function(a){var href=(a.getAttribute('href')||'').split('/').pop().replace(/\.html$/,'');var on=href===path;a.classList.toggle('active',on);if(on)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')})}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply);else apply();window.addEventListener('pageshow',apply)})();</script>
+
+<style id="administrator-freeze-final-shell">
+:root{--cs-admin-sidebar-width:255px;--cs-admin-blue:#2563eb;--cs-admin-ink:#172033}
+html,body{max-width:100%!important;overflow-x:hidden!important}
+body .app-sidebar,body .sidebar{width:255px!important;min-width:255px!important;max-width:255px!important;box-sizing:border-box!important;background:linear-gradient(180deg,#0f172a 0%,#111827 58%,#0b1220 100%)!important;color:#cbd5e1!important;border-right:1px solid rgba(255,255,255,.06)!important}
+body .app-sidebar{position:fixed!important;inset:0 auto 0 0!important;height:100vh!important;min-height:100vh!important;display:flex!important;flex-direction:column!important;padding:14px 14px 16px!important;overflow-y:auto!important;overflow-x:hidden!important}
+body .sidebar{position:fixed!important;inset:0 auto 0 0!important;height:100vh!important;min-height:100vh!important;display:flex!important;flex-direction:column!important;padding:14px 14px 16px!important;overflow-y:auto!important;overflow-x:hidden!important}
+body .app-sidebar .brand,body .sidebar .brand{display:flex!important;align-items:center!important;gap:10px!important;height:48px!important;min-height:48px!important;margin:0 0 18px!important;padding:5px 8px!important;white-space:nowrap!important;color:#fff!important;text-decoration:none!important}
+body .app-sidebar .brand img,body .sidebar .brand img{width:34px!important;height:34px!important;min-width:34px!important;flex:0 0 34px!important;object-fit:contain!important}
+body .app-sidebar .brand-word,body .sidebar .brand-word{color:#fff!important;font-size:20px!important;font-weight:850!important;letter-spacing:-.025em!important;line-height:1!important;white-space:nowrap!important}
+body .app-sidebar .brand-accent,body .sidebar .brand-accent,body .app-sidebar .accent,body .sidebar .accent{color:#60a5fa!important}
+body .app-sidebar .administrator-nav,body .sidebar .administrator-nav{display:flex!important;flex-direction:column!important;gap:5px!important;width:100%!important;min-width:0!important}
+body .app-sidebar .nav-section,body .sidebar .nav-section{margin:16px 8px 6px!important;color:#8390a6!important;font-size:9px!important;font-weight:850!important;letter-spacing:.12em!important;text-transform:uppercase!important}
+body .app-sidebar .administrator-nav a.admin-nav-link,body .sidebar .administrator-nav a.admin-nav-link{display:flex!important;align-items:center!important;gap:10px!important;width:100%!important;min-height:40px!important;height:40px!important;padding:0 10px!important;margin:0!important;border-radius:9px!important;text-decoration:none!important;color:#a7b3c6!important;font-size:13px!important;font-weight:800!important;line-height:1.2!important;box-sizing:border-box!important;transition:background .18s ease,color .18s ease,transform .18s ease!important}
+body .app-sidebar .administrator-nav a.admin-nav-link:hover,body .sidebar .administrator-nav a.admin-nav-link:hover{background:rgba(255,255,255,.08)!important;color:#fff!important;transform:translateX(1px)!important}
+body .app-sidebar .administrator-nav a.admin-nav-link.active,body .app-sidebar .administrator-nav a.admin-nav-link[aria-current="page"],body .sidebar .administrator-nav a.admin-nav-link.active,body .sidebar .administrator-nav a.admin-nav-link[aria-current="page"]{background:rgba(37,99,235,.26)!important;color:#fff!important;box-shadow:inset 3px 0 0 #3b82f6!important}
+body .app-sidebar .admin-nav-icon,body .sidebar .admin-nav-icon{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:20px!important;min-width:20px!important;flex:0 0 20px!important;text-align:center!important;font-size:15px!important;line-height:1!important}
+body .app-sidebar-footer,body .academic-sidebar-footer,body .sidebar-bottom{margin-top:auto!important;padding-top:18px!important;flex:0 0 auto!important}
+body #app-logout,body .logout-btn,body .logout{display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;width:100%!important;min-height:42px!important;padding:0 12px!important;border:1px solid rgba(148,163,184,.24)!important;border-radius:9px!important;background:rgba(15,23,42,.55)!important;color:#e2e8f0!important;font-size:13px!important;font-weight:750!important;line-height:1.2!important;cursor:pointer!important;transition:background .18s ease,border-color .18s ease,transform .18s ease!important}
+body #app-logout:hover,body .logout-btn:hover,body .logout:hover{background:#253249!important;border-color:rgba(96,165,250,.45)!important;color:#fff!important;transform:translateY(-1px)!important}
+body .app-main,body .main{min-width:0!important;max-width:none!important}
+body .app-main{grid-column:2!important;grid-row:1!important;width:auto!important;height:100vh!important;min-height:100vh!important;max-height:100vh!important;margin:0!important;padding:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}
+body .main{display:flex!important;flex-direction:column!important;margin-left:255px!important;width:calc(100% - 255px)!important;height:100vh!important;min-height:0!important;max-height:100vh!important;overflow:hidden!important}
+body .app-topbar,body .topbar{position:relative!important;top:0!important;z-index:1000!important;display:flex!important;align-items:center!important;justify-content:space-between!important;flex:0 0 54px!important;height:54px!important;min-height:54px!important;width:100%!important;max-width:none!important;margin:0!important;padding:0 16px!important;box-sizing:border-box!important;background:#fff!important;border-bottom:1px solid #e5eaf2!important}
+body .app-topbar h1,body .topbar-title{margin:0!important;font-size:16px!important;font-weight:800!important;color:#172033!important;line-height:1.2!important}
+body .app-topbar .who,body .app-topbar .user,body .topbar>.user,body .topbar .user,body .topbar>.topbar-user,body .topbar .topbar-user{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:9px!important;margin-left:auto!important;margin-right:0!important;position:static!important;transform:none!important;flex:0 0 auto!important;max-width:320px!important;white-space:nowrap!important}
+body .app-content{flex:1 1 auto!important;min-height:0!important;height:auto!important;max-height:none!important;overflow-y:auto!important;overflow-x:hidden!important;width:100%!important;max-width:none!important;margin:0!important;padding:22px 24px 26px!important;box-sizing:border-box!important;background:#f3f6fb!important}
+body .content{flex:1 1 auto!important;min-height:0!important;height:auto!important;max-height:none!important;overflow-y:auto!important;overflow-x:hidden!important;width:100%!important;max-width:none!important;margin:0!important;padding:22px 24px 26px!important;box-sizing:border-box!important;background:#f3f6fb!important;display:block!important}
+@media(max-width:760px){body .app-content,body .content{padding:16px!important}}
+</style>
+
+<link rel="stylesheet" href="/assets/css/mobile-shell.css" media="(max-width:820px)"><script src="/assets/js/mobile-shell.js" defer></script></head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div>
+    <div class="brand"><img src="/assets/images/favicon.svg" alt="ConnectSukuu"><span class="brand-word">Connect<span class="brand-accent">Sukuu</span></span></div>
+<nav class="nav app-nav connectsukuu-nav administrator-nav"><div class="section-label nav-section">Workspace</div><a class="admin-nav-link" href="/roles/administrator/administrator-dashboard.html"><span class="admin-nav-icon" aria-hidden="true">▦</span><span>Dashboard</span></a><a class="admin-nav-link" href="/roles/administrator/administrator-academic.html"><span class="admin-nav-icon" aria-hidden="true">▤</span><span>Academic Setup</span></a><a class="admin-nav-link" href="/roles/administrator/administrator-students.html"><span class="admin-nav-icon" aria-hidden="true">♙</span><span>Students</span></a><a class="admin-nav-link active" aria-current="page" href="/roles/administrator/administrator-attendance.html"><span class="admin-nav-icon" aria-hidden="true">✓</span><span>Attendance</span></a></nav>
+  </div>
+  <div class="sidebar-bottom"><button id="logoutBtn" class="logout">↪ Log out</button></div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <div class="topbar-title">Attendance</div>
+  <div class="user"><div class="avatar" id="userAvatar">U</div><span id="userName">User</span></div>
+</header>
+
+<section class="content">
+  <div class="heading">
+    <div>
+      <div class="eyebrow">School Operations</div>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="hero-row">
+      <div>
+        <h2 id="heroTitle">Attendance Overview</h2>
+        <p id="heroText">Review attendance records by class, date, lesson and student. Teachers record attendance; leadership reviews the results.</p>
+      </div>
+      <span class="role-pill"><span class="dot"></span><span id="rolePillText">Read-only oversight</span></span>
+    </div>
+  </section>
+
+  <section class="filters">
+    <div class="filter-grid">
+      <div class="field"><label>Academic year</label><select id="year"><option value="">Loading…</option></select></div>
+      <div class="field"><label>Term</label><select id="term"><option value="">Select year first</option></select></div>
+      <div class="field"><label>Class</label><select id="class"><option value="">Select term first</option></select></div>
+      <div class="field"><label>Attendance date</label><input id="date" type="date"></div>
+      <div class="field hidden" id="lessonField"><label>Lesson</label><select id="lesson"><option value="">Select lesson</option></select></div>
+<div class="field hidden" id="studentSearchField"><label>Find student</label><input id="studentSearch" type="search" placeholder="Name or admission number"></div>
+    </div>
+    <div class="mode-row">
+      <div class="mode-left">
+        <span class="mode-title">Attendance mode</span>
+        <label class="mode-option" id="subjectMode"><input type="radio" name="mode" value="SUBJECT"> Subject-based</label>
+        <label class="mode-option" id="classMode"><input type="radio" name="mode" value="CLASS"> Class-based</label>
+      </div>
+      <span class="default-note" id="defaultNote">Loading school default…</span>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat"><div class="stat-label">Students</div><div class="stat-value" id="statTotal">—</div><div class="stat-sub" id="statTotalSub">selected roster</div></div>
+    <div class="stat"><div class="stat-label">Present</div><div class="stat-value" id="statPresent">—</div><div class="stat-sub">recorded as present</div></div>
+    <div class="stat"><div class="stat-label">Absent</div><div class="stat-value" id="statAbsent">—</div><div class="stat-sub">recorded as absent</div></div>
+    <div class="stat"><div class="stat-label" id="statFourthLabel">Remaining</div><div class="stat-value" id="statFourth">—</div><div class="stat-sub" id="statFourthSub">not yet recorded</div></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <div class="panel-title">
+        <div class="panel-icon" id="panelIcon">✓</div>
+        <div><h2 id="panelTitle">Attendance Overview</h2><p id="panelSub">Choose the academic context above to load attendance.</p></div>
+      </div>
+      <div class="actions" id="teacherActions">
+        <button class="btn" id="allBtn" disabled>Mark all present</button>
+        <button class="btn primary" id="saveBtn" disabled>Save attendance</button>
+      </div>
+    </div>
+    <div id="readonlyStrip" class="readonly-strip">
+      <div class="context">
+        <span>Mode <strong id="ctxMode">—</strong></span>
+        <span>Class <strong id="ctxClass">—</strong></span>
+        <span id="ctxLessonWrap">Lesson <strong id="ctxLesson">—</strong></span>
+        <span>Date <strong id="ctxDate">—</strong></span>
+      </div>
+      <span class="readonly-badge"><span class="lock">🔒</span> Read-only review</span>
+    </div>
+    
+<!-- CONNECTSUKUU_HOA_ATTENDANCE_ANALYTICS_CLEAN -->
+<section id="hoaAttendanceAnalyticsClean" class="hoa-analytics-clean" aria-label="Head of Academics attendance analytics" style="display:none">
+  <div class="hoa-a-head">
+    <div class="hoa-a-title">
+      <div class="hoa-a-icon">▥</div>
+      <div>
+        <h3>Attendance analytics</h3>
+        <p>Read-only academic oversight. Teachers remain responsible for recording attendance.</p>
+      </div>
+    </div>
+    <span class="hoa-a-badge">Head of Academics</span>
+  </div>
+  <div class="hoa-a-grid">
+    <div class="hoa-a-card">
+      <div class="hoa-a-label">Attendance rate</div>
+      <div class="hoa-a-value" id="hoaAttendanceRateClean">—</div>
+      <div class="hoa-a-progress"><span id="hoaAttendanceProgressClean"></span></div>
+    </div>
+    <div class="hoa-a-card">
+      <div class="hoa-a-label">Records reviewed</div>
+      <div class="hoa-a-value" id="hoaRecordsReviewedClean">—</div>
+      <div class="hoa-a-sub">selected context</div>
+    </div>
+    <div class="hoa-a-card">
+      <div class="hoa-a-label">Late / excused</div>
+      <div class="hoa-a-value" id="hoaLateExcusedClean">—</div>
+      <div class="hoa-a-sub">recorded statuses</div>
+    </div>
+    <div class="hoa-a-card">
+      <div class="hoa-a-label">Absent rate</div>
+      <div class="hoa-a-value" id="hoaAbsentRateClean">—</div>
+      <div class="hoa-a-sub">selected records</div>
+    </div>
+  </div>
+  <div class="hoa-a-status">
+    <div class="hoa-a-status-card"><strong id="hoaPresentCountClean">—</strong><span>Present</span></div>
+    <div class="hoa-a-status-card"><strong id="hoaAbsentCountClean">—</strong><span>Absent</span></div>
+    <div class="hoa-a-status-card"><strong id="hoaLateCountClean">—</strong><span>Late</span></div>
+    <div class="hoa-a-status-card"><strong id="hoaExcusedCountClean">—</strong><span>Excused</span></div>
+  </div>
+</section>
+<!-- END_CONNECTSUKUU_HOA_ATTENDANCE_ANALYTICS_CLEAN -->
+
+<div id="tableWrap" class="table-wrap hidden"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+    <div id="empty" class="empty"><div class="empty-icon">✓</div><h3 id="emptyTitle">Choose an academic context</h3><p id="emptyText">Select an academic year, term and class. Subject-based attendance also requires a lesson.</p></div>
+  </section>
+</main>
+</div>
+
+<div class="modal" id="historyModal">
+  <div class="modal-card">
+    <div class="modal-head"><div><h3 id="historyTitle">Student attendance</h3><p id="historySubtitle">Attendance details for the selected student.</p></div><button class="close" id="closeHistory">×</button></div>
+    <div class="modal-body">
+      <div class="history-summary">
+        <div class="history-stat"><b id="hTotal">—</b><span>records shown</span></div>
+        <div class="history-stat"><b id="hPresent">—</b><span>present</span></div>
+        <div class="history-stat"><b id="hAbsent">—</b><span>absent</span></div>
+        <div class="history-stat"><b id="hOther">—</b><span>late / excused</span></div>
+      </div>
+      <div class="history-table"><table><thead><tr><th>Date</th><th>Mode</th><th>Lesson / context</th><th>Status</th><th>Recorded by</th></tr></thead><tbody id="historyBody"></tbody></table></div>
+    </div>
+    <div class="modal-foot"><button class="btn" id="closeHistory2">Close</button></div>
+  </div>
+</div>
+
+<div class="banner" id="banner"></div>
+
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+(() => {
+'use strict';
+
+const user = requireAuthOrRedirect();
+if (!user) return;
+
+const $ = id => document.getElementById(id);
+const role = user.role;
+const isTeacher = role === 'TEACHER';
+const isReviewer = ['HEAD_TEACHER','HEAD_OF_ACADEMICS','ADMINISTRATOR'].includes(role);
+if (!isTeacher && !isReviewer) { location.href="/roles/administrator/administrator-dashboard.html"; return; }
+
+const state = {
+  years: [], terms: [], classes: [], lessons: [], students: [], records: [],
+  mode: 'SUBJECT', defaultMode: 'SUBJECT'
+};
+
+const days = ['', 'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+function esc(v){return String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function api(path,opt={}) {
+  return apiFetch(path,opt).then(async r=>{
+    if(!r) throw new Error('Authentication expired.');
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(d.error||d.message||`Request failed (${r.status})`);
+    return d;
+  });
+}
+function showBanner(message,type=''){const b=$('banner');b.textContent=message;b.className='banner show '+type;clearTimeout(window.__attendanceBanner);window.__attendanceBanner=setTimeout(()=>b.className='banner',4200)}
+function fill(el,items,placeholder,label){el.innerHTML=`<option value="">${esc(placeholder)}</option>`;(items||[]).forEach(x=>{const o=document.createElement('option');o.value=x.id;o.textContent=label(x);el.appendChild(o)})}
+function fmtStatus(s){return s ? s.charAt(0)+s.slice(1).toLowerCase() : 'Not recorded'}
+function statusClass(s){return s ? s.toLowerCase() : 'none'}
+function dateToday(){return new Date().toISOString().slice(0,10)}
+function selectedDay(){const d=$('date').value;if(!d)return null;const parts=d.split('-').map(Number);return new Date(Date.UTC(parts[0],parts[1]-1,parts[2])).getUTCDay() || 7}
+
+function setupIdentity(){
+  $('userName').textContent=`${user.firstName||''} ${user.lastName||''}`.trim()||user.email||'User';
+  $('userAvatar').textContent=(user.firstName||user.email||'?').charAt(0).toUpperCase();
+  document.querySelectorAll('[data-role-nav]').forEach(a=>a.classList.toggle('hidden',!a.dataset.roleNav.split(',').includes(role)));
+
+  if(isTeacher){
+    $('panelSub').textContent='Record attendance for your assigned class or lesson. Changes are saved in one batch to avoid double entry.';
+    $('heroTitle').textContent='Take Attendance';
+    $('heroText').textContent='Record attendance for your assigned class or lesson. Changes are saved in one batch to avoid double entry.';
+    $('rolePillText').textContent='Teacher recording';
+    $('panelTitle').textContent='Take attendance';
+    $('panelIcon').textContent='✓';
+    $('teacherActions').classList.remove('hidden');
+    $('readonlyStrip').classList.add('hidden');
+    $('statFourthLabel').textContent='Remaining';
+    $('statFourthSub').textContent='not yet recorded';
+  } else {
+    $('teacherActions').classList.add('hidden');
+    $('readonlyStrip').classList.remove('hidden');
+    $('studentSearchField').classList.remove('hidden');
+    $('panelSub').textContent='Search attendance by academic context, class, date, lesson and student. Attendance entry remains with teachers.';
+    $('heroTitle').textContent='Attendance Overview';
+    $('heroText').textContent='Search attendance by academic context, class, date, lesson and student. Attendance entry remains with teachers.';
+    $('rolePillText').textContent='Read-only oversight';
+    $('panelTitle').textContent='Attendance Overview';
+    $('panelIcon').textContent='⌕';
+    $('statFourthLabel').textContent='Late / Excused';
+    $('statFourthSub').textContent='recorded statuses';
+  }
+}
+
+function setMode(mode){
+  state.mode=mode;
+  $('subjectMode').classList.toggle('active',mode==='SUBJECT');
+  $('classMode').classList.toggle('active',mode==='CLASS');
+  $('lessonField').classList.toggle('hidden',mode!=='SUBJECT');
+  $('subjectMode').querySelector('input').checked=mode==='SUBJECT';
+  $('classMode').querySelector('input').checked=mode==='CLASS';
+}
+
+async function loadYears(){
+  state.years=await api('/api/academic-years');
+  fill($('year'),state.years,'Select academic year',y=>`${y.name}${y.isCurrent?' — Current':''}`);
+  const current=state.years.find(y=>y.isCurrent)||state.years[0];
+  if(current){$('year').value=current.id;await loadTerms();}
+}
+async function loadTerms(){
+  const y=$('year').value;
+  state.terms=[];state.classes=[];state.lessons=[];state.students=[];state.records=[];
+  fill($('term'),[],'Select term',x=>x.name);fill($('class'),[],'Select class',x=>x.name);fill($('lesson'),[],'Select lesson',x=>x.name);
+  clearTable();
+  if(!y)return;
+  const selectedYear=state.years.find(x=>x.id===y);
+  state.terms=Array.isArray(selectedYear?.terms)?selectedYear.terms:await api(`/api/academic-years/${encodeURIComponent(y)}/terms`);
+  fill($('term'),state.terms,'Select term',t=>`${t.name}${t.isCurrent?' — Current':''}`);
+  const current=state.terms.find(t=>t.isCurrent)||state.terms[0];
+  if(current)$('term').value=current.id;
+  state.classes=await api(`/api/classes?academicYearId=${encodeURIComponent(y)}`);
+  fill($('class'),state.classes,'Select class',c=>`${c.name}${c.section?' — '+c.section:''}`);
+  await loadLessons();
+  updateContext();
+}
+async function loadLessons(){
+  fill($('lesson'),[],'Select lesson',x=>x.name);state.lessons=[];
+  if(state.mode!=='SUBJECT'||!$('year').value||!$('term').value||!$('class').value)return;
+  const all=await api(`/api/attendance/lessons?academicYearId=${encodeURIComponent($('year').value)}&termId=${encodeURIComponent($('term').value)}&classId=${encodeURIComponent($('class').value)}`);
+  const day=selectedDay();
+  state.lessons=day ? all.filter(x=>Number(x.dayOfWeek)===day) : all;
+  fill($('lesson'),state.lessons,'Select lesson',x=>`${days[x.dayOfWeek]||'Day'} · ${x.startTime}–${x.endTime} · ${x.teachingAssignment?.subject?.name||'Lesson'} · ${`${x.teachingAssignment?.teacher?.firstName||''} ${x.teachingAssignment?.teacher?.lastName||''}`.trim()}`);
+  if(state.lessons.length===1)$('lesson').value=state.lessons[0].id;
+}
+function ready(){return Boolean($('year').value&&$('term').value&&$('class').value&&(state.mode==='CLASS'||$('lesson').value))}
+function clearTable(){
+  $('tableWrap').classList.add('hidden');$('tbody').innerHTML='';$('thead').innerHTML='';
+  $('empty').classList.remove('hidden');$('emptyTitle').textContent='Choose an academic context';
+  $('emptyText').textContent=state.mode==='SUBJECT'?'Select an academic year, term and class, then choose a lesson for the selected date.':'Select an academic year, term and class to review daily attendance.';
+  updateStats([]);updateContext();
+}
+function updateContext(){
+  const c=state.classes.find(x=>x.id===$('class').value);
+  const l=state.lessons.find(x=>x.id===$('lesson').value);
+  $('ctxMode').textContent=state.mode==='SUBJECT'?'Subject-based':'Class-based';
+  $('ctxClass').textContent=c?.name||'—';$('ctxDate').textContent=$('date').value||'—';
+  $('ctxLessonWrap').classList.toggle('hidden',state.mode!=='SUBJECT');
+  $('ctxLesson').textContent=l?`${l.teachingAssignment?.subject?.name||'Lesson'} · ${l.startTime}–${l.endTime}`:'—';
+}
+async function loadRoster(){
+  if(!ready()){clearTable();return;}
+  $('emptyTitle').textContent='Loading attendance…';$('emptyText').textContent='Fetching the selected roster and attendance records.';
+  $('tableWrap').classList.add('hidden');$('empty').classList.remove('hidden');
+  try{
+    state.students=await api(`/api/attendance/students?academicYearId=${encodeURIComponent($('year').value)}&termId=${encodeURIComponent($('term').value)}&classId=${encodeURIComponent($('class').value)}`);
+    let p=`/api/attendance?academicYearId=${encodeURIComponent($('year').value)}&termId=${encodeURIComponent($('term').value)}&classId=${encodeURIComponent($('class').value)}&attendanceDate=${encodeURIComponent($('date').value)}&attendanceMode=${state.mode}`;
+    if(state.mode==='SUBJECT')p+=`&timetableEntryId=${encodeURIComponent($('lesson').value)}`;
+    state.records=await api(p);
+    renderTable();
+  }catch(e){state.students=[];state.records=[];clearTable();$('emptyTitle').textContent='Could not load attendance';$('emptyText').textContent=e.message;showBanner(e.message,'error')}
+}
+function recordFor(id){return state.records.find(r=>r.studentId===id)}
+function renderTable(){
+  updateContext();$('empty').classList.add('hidden');$('tableWrap').classList.remove('hidden');
+  if(isTeacher){
+    $('thead').innerHTML='<tr><th>Student</th><th>Attendance status</th><th>Notes</th><th>Saved</th></tr>';
+    $('tbody').innerHTML=state.students.map(s=>{
+      const e=recordFor(s.id),st=e?.status||'',ini=(`${s.firstName||''}${s.lastName||''}`.trim().slice(0,2)||'?').toUpperCase();
+      return `<tr data-id="${esc(s.id)}"><td><div class="student"><div class="student-av">${esc(ini)}</div><div><div class="name">${esc(`${s.firstName||''} ${s.lastName||''}`.trim())}</div><div class="adm">${esc(s.admissionNumber||'No admission number')}</div></div></div></td><td><div class="statuses">${['PRESENT','ABSENT','LATE','EXCUSED'].map(x=>`<button type="button" class="status ${st===x?'sel':''}" data-s="${x}">${fmtStatus(x)}</button>`).join('')}</div></td><td><input class="notes" maxlength="500" placeholder="Optional note" value="${esc(e?.notes||'')}"></td><td>${e?'<span class="badge present">Saved</span>':'<span class="badge none">New</span>'}</td></tr>`;
+    }).join('');
+    document.querySelectorAll('.status').forEach(btn=>btn.addEventListener('click',()=>{const row=btn.closest('tr');row.querySelectorAll('.status').forEach(x=>x.classList.remove('sel'));btn.classList.add('sel');updateStatsFromTeacher();}));
+    $('saveBtn').disabled=false;$('allBtn').disabled=false;
+    updateStatsFromTeacher();
+  } else {
+    $('thead').innerHTML='<tr><th>Student</th><th>Status</th><th>Attendance context</th><th>Recorded by</th><th></th></tr>';
+    const q=document.getElementById('studentSearch')?.value?.trim().toLowerCase()||'';
+    const rows=state.records.filter(r=>{const name=`${r.student?.firstName||''} ${r.student?.lastName||''} ${r.student?.admissionNumber||''}`.toLowerCase();return !q||name.includes(q)});
+    $('tbody').innerHTML=rows.length?rows.map(r=>{
+      const a=r.timetableEntry?.teachingAssignment,l=a?.subject?.name;
+      const context=r.attendanceMode==='SUBJECT'?(l?`${l} · ${r.timetableEntry?.startTime||''}–${r.timetableEntry?.endTime||''}`:'Subject lesson'):'Daily class attendance';
+      return `<tr><td><div class="student"><div class="student-av">${esc((`${r.student?.firstName||''}${r.student?.lastName||''}`.trim().slice(0,2)||'?').toUpperCase())}</div><div><div class="name">${esc(`${r.student?.firstName||''} ${r.student?.lastName||''}`.trim()||'Student')}</div><div class="adm">${esc(r.student?.admissionNumber||'No admission number')}</div></div></div></td><td><span class="badge ${statusClass(r.status)}">${fmtStatus(r.status)}</span></td><td><div>${esc(context)}</div><div class="adm">${esc(r.attendanceMode==='SUBJECT'?(days[r.timetableEntry?.dayOfWeek]||''):'Class-based')}</div></td><td><span class="recorded">${esc(`${r.recordedBy?.firstName||''} ${r.recordedBy?.lastName||''}`.trim()||'—')}<br><strong>${esc(r.recordedBy?.role||'')}</strong></span></td><td><button type="button" class="btn view-student" data-id="${esc(r.studentId)}">Student view</button></td></tr>`;
+    }).join(''):`<tr><td colspan="5"><div class="empty"><div class="empty-icon">⌕</div><h3>No attendance records</h3><p>No records match the selected academic context and date.</p></div></td></tr>`;
+    document.querySelectorAll('.view-student').forEach(b=>b.addEventListener('click',()=>openHistory(b.dataset.id)));
+    updateStatsFromRecords(state.records);
+  }
+}
+function updateStatsFromTeacher(){
+  const rows=[...document.querySelectorAll('#tbody tr')],statuses=rows.map(r=>r.querySelector('.status.sel')?.dataset.s||'');
+  $('statTotal').textContent=state.students.length;$('statTotalSub').textContent='active students in class';
+  $('statPresent').textContent=statuses.filter(x=>x==='PRESENT').length;
+  $('statAbsent').textContent=statuses.filter(x=>x==='ABSENT').length;
+  $('statFourth').textContent=statuses.filter(x=>x==='LATE'||x==='EXCUSED').length;
+  $('statFourthSub').textContent='late or excused';
+}
+function updateStatsFromRecords(records){
+  $('statTotal').textContent=state.students.length||records.length||0;$('statTotalSub').textContent='active students / records';
+  $('statPresent').textContent=records.filter(r=>r.status==='PRESENT').length;
+  $('statAbsent').textContent=records.filter(r=>r.status==='ABSENT').length;
+  $('statFourth').textContent=records.filter(r=>r.status==='LATE'||r.status==='EXCUSED').length;
+}
+function updateStatsFromEmpty(){updateStatsFromRecords([])}
+function updateStats(records){$('statTotal').textContent=state.students.length||0;$('statPresent').textContent=records.filter(r=>r.status==='PRESENT').length;$('statAbsent').textContent=records.filter(r=>r.status==='ABSENT').length;$('statFourth').textContent=records.filter(r=>r.status==='LATE'||r.status==='EXCUSED').length}
+async function save(){
+  if(!isTeacher||!ready())return;
+  const btn=$('saveBtn');btn.disabled=true;btn.textContent='Saving…';
+  try{
+    const records=state.students.map(s=>{const row=document.querySelector(`tr[data-id="${CSS.escape(s.id)}"]`);return{studentId:s.id,status:row?.querySelector('.status.sel')?.dataset.s||'PRESENT',notes:row?.querySelector('.notes')?.value.trim()||null}});
+    const payload={academicYearId:$('year').value,termId:$('term').value,classId:$('class').value,attendanceDate:$('date').value,attendanceMode:state.mode,records};
+    if(state.mode==='SUBJECT')payload.timetableEntryId=$('lesson').value;
+    const r=await api('/api/attendance/bulk',{method:'POST',body:JSON.stringify(payload)});
+    showBanner(`${r.count||records.length} attendance record${(r.count||records.length)===1?'':'s'} saved successfully.`,'success');
+    await loadRoster();
+  }catch(e){showBanner(e.message,'error')}finally{btn.disabled=false;btn.textContent='Save attendance'}
+}
+function allPresent(){
+  if(!isTeacher)return;
+  document.querySelectorAll('#tbody .status[data-s="PRESENT"]').forEach(btn=>{const row=btn.closest('tr');row.querySelectorAll('.status').forEach(x=>x.classList.remove('sel'));btn.classList.add('sel')});
+  updateStatsFromTeacher();
+}
+async function openHistory(studentId){
+  const student=state.students.find(s=>s.id===studentId)||state.records.find(r=>r.studentId===studentId)?.student;
+  if(!student)return;
+
+  const term=state.terms.find(t=>t.id===$('term').value);
+  const from=(term?.startsAt||'').slice(0,10);
+  const to=(term?.endsAt||'').slice(0,10);
+
+  $('historyTitle').textContent=`${student.firstName||''} ${student.lastName||''}`.trim()||'Student attendance';
+  $('historySubtitle').textContent=`${student.admissionNumber||'No admission number'} · selected term attendance history`;
+  $('historyBody').innerHTML='<tr><td colspan="5" style="text-align:center;color:#98a2b3;padding:30px">Loading student attendance history…</td></tr>';
+  $('historyModal').classList.add('open');
+
+  try{
+    let p=`/api/attendance?academicYearId=${encodeURIComponent($('year').value)}&termId=${encodeURIComponent($('term').value)}&classId=${encodeURIComponent($('class').value)}&studentId=${encodeURIComponent(studentId)}`;
+    if(from)p+=`&from=${encodeURIComponent(from)}`;
+    if(to)p+=`&to=${encodeURIComponent(to)}`;
+    const rows=await api(p);
+
+    $('hTotal').textContent=rows.length;
+    $('hPresent').textContent=rows.filter(r=>r.status==='PRESENT').length;
+    $('hAbsent').textContent=rows.filter(r=>r.status==='ABSENT').length;
+    $('hOther').textContent=rows.filter(r=>r.status==='LATE'||r.status==='EXCUSED').length;
+
+    $('historyBody').innerHTML=rows.length?rows.map(r=>{
+      const a=r.timetableEntry?.teachingAssignment;
+      const context=r.attendanceMode==='SUBJECT'
+        ? `${a?.subject?.name||'Subject lesson'} · ${r.timetableEntry?.startTime||''}–${r.timetableEntry?.endTime||''}`
+        : 'Daily class attendance';
+      const recorded=`${r.recordedBy?.firstName||''} ${r.recordedBy?.lastName||''}`.trim()||'—';
+      return `<tr><td>${esc((r.attendanceDate||'').slice(0,10))}</td><td>${esc(r.attendanceMode==='SUBJECT'?'Subject':'Class')}</td><td>${esc(context)}</td><td><span class="badge ${statusClass(r.status)}">${fmtStatus(r.status)}</span></td><td>${esc(recorded)}</td></tr>`;
+    }).join(''):'<tr><td colspan="5" style="text-align:center;color:#98a2b3;padding:30px">No attendance records found for this student in the selected term and class.</td></tr>';
+  }catch(e){
+    $('historyBody').innerHTML=`<tr><td colspan="5" style="text-align:center;color:#b91c1c;padding:30px">${esc(e.message)}</td></tr>`;
+    $('hTotal').textContent='—';$('hPresent').textContent='—';$('hAbsent').textContent='—';$('hOther').textContent='—';
+  }
+}
+function updateDefaultNote(){ $('defaultNote').textContent=`School default: ${state.defaultMode==='CLASS'?'Class-based':'Subject-based'}` }
+async function init(){
+  setupIdentity();$('date').value=dateToday();
+  try{const s=await api('/api/settings');state.defaultMode=['CLASS','SUBJECT'].includes(s.defaultAttendanceMode)?s.defaultAttendanceMode:'SUBJECT'}catch(_){state.defaultMode='SUBJECT'}
+  setMode(state.defaultMode);updateDefaultNote();await loadYears();
+}
+$('year').addEventListener('change',loadTerms);
+$('term').addEventListener('change',async()=>{await loadLessons();await loadRoster()});
+$('class').addEventListener('change',async()=>{await loadLessons();await loadRoster()});
+$('date').addEventListener('change',async()=>{if(state.mode==='SUBJECT'){await loadLessons();if(state.lessons.length===1)$('lesson').value=state.lessons[0].id}await loadRoster()});
+$('lesson').addEventListener('change',loadRoster);
+$('studentSearch').addEventListener('input',()=>{if(!isTeacher)renderTable()});
+document.querySelectorAll('input[name="mode"]').forEach(x=>x.addEventListener('change',async()=>{setMode(x.value);await loadLessons();await loadRoster()}));
+$('saveBtn').addEventListener('click',save);$('allBtn').addEventListener('click',allPresent);
+$('logoutBtn').addEventListener('click',()=>AUTH.logout());
+$('closeHistory').addEventListener('click',()=>$('historyModal').classList.remove('open'));$('closeHistory2').addEventListener('click',()=>$('historyModal').classList.remove('open'));
+$('historyModal').addEventListener('click',e=>{if(e.target===$('historyModal'))$('historyModal').classList.remove('open')});
+init().catch(e=>showBanner(e.message,'error'));
+})();
+</script>
+
+<!-- CONNECTSUKUU_HOA_ATTENDANCE_ANALYTICS_CLEAN_JS -->
+<script>
+(function(){
+  'use strict';
+
+  function hoaAttendanceApi(path){
+    return apiFetch(path).then(async function(r){
+      if(!r) throw new Error('Authentication expired.');
+      var data=await r.json().catch(function(){return []});
+      if(!r.ok) throw new Error(data.error||data.message||('Request failed ('+r.status+')'));
+      return data;
+    });
+  }
+
+  function hoaRows(data){
+    if(Array.isArray(data)) return data;
+    if(Array.isArray(data?.records)) return data.records;
+    if(Array.isArray(data?.data)) return data.data;
+    if(Array.isArray(data?.attendance)) return data.attendance;
+    return [];
+  }
+
+  async function refreshHoaAttendanceAnalytics(){
+    var user=AUTH.getUser ? AUTH.getUser() : null;
+    var panel=document.getElementById('hoaAttendanceAnalyticsClean');
+    if(!panel) return;
+    if(!user || user.role!=='HEAD_OF_ACADEMICS'){
+      panel.style.display='none';
+      return;
+    }
+    panel.style.display='block';
+
+    var year=document.getElementById('year')?.value||'';
+    var term=document.getElementById('term')?.value||'';
+    var cls=document.getElementById('class')?.value||'';
+    var date=document.getElementById('date')?.value||'';
+    var lesson=document.getElementById('lesson')?.value||'';
+    var subjectMode=document.getElementById('subjectMode');
+    var mode=(subjectMode && subjectMode.classList.contains('active'))?'SUBJECT':'CLASS';
+
+    var ids=['hoaAttendanceRateClean','hoaRecordsReviewedClean','hoaLateExcusedClean','hoaAbsentRateClean','hoaPresentCountClean','hoaAbsentCountClean','hoaLateCountClean','hoaExcusedCountClean'];
+    ids.forEach(function(id){var e=document.getElementById(id);if(e)e.textContent='—'});
+    var bar=document.getElementById('hoaAttendanceProgressClean');if(bar)bar.style.width='0%';
+
+    if(!year || !term || !cls || !date || (mode==='SUBJECT' && !lesson)) return;
+
+    try{
+      var query='/api/attendance?academicYearId='+encodeURIComponent(year)
+        +'&termId='+encodeURIComponent(term)
+        +'&classId='+encodeURIComponent(cls)
+        +'&attendanceDate='+encodeURIComponent(date)
+        +'&attendanceMode='+encodeURIComponent(mode);
+      if(mode==='SUBJECT') query+='&timetableEntryId='+encodeURIComponent(lesson);
+
+      var rows=hoaRows(await hoaAttendanceApi(query));
+      var total=rows.length;
+      var present=rows.filter(function(x){return x.status==='PRESENT'}).length;
+      var absent=rows.filter(function(x){return x.status==='ABSENT'}).length;
+      var late=rows.filter(function(x){return x.status==='LATE'}).length;
+      var excused=rows.filter(function(x){return x.status==='EXCUSED'}).length;
+      var attended=present+late+excused;
+      var rate=total?Math.round(attended/total*100):0;
+      var absentRate=total?Math.round(absent/total*100):0;
+      function set(id,value){var e=document.getElementById(id);if(e)e.textContent=value}
+      set('hoaAttendanceRateClean',rate+'%');
+      set('hoaRecordsReviewedClean',total);
+      set('hoaLateExcusedClean',late+excused);
+      set('hoaAbsentRateClean',absentRate+'%');
+      set('hoaPresentCountClean',present);
+      set('hoaAbsentCountClean',absent);
+      set('hoaLateCountClean',late);
+      set('hoaExcusedCountClean',excused);
+      if(bar)bar.style.width=rate+'%';
+    }catch(error){
+      console.warn('ConnectSukuu Head of Academics attendance analytics:',error);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded',function(){
+    ['year','term','class','date','lesson'].forEach(function(id){
+      var e=document.getElementById(id);
+      if(e)e.addEventListener('change',function(){setTimeout(refreshHoaAttendanceAnalytics,120)});
+    });
+    setTimeout(refreshHoaAttendanceAnalytics,700);
+    setTimeout(refreshHoaAttendanceAnalytics,1600);
+  });
+
+  window.connectSukuuRefreshHoaAttendanceAnalytics=refreshHoaAttendanceAnalytics;
+})();
+</script>
+<!-- END_CONNECTSUKUU_HOA_ATTENDANCE_ANALYTICS_CLEAN_JS -->
+
+
+
+<style id="connectsukuu-administrator-canonical-shell-repair">
+:root{--cs-admin-sidebar-width:255px;--cs-admin-text:#172033;--cs-admin-blue:#2563eb}
+html,body{max-width:100%;overflow-x:hidden!important}
+body .app-shell,body .layout{width:100%!important;min-width:0!important}
+body .app-sidebar,body .sidebar{width:255px!important;min-width:255px!important;max-width:255px!important;box-sizing:border-box!important}
+body .app-sidebar{position:fixed!important;inset:0 auto 0 0!important;height:100vh!important;min-height:100vh!important;display:flex!important;flex-direction:column!important;background:linear-gradient(180deg,#0f172a,#111827 58%,#0b1220)!important}
+body .sidebar{position:fixed!important;inset:0 auto 0 0!important;height:100vh!important;min-height:100vh!important;display:flex!important;flex-direction:column!important;background:linear-gradient(180deg,#0f172a,#111827 58%,#0b1220)!important}
+body .app-sidebar .brand,body .sidebar .brand{height:40px!important;min-height:40px!important;margin:0 0 22px!important;padding:0 8px!important;display:flex!important;align-items:center!important;gap:10px!important;white-space:nowrap!important}
+body .app-sidebar .brand-word,body .sidebar .brand-word{font-size:20px!important;font-weight:850!important;line-height:1!important;color:#fff!important}
+body .app-sidebar .brand-accent,body .sidebar .brand-accent,body .app-sidebar .accent,body .sidebar .accent{color:#60a5fa!important}
+body .app-sidebar .admin-nav-link,body .sidebar .admin-nav-link{font-size:13px!important;font-weight:700!important;min-height:40px!important}
+body .app-sidebar .admin-nav-link.active,body .sidebar .admin-nav-link.active{background:rgba(37,99,235,.24)!important;color:#fff!important;box-shadow:inset 3px 0 0 #3b82f6!important}
+body .app-sidebar-footer,body .academic-sidebar-footer,body .sidebar-bottom{margin-top:auto!important;padding-top:18px!important}
+body #app-logout,body .logout-btn,body .logout{width:100%!important;min-height:40px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;border:1px solid rgba(148,163,184,.24)!important;border-radius:9px!important;background:rgba(15,23,42,.55)!important;color:#cbd5e1!important;font-size:13px!important;font-weight:650!important;cursor:pointer!important}
+body #app-logout:hover,body .logout-btn:hover,body .logout:hover{background:rgba(255,255,255,.08)!important;color:#fff!important}
+body .app-main,body .main{min-width:0!important;max-width:none!important}
+body .app-topbar,body .topbar{position:sticky!important;top:0!important;z-index:1000!important;display:flex!important;align-items:center!important;justify-content:space-between!important;min-height:54px!important;box-sizing:border-box!important}
+body .app-topbar h1,body .topbar-title{font-size:16px!important;font-weight:750!important;color:#172033!important}
+.cs-administrator-profile{margin-left:auto!important;display:flex!important;align-items:center!important;gap:10px!important;flex:0 0 auto!important;max-width:310px!important;padding:6px 10px!important;border:1px solid #e3eaf4!important;border-radius:12px!important;background:#fff!important;box-shadow:0 3px 12px rgba(15,23,42,.05)!important}
+.cs-administrator-profile-avatar{width:32px!important;height:32px!important;flex:0 0 32px!important;border-radius:9px!important;background:#172033!important;color:#fff!important;display:grid!important;place-items:center!important;font-size:12px!important;font-weight:850!important}
+.cs-administrator-profile-copy{min-width:0!important;line-height:1.2!important}
+.cs-administrator-profile-email{font-size:12px!important;font-weight:800!important;color:#172033!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:220px!important}
+.cs-administrator-profile-role{font-size:10px!important;color:#64748b!important;margin-top:3px!important}
+/* Exactly one identity chip: the canonical right-aligned profile is installed at runtime. */
+body .app-topbar>.who,body .app-topbar>.user,body .app-topbar>.topbar-user,body .topbar>.who,body .topbar>.user,body .topbar>.topbar-user{display:none!important}
+@media(max-width:760px){.cs-administrator-profile{padding:5px!important}.cs-administrator-profile-copy{display:block!important}.cs-administrator-profile-email{max-width:145px!important}body .app-content,body .content{padding:16px!important}}
+</style>
+<script id="connectsukuu-administrator-canonical-profile">
+(function(){
+ function install(){
+  try{
+   var user=(window.AUTH&&typeof AUTH.getUser==='function'&&AUTH.getUser())||JSON.parse(localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user')||'null')||{};
+   var header=document.querySelector('.app-topbar')||document.querySelector('.topbar'); if(!header)return;
+   var existing=document.getElementById('cs-administrator-profile');
+   header.querySelectorAll(':scope > .who,:scope > .user,:scope > .topbar-user,:scope > .cs-administrator-profile').forEach(function(el){if(el!==existing)el.remove()});
+   if(!existing){existing=document.createElement('div');existing.id='cs-administrator-profile';existing.className='cs-administrator-profile';existing.innerHTML='<div class="cs-administrator-profile-avatar"></div><div class="cs-administrator-profile-copy"><div class="cs-administrator-profile-email"></div><div class="cs-administrator-profile-role">Administrator</div></div>';header.appendChild(existing)}
+   var full=[user.firstName,user.lastName].filter(Boolean).join(' ')||user.name||'';var display=full||user.email||'Administrator';
+    var av=existing.querySelector('.cs-administrator-profile-avatar');
+    if(!av.querySelector('img')){var t=(full||display).trim().split(/\s+/).filter(Boolean);av.textContent=((t[0]||'A').charAt(0)+(t.length>1?t[1].charAt(0):'')).toUpperCase()}
+    existing.querySelector('.cs-administrator-profile-email').textContent=full||user.email||display;
+    existing.querySelector('.cs-administrator-profile-role').textContent='Administrator';
+  }catch(e){}
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
+ setTimeout(install,250);
+})();
+</script>
+
+<script src="/assets/js/role-shell-extension.js"></script>
+</body>
+</html>

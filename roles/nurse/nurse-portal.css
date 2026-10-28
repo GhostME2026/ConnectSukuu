@@ -1,0 +1,187 @@
+/* ConnectSukuu Nurse workspace — fixed role shell */
+:root{--nurse-side:255px;--nurse-ink:#17233b;--nurse-muted:#71819b;--nurse-line:#e0e8f4;--nurse-blue:#2563eb;--nurse-bg:#f3f6fb}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--nurse-ink);background:var(--nurse-bg)}body{font-size:14px}.ns-shell{display:grid;grid-template-columns:var(--nurse-side) minmax(0,1fr);min-height:100vh}.ns-sidebar{position:fixed;inset:0 auto 0 0;width:var(--nurse-side);display:flex;flex-direction:column;background:#0e1b33;color:#d5deef;padding:16px 11px;z-index:30}.ns-brand{height:42px;display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-size:16px;font-weight:900;padding:0 5px 12px}.ns-brand img{width:31px;height:31px}.ns-brand .accent{color:#60a5fa}.ns-nav-label{margin:15px 9px 8px;color:#7d8eac;font-size:9px;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.ns-nav{display:grid;gap:4px}.ns-nav a{min-height:39px;display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:9px;text-decoration:none;color:#b9c6dc;font-size:12px;font-weight:750;border-left:3px solid transparent;transition:background .16s,color .16s}.ns-nav a:hover{background:#162b4e;color:#fff}.ns-nav a.active{background:#183564;color:#fff;border-left-color:#3b82f6}.ns-icon{width:18px;text-align:center;font-size:15px;flex:0 0 18px}.ns-sidebar-bottom{margin-top:auto;padding-top:14px}.ns-logout{width:100%;border:1px solid #2b3e5b;background:rgba(255,255,255,.04);color:#d8e2f1;border-radius:9px;min-height:39px;font-weight:800;font-size:11px;cursor:pointer}.ns-logout:hover{background:#1c2d49}.ns-main{grid-column:2;min-width:0;min-height:100vh}.ns-topbar{height:68px;position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--nurse-line);display:flex;align-items:center;gap:16px;padding:10px 22px}.ns-title{min-width:0}.ns-title h1{font-size:15px;margin:0;font-weight:900}.ns-title p{font-size:11px;color:var(--nurse-muted);margin:4px 0 0}.ns-actions{margin-left:auto;display:flex;align-items:center;gap:10px}.ns-bell{width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--nurse-line);border-radius:11px;text-decoration:none;color:#34435c;position:relative;font-size:17px}.ns-badge{position:absolute;right:-4px;top:-5px;background:#ef4444;color:#fff;border-radius:99px;min-width:17px;height:17px;padding:0 4px;font-size:9px;font-weight:900;display:grid;place-items:center}.ns-profile{display:flex;align-items:center;gap:9px;min-width:190px;max-width:280px;padding:5px 10px 5px 6px;border:1px solid var(--nurse-line);border-radius:13px;background:#fff;cursor:pointer;text-align:left}.ns-avatar{width:34px;height:34px;flex:0 0 34px;border-radius:10px;background:#eaf1ff;color:#245de8;display:grid;place-items:center;overflow:hidden;font-weight:900;font-size:12px}.ns-avatar img{width:100%;height:100%;object-fit:cover}.ns-profile-copy{min-width:0;flex:1}.ns-profile-name{font-size:11px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ns-profile-role{font-size:10px;color:var(--nurse-muted);margin-top:2px}.ns-profile-caret{color:#8190a7}.ns-scroll{padding:22px;min-width:0}.ns-content{max-width:1600px;margin:0 auto;display:grid;gap:16px}.ns-hero{border:1px solid #d8e5ff;border-radius:16px;padding:22px;background:linear-gradient(115deg,#fff 0%,#f8faff 62%,#f3f1ff 100%);display:flex;align-items:center;justify-content:space-between;gap:18px}.ns-eyebrow{font-size:10px;letter-spacing:.14em;font-weight:900;color:#2563eb;text-transform:uppercase}.ns-hero h2{font-size:clamp(25px,2.2vw,32px);letter-spacing:-.035em;margin:8px 0;color:#17233b}.ns-hero p{font-size:13px;line-height:1.65;color:var(--nurse-muted);margin:0;max-width:780px}.ns-hero-mark{width:60px;height:60px;flex:0 0 60px;display:grid;place-items:center;border-radius:18px;background:#e4f7ef;color:#07835b;font-size:29px}.ns-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}.ns-stat{border:1px solid var(--nurse-line);border-radius:13px;background:#fff;padding:16px;min-width:0;box-shadow:0 3px 12px #1d355708}.ns-stat-label{font-size:10px;color:#7485a2;font-weight:900;letter-spacing:.07em;text-transform:uppercase}.ns-stat-value{font-size:28px;letter-spacing:-.04em;font-weight:900;margin-top:9px;color:#2563eb}.ns-stat:nth-child(2) .ns-stat-value{color:#059669}.ns-stat:nth-child(3) .ns-stat-value{color:#7c3aed}.ns-stat:nth-child(4) .ns-stat-value{color:#ea580c}.ns-stat-note{font-size:11px;line-height:1.5;color:#8998b0;margin-top:5px}.ns-grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.ns-panel{min-width:0;background:#fff;border:1px solid var(--nurse-line);border-radius:14px;padding:17px;box-shadow:0 3px 12px #1d355708}.ns-panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:13px}.ns-panel h3{font-size:15px;margin:0;font-weight:900}.ns-subtitle{font-size:12px;color:var(--nurse-muted);line-height:1.55;margin:5px 0 0}.ns-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:8px 13px;border:1px solid #d6e1f2;border-radius:9px;background:#fff;color:#31415d;text-decoration:none;font-size:12px;font-weight:850;cursor:pointer}.ns-btn:hover{border-color:#9cb8ed;background:#f8fbff}.ns-btn.primary{background:#2563eb;color:#fff;border-color:#2563eb}.ns-btn.primary:hover{background:#1d4ed8}.ns-btn.small{min-height:30px;padding:6px 9px;font-size:11px}.ns-btn:disabled{opacity:.55;cursor:not-allowed}.ns-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-bottom:13px}.ns-search,.ns-field input,.ns-field select,.ns-field textarea{width:100%;min-height:40px;border:1px solid #d6e0ef;border-radius:9px;padding:9px 11px;background:#fff;color:#273751;font:inherit;font-size:13px;outline:none}.ns-search{max-width:360px}.ns-field input:focus,.ns-field select:focus,.ns-field textarea:focus,.ns-search:focus{border-color:#7ca7f7;box-shadow:0 0 0 3px #2563eb16}.ns-field label{display:block;font-size:12px;font-weight:800;color:#4c5f7b;margin-bottom:6px}.ns-field textarea{min-height:90px;resize:vertical;line-height:1.55}.ns-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.ns-field.full{grid-column:1/-1}.ns-table-wrap{width:100%;overflow:auto;border:1px solid #e4ebf5;border-radius:10px}.ns-table{width:100%;border-collapse:collapse;min-width:700px}.ns-table th{text-align:left;background:#f7f9fd;padding:11px 12px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#7586a2;white-space:nowrap}.ns-table td{padding:12px;border-top:1px solid #eaf0f7;font-size:12px;color:#34435c;vertical-align:middle}.ns-table tbody tr:hover{background:#fbfdff}.ns-person{display:flex;align-items:center;gap:9px;min-width:170px}.ns-person-avatar{width:35px;height:35px;display:grid;place-items:center;flex:0 0 35px;border-radius:11px;background:#eaf1ff;color:#245de8;font-size:11px;font-weight:900}.ns-person-name{font-size:13px;font-weight:850;color:#1e2a40}.ns-person-meta{margin-top:3px;font-size:11px;color:#8290a7}.ns-pill{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:5px 8px;background:#f1f5f9;color:#53637c;font-size:10px;font-weight:850;white-space:nowrap}.ns-pill.green{background:#e9fbf2;color:#07814c}.ns-pill.blue{background:#edf4ff;color:#245de8}.ns-pill.orange{background:#fff4e5;color:#b86b0c}.ns-pill.red{background:#fff0f0;color:#b91c1c}.ns-empty{padding:30px 15px;text-align:center;color:#7d8ba3;font-size:13px;line-height:1.6}.ns-empty strong{display:block;margin-bottom:5px;color:#34435c;font-size:14px}.ns-loading{display:flex;align-items:center;justify-content:center;gap:11px;padding:28px;color:#71819b;font-size:12px}.ns-spinner{width:20px;height:20px;border:2px solid #dce8ff;border-top-color:#2563eb;border-right-color:#16a779;border-radius:50%;animation:ns-spin .75s linear infinite}@keyframes ns-spin{to{transform:rotate(360deg)}}.ns-list{display:grid;gap:9px}.ns-list-item{display:flex;align-items:flex-start;gap:11px;padding:13px;border:1px solid #e8edf5;border-radius:11px;background:#fff}.ns-list-item.unread{border-color:#cbdcff;background:#f8fbff}.ns-list-icon{width:35px;height:35px;display:grid;place-items:center;flex:0 0 35px;border-radius:10px;background:#edf4ff;color:#245de8;font-size:16px}.ns-list-copy{min-width:0;flex:1}.ns-list-title{font-size:13px;font-weight:850;color:#1e2a40}.ns-list-content{margin-top:4px;color:#6e7e97;font-size:12px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}.ns-list-meta{margin-top:6px;color:#95a0b3;font-size:11px}.ns-toast{position:fixed;right:22px;bottom:20px;z-index:100;max-width:360px;padding:12px 15px;border-radius:11px;background:#14213a;color:#fff;box-shadow:0 12px 30px #0f172a25;font-size:12px;line-height:1.5}.ns-toast.error{background:#8d2525}.ns-hidden{display:none!important}.ns-modal-backdrop{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:20px;background:#0b1830a8;backdrop-filter:blur(3px)}.ns-modal-backdrop.open{display:flex}.ns-modal{width:min(720px,100%);max-height:min(90vh,850px);overflow:auto;background:#fff;border-radius:16px;box-shadow:0 24px 80px #0b18304a}.ns-modal-head{position:sticky;top:0;background:#fff;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 20px;border-bottom:1px solid #e8edf5;z-index:1}.ns-modal-head h2{font-size:17px;margin:0}.ns-modal-head p{font-size:12px;line-height:1.55;color:#71819b;margin:5px 0 0}.ns-modal-body{padding:18px 20px}.ns-modal-close{width:32px;height:32px;border:0;border-radius:9px;background:#eef3fb;color:#53637c;font-size:20px;cursor:pointer}.ns-photo-row{display:flex;align-items:center;gap:14px;margin-bottom:16px}.ns-photo-large{width:62px;height:62px;display:grid;place-items:center;border-radius:17px;background:#eaf1ff;overflow:hidden;color:#245de8;font-weight:900}.ns-photo-large img{width:100%;height:100%;object-fit:cover}.ns-dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.ns-footer-note{font-size:11px;line-height:1.55;color:#7d8ba3;margin-top:10px}
+@media(max-width:1100px){.ns-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.ns-grid-2{grid-template-columns:1fr}.ns-scroll{padding:17px}}@media(max-width:760px){:root{--nurse-side:210px}.ns-sidebar{padding:14px 8px}.ns-nav a{font-size:11px;padding:9px}.ns-topbar{padding:10px 13px}.ns-scroll{padding:13px}.ns-hero{padding:18px;flex-direction:column;align-items:flex-start}.ns-form-grid{grid-template-columns:1fr}.ns-field.full{grid-column:auto}}@media(max-width:540px){:root{--nurse-side:66px}.ns-sidebar{padding:12px 7px}.ns-brand{justify-content:center;padding:0;margin-bottom:15px}.ns-brand>span,.ns-nav-label,.ns-nav a span:not(.ns-icon),.ns-logout{display:none}.ns-nav a{justify-content:center;padding:10px 0}.ns-icon{font-size:17px}.ns-sidebar-bottom{display:flex;justify-content:center}.ns-sidebar-bottom:after{content:'↪';display:grid;place-items:center;width:39px;height:39px;border:1px solid #30415e;border-radius:9px;color:#fff}.ns-profile{min-width:0;width:44px;padding:4px;gap:0}.ns-profile-copy,.ns-profile-caret{display:none}.ns-avatar{width:34px}.ns-title p{display:none}.ns-stats{grid-template-columns:1fr 1fr}.ns-stat{padding:13px}.ns-stat-value{font-size:24px}.ns-hero h2{font-size:24px}.ns-panel{padding:13px}.ns-modal-backdrop{padding:8px}.ns-modal-body,.ns-modal-head{padding:14px}}
+
+
+/* Nurse role refinement — brighter healthcare palette, readable sizing and baseline profile card. */
+:root{--nurse-teal:#0f9f8f;--nurse-mint:#e5fbf5;--nurse-lilac:#f1edff;--nurse-coral:#fff0e9;--nurse-sky:#eaf4ff}
+body{font-size:15px}
+.ns-nav a{font-size:13px;min-height:42px}
+.ns-nav-label{font-size:10px}
+.ns-logout{font-size:12px;min-height:42px}
+.ns-topbar{height:72px;padding:10px 24px}
+.ns-title h1{font-size:17px}
+.ns-title p{font-size:12px}
+.ns-scroll{padding:24px}
+.ns-profile{min-width:245px;max-width:300px;min-height:54px;padding:6px 11px 6px 7px;border-radius:12px;background:#fff;box-shadow:0 4px 14px #152c4b0a}
+.ns-avatar{width:38px;height:38px;flex-basis:38px;border-radius:11px;background:linear-gradient(135deg,#d9f7ef,#e6edff);color:#155e75;font-size:13px}
+.ns-profile-name{font-size:12px;line-height:1.4}
+.ns-profile-role{font-size:11px;color:#4f6480}
+.ns-hero{border-color:#cfece8;background:linear-gradient(115deg,#fff 0%,#f0fcfa 52%,#f3f0ff 100%)}
+.ns-eyebrow{color:#087f8c;font-size:11px}
+.ns-hero-mark{background:linear-gradient(135deg,#d9f8ee,#e0eaff);color:#0f766e}
+.ns-stat{padding:18px;background:linear-gradient(145deg,#fff 0%,#fbfdff 100%);box-shadow:0 5px 16px #1d35570b}
+.ns-stat:nth-child(1){border-top:3px solid #38bdf8}
+.ns-stat:nth-child(2){border-top:3px solid #34d399}
+.ns-stat:nth-child(3){border-top:3px solid #a78bfa}
+.ns-stat:nth-child(4){border-top:3px solid #fb923c}
+.ns-stat-label{font-size:11px}
+.ns-stat-note{font-size:12px}
+.ns-panel{padding:19px;box-shadow:0 6px 20px #20385c0b}
+.ns-panel h3{font-size:16px}
+.ns-subtitle{font-size:13px}
+.ns-btn{font-size:13px;min-height:40px}
+.ns-btn.small{font-size:12px;min-height:32px}
+.ns-search,.ns-field input,.ns-field select,.ns-field textarea{font-size:14px;min-height:43px;border-radius:10px}
+.ns-field label{font-size:13px}
+.ns-field textarea{min-height:96px}
+.ns-table th{font-size:11px;padding:12px 13px}
+.ns-table td{font-size:13px;padding:13px}
+.ns-person-name,.ns-list-title{font-size:14px}
+.ns-person-meta,.ns-list-meta{font-size:12px}
+.ns-list-content{font-size:13px}
+.ns-pill{font-size:11px;padding:6px 9px}
+.ns-modal{border-radius:19px;border:1px solid #dce8f5;box-shadow:0 28px 90px #0b18304f}
+.ns-modal-head{background:linear-gradient(110deg,#f0fcfa,#f4f2ff);border-bottom-color:#dcece9;padding:21px 23px}
+.ns-modal-head h2{font-size:19px;color:#16304a}
+.ns-modal-head p{font-size:13px}
+.ns-modal-body{padding:22px 23px}
+.ns-modal-close{width:36px;height:36px;background:#e4f5f2;color:#126e70;font-size:23px}
+.ns-footer-note{font-size:12px;padding:11px 13px;border-radius:10px;background:#f1f8ff;color:#536985}
+.ns-dialog-actions{margin-top:19px}
+.ns-student-picker{padding:14px;border:1px solid #cfe8e5;border-radius:13px;background:linear-gradient(135deg,#f1fcfa,#f7f8ff);display:grid;gap:12px}
+.ns-picker-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(180px,.8fr);gap:12px}
+.ns-picker-hint{margin:6px 0 0;font-size:12px;line-height:1.5;color:#61758e}
+.ns-upload-field{padding:14px;border:1px dashed #9bcfc7;border-radius:12px;background:#f4fcfa}
+.ns-upload-field input[type=file]{background:#fff}
+.ns-upload-preview{margin-top:10px;max-width:220px;padding:5px;background:#fff;border:1px solid #dce8f5;border-radius:12px}
+.ns-upload-preview img{display:block;width:100%;max-height:180px;object-fit:contain;border-radius:8px}
+.ns-record-attachment{display:flex;align-items:center;gap:8px;margin-top:8px;color:#536985;font-size:12px}
+.ns-record-attachment img{width:44px;height:44px;object-fit:cover;border-radius:8px;border:1px solid #d7e5f2}
+.ns-record-attachment button{font-size:12px}
+@media(max-width:760px){.ns-scroll{padding:16px}.ns-picker-grid{grid-template-columns:1fr}.ns-modal-head,.ns-modal-body{padding:16px}}
+@media(max-width:540px){.ns-topbar{height:64px;padding:8px 10px}.ns-profile{min-width:0;width:44px;min-height:44px}.ns-profile-name,.ns-profile-role{display:none}.ns-scroll{padding:12px}.ns-modal-backdrop{padding:8px}}
+
+/* Keep the established fixed header and independently scrolling page content. */
+.ns-main{height:100vh;min-height:0;overflow:hidden}
+.ns-scroll{height:calc(100vh - 72px);overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+@media(max-width:540px){.ns-scroll{height:calc(100vh - 64px)}}
+
+/* Nurse account/password usability and canonical profile stacking */
+.ns-profile-copy{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0}
+.ns-profile-name,.ns-profile-role{display:block;width:100%;line-height:1.35}
+.ns-profile-name{font-size:11px}
+.ns-profile-role{font-size:10px;margin-top:0}
+.ns-password-wrap{position:relative;display:flex;align-items:center;width:100%}
+.ns-password-wrap input{width:100%;padding-right:46px}
+.ns-password-toggle{position:absolute;right:5px;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:34px;height:32px;border:0;border-radius:8px;background:transparent;color:#536783;cursor:pointer}
+.ns-password-toggle:hover,.ns-password-toggle:focus-visible{background:#edf4ff;color:#245ce8;outline:2px solid #9bbcff;outline-offset:1px}
+.ns-password-toggle svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+
+/* Nurse profile readability and saved-photo display fix */
+.ns-profile {
+  min-width: 245px;
+  max-width: 320px;
+  min-height: 58px;
+  padding: 7px 12px 7px 8px;
+  gap: 10px;
+}
+
+.ns-avatar {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  overflow: hidden;
+}
+
+.ns-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ns-profile-copy {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 3px;
+  min-width: 0;
+}
+
+.ns-profile-name {
+  display: block;
+  width: 100%;
+  margin: 0;
+  color: #17233b;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ns-profile-role {
+  display: block;
+  width: 100%;
+  margin: 0;
+  color: #536783;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+@media (max-width: 540px) {
+  .ns-profile {
+    min-width: 0;
+    width: 44px;
+    min-height: 44px;
+    padding: 4px;
+    gap: 0;
+  }
+
+  .ns-profile-copy,
+  .ns-profile-caret {
+    display: none;
+  }
+
+  .ns-avatar {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
+}
+
+
+
+/* Private chat workspace */
+.ns-chat-layout{display:grid;grid-template-columns:minmax(230px,.34fr) minmax(0,1fr);gap:0;min-height:480px;height:min(68vh,680px);border:1px solid #dce5f2;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 8px 28px rgba(15,23,42,.05)}.ns-chat-contacts{min-width:0;border-right:1px solid #e6edf6;display:flex;flex-direction:column;background:#fbfcff}.ns-chat-contacts-head{padding:16px;border-bottom:1px solid #e6edf6}.ns-chat-contacts-head h3{margin:0 0 10px;font-size:15px;color:#17233b}.ns-chat-contacts-list{overflow:auto;min-height:0;flex:1}.ns-chat-contact{width:100%;display:flex;align-items:center;gap:10px;padding:12px;border:0;border-bottom:1px solid #edf1f7;background:transparent;text-align:left;cursor:pointer}.ns-chat-contact:hover,.ns-chat-contact.active{background:#edf4ff}.ns-chat-contact-avatar{width:38px;height:38px;flex:0 0 38px;border-radius:50%;display:grid;place-items:center;background:#dce9ff;color:#245de8;font-weight:850;font-size:12px;overflow:hidden}.ns-chat-contact-avatar img{width:100%;height:100%;object-fit:cover}.ns-chat-contact-copy{min-width:0;flex:1;display:flex;flex-direction:column}.ns-chat-contact-name{font-size:12px;font-weight:850;color:#1e2a40;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ns-chat-contact-meta{font-size:10px;color:#7c8aa1;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ns-chat-window{min-width:0;display:flex;flex-direction:column}.ns-chat-head{display:flex;align-items:center;gap:10px;padding:14px 17px;border-bottom:1px solid #e6edf6;background:#fff}.ns-chat-head h3{margin:0;font-size:14px;color:#17233b}.ns-chat-head p{margin:3px 0 0;font-size:10px;color:#7c8aa1}.ns-chat-thread{min-height:0;flex:1;overflow:auto;display:flex;flex-direction:column;gap:10px;padding:18px;background:linear-gradient(180deg,#f8fbff,#f3f7fc)}.ns-chat-empty{margin:auto;max-width:300px;text-align:center;color:#7c8aa1;font-size:12px;line-height:1.6}.ns-chat-bubble{max-width:min(78%,620px);padding:10px 12px;border:1px solid #e0e8f2;border-radius:13px 13px 13px 4px;background:#fff;box-shadow:0 2px 6px rgba(15,23,42,.025);align-self:flex-start;overflow-wrap:anywhere}.ns-chat-bubble.outgoing{align-self:flex-end;border-color:#cce0ff;background:#eaf3ff;border-radius:13px 13px 4px 13px}.ns-chat-bubble-text{white-space:pre-wrap;font-size:12px;line-height:1.55;color:#25344d}.ns-chat-bubble-meta{margin-top:6px;font-size:9px;color:#8492a7;text-align:right}.ns-chat-composer{padding:12px;border-top:1px solid #e6edf6;background:#fff}.ns-chat-compose-row{display:flex;align-items:flex-end;gap:8px}.ns-chat-compose-row textarea{flex:1;min-height:42px;max-height:120px;resize:vertical;border:1px solid #d6dfed;border-radius:12px;padding:10px 12px;font:inherit;font-size:12px}.ns-chat-compose-row button{min-height:40px}.ns-chat-attach{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;font-size:10px;color:#6d7d95}.ns-chat-attach input{max-width:100%;font-size:10px}.ns-chat-attachment{display:inline-flex;margin-top:7px;color:#245de8;font-size:10px;font-weight:800;text-decoration:none}@media(max-width:760px){.ns-chat-layout{grid-template-columns:1fr;height:auto;min-height:0}.ns-chat-contacts{border-right:0;border-bottom:1px solid #e6edf6;max-height:220px}.ns-chat-thread{min-height:280px}.ns-chat-bubble{max-width:90%}}
+
+
+/* Nurse direct-message unread state */
+.ns-chat-contact.unread{background:#f3f8ff}
+.ns-chat-contact.unread .ns-chat-contact-name,.ns-chat-contact.unread .ns-chat-contact-meta{font-weight:850;color:#17233b}
+.ns-chat-contact.unread .ns-chat-contact-avatar{box-shadow:inset 0 0 0 2px #2563eb}
+.ns-chat-unread{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:#2563eb;color:#fff;font-size:10px;font-weight:900}
+.ns-chat-head-copy{min-width:0}
+.ns-chat-head-copy h3{overflow-wrap:anywhere}
+.ns-chat-layout .ns-input{width:100%;min-height:38px;padding:9px 11px;border:1px solid #d6dfed;border-radius:10px;background:#fff;font:inherit;font-size:12px;color:#17233b}
+.ns-chat-layout .ns-input:focus,.ns-chat-compose-row textarea:focus{outline:2px solid #a9c6ff;outline-offset:1px;border-color:#6c9dff}
+.ns-chat-contacts-head{padding:14px}
+.ns-chat-contact{font:inherit}
+.ns-chat-composer .ns-btn{min-width:66px}
+.ns-chat-compose-row textarea{min-width:0}
+@media(max-width:760px){
+ .ns-chat-layout{grid-template-columns:minmax(0,1fr);height:auto;min-height:0}
+ .ns-chat-contacts{border-right:0;border-bottom:1px solid #e6edf6;max-height:230px}
+ .ns-chat-thread{min-height:280px;max-height:48vh}
+ .ns-chat-bubble{max-width:90%}
+ .ns-chat-composer{padding:10px}
+ .ns-chat-compose-row{align-items:stretch}
+ .ns-chat-compose-row textarea{min-height:44px}
+}

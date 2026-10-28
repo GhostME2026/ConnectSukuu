@@ -1,0 +1,119 @@
+/* ConnectSukuu Head Teacher UI refinement — scoped to HT pages only */
+:root{--cs-ht-blue:#2563eb;--cs-ht-ink:#172033;--cs-ht-muted:#64748b;--cs-ht-line:#dfe7f2;--cs-ht-bg:#f3f6fb}
+/* Standardize shell geometry while keeping role-specific content intact. */
+body.cs-headteacher-final-shell .csk-ht-sidebar-final{width:255px!important;min-width:255px!important;max-width:255px!important;padding:16px 12px 12px!important;overflow:hidden!important;box-sizing:border-box!important;gap:0!important}
+body.cs-headteacher-final-shell .csk-ht-brand-final{min-height:44px!important;margin:0 2px 15px!important;padding:4px 7px!important;gap:9px!important}
+body.cs-headteacher-final-shell .csk-ht-brand-final .brand-mark{width:32px!important;height:32px!important;flex:0 0 32px!important;overflow:hidden!important;border-radius:9px!important}
+body.cs-headteacher-final-shell .csk-ht-brand-final .brand-mark img{width:100%!important;height:100%!important;object-fit:contain!important;display:block!important}
+body.cs-headteacher-final-shell .csk-ht-brand-final .brand-connect{font-size:16px!important;white-space:nowrap!important;letter-spacing:-.3px!important}
+body.cs-headteacher-final-shell .csk-ht-nav-final{display:flex!important;flex-direction:column!important;gap:3px!important;min-height:0!important;overflow:visible!important}
+body.cs-headteacher-final-shell .csk-ht-nav-final .nav-label{margin:12px 8px 4px!important;font-size:9px!important;line-height:1.2!important;letter-spacing:.11em!important;font-weight:850!important}
+body.cs-headteacher-final-shell .csk-ht-nav-final a{height:35px!important;min-height:35px!important;padding:0 9px!important;margin:0!important;gap:9px!important;border-radius:8px!important;font-size:12px!important;line-height:1.15!important;font-weight:700!important;box-sizing:border-box!important}
+body.cs-headteacher-final-shell .csk-ht-nav-final a .nav-icon{width:18px!important;height:18px!important;min-width:18px!important;flex:0 0 18px!important;display:grid!important;place-items:center!important}
+body.cs-headteacher-final-shell .csk-ht-nav-final a .nav-icon svg{width:16px!important;height:16px!important;display:block!important;stroke:currentColor!important;fill:none!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+body.cs-headteacher-final-shell .csk-ht-logout-final{margin-top:auto!important;flex:0 0 auto!important;height:36px!important;min-height:36px!important;padding:0 10px!important;font-size:12px!important;font-weight:750!important}
+body.cs-headteacher-final-shell .csk-ht-header-final{height:64px!important;min-height:64px!important;padding:0 22px!important;gap:14px!important;box-sizing:border-box!important;position:sticky!important;top:0!important;z-index:100!important;background:#fff!important;border-bottom:1px solid #e4eaf3!important}
+body.cs-headteacher-final-shell .csk-ht-header-title-final{font-size:16px!important;font-weight:800!important;line-height:1.25!important;color:var(--cs-ht-ink)!important}
+body.cs-headteacher-final-shell .csk-ht-profile-final{min-width:0!important;max-width:260px!important;gap:9px!important;padding:5px 9px!important;border:1px solid #e2e8f0!important;border-radius:11px!important;background:#fff!important;box-sizing:border-box!important;cursor:pointer!important}
+body.cs-headteacher-final-shell .csk-ht-profile-copy-final{min-width:0!important;gap:2px!important}
+body.cs-headteacher-final-shell .csk-ht-profile-email-final{font-size:12px!important;font-weight:750!important;line-height:1.2!important;color:#172033!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;max-width:175px!important}
+body.cs-headteacher-final-shell .csk-ht-profile-role-final{font-size:9px!important;line-height:1.2!important;font-weight:800!important;letter-spacing:.04em!important;color:#64748b!important}
+body.cs-headteacher-final-shell .csk-ht-avatar-final{width:34px!important;height:34px!important;min-width:34px!important;max-width:34px!important;flex:0 0 34px!important;border-radius:8px!important;overflow:hidden!important;display:grid!important;place-items:center!important;background:#dbeafe!important;color:#1d4ed8!important;font-size:11px!important;font-weight:850!important;box-sizing:border-box!important;background-position:center!important;background-repeat:no-repeat!important;background-size:cover!important}
+body.cs-headteacher-final-shell .csk-ht-avatar-final img,body.cs-headteacher-final-shell .csk-ht-profile-final img,body.cs-headteacher-final-shell .cs-profile img,body.cs-headteacher-final-shell .cs-avatar img,body.cs-headteacher-final-shell .avatar img,body.cs-headteacher-final-shell .app-avatar img{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:cover!important;object-position:center!important;display:block!important;overflow:hidden!important;border-radius:inherit!important}
+body.cs-headteacher-final-shell .csk-ht-main-final{margin-left:255px!important;width:calc(100% - 255px)!important;min-width:0!important;max-width:calc(100% - 255px)!important;box-sizing:border-box!important;padding-top:0!important;overflow-x:hidden!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.app-content,body.cs-headteacher-final-shell .csk-ht-main-final>.content,body.cs-headteacher-final-shell .csk-ht-main-final>.page,body.cs-headteacher-final-shell .csk-ht-main-final>section.content{padding:20px 24px 30px!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+body.cs-headteacher-final-shell .csk-ht-main-final :is(.card,.ht-panel,.ht-hero,.ht-stat-card,.ht-attention-card){min-width:0!important;box-sizing:border-box!important}
+/* Dashboard: clearer hierarchy, larger metrics, richer cards and tighter vertical rhythm. */
+body.cs-headteacher-final-shell .ht-hero{margin:0 0 14px!important;padding:25px 27px!important;border-radius:17px!important;background:linear-gradient(120deg,#eaf2ff 0%,#fff 54%,#f2edff 100%)!important;border-color:#d6e4ff!important;box-shadow:0 8px 24px rgba(37,99,235,.08)!important}
+body.cs-headteacher-final-shell .ht-eyebrow,body.cs-headteacher-final-shell .ht-panel-kicker{font-size:10px!important;letter-spacing:.11em!important;color:#2563eb!important;font-weight:850!important}
+body.cs-headteacher-final-shell .ht-hero h2{font-size:32px!important;line-height:1.12!important;margin:4px 0 8px!important;letter-spacing:-.035em!important;color:#15213b!important}
+body.cs-headteacher-final-shell .ht-hero p{font-size:14px!important;line-height:1.55!important;max-width:760px!important;margin:0!important;color:#60718f!important}
+body.cs-headteacher-final-shell .ht-role-pill{padding:7px 11px!important;border-radius:999px!important;font-size:11px!important;font-weight:800!important;background:#eaf2ff!important;color:#1d4ed8!important;white-space:nowrap!important}
+body.cs-headteacher-final-shell .ht-stat-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;margin:0 0 14px!important}
+body.cs-headteacher-final-shell .ht-stat-card{min-height:112px!important;padding:18px!important;border-radius:15px!important;border:1px solid #e0e8f3!important;box-shadow:0 6px 18px rgba(15,23,42,.045)!important;background:linear-gradient(145deg,#fff 0%,#f8fbff 100%)!important;display:grid!important;grid-template-columns:42px minmax(0,1fr)!important;grid-template-rows:auto auto auto!important;column-gap:12px!important;align-content:center!important}
+body.cs-headteacher-final-shell .ht-stat-icon{grid-row:1/4!important;width:42px!important;height:42px!important;min-width:42px!important;border-radius:12px!important;font-size:12px!important;font-weight:900!important;align-self:center!important}
+body.cs-headteacher-final-shell .ht-stat-card:nth-child(1) .ht-stat-icon{background:#eaf2ff!important;color:#2563eb!important}
+body.cs-headteacher-final-shell .ht-stat-card:nth-child(2) .ht-stat-icon{background:#f0eaff!important;color:#7c3aed!important}
+body.cs-headteacher-final-shell .ht-stat-card:nth-child(3) .ht-stat-icon{background:#e6fbf0!important;color:#15803d!important}
+body.cs-headteacher-final-shell .ht-stat-card:nth-child(4) .ht-stat-icon{background:#fff0e4!important;color:#c2410c!important}
+body.cs-headteacher-final-shell .ht-stat-label{font-size:11px!important;letter-spacing:.06em!important;color:#64748b!important}
+body.cs-headteacher-final-shell .ht-stat-card strong{font-size:30px!important;line-height:1.05!important;margin-top:3px!important;color:#172033!important;font-weight:900!important}
+body.cs-headteacher-final-shell .ht-stat-note{font-size:11px!important;color:#8290a7!important;margin-top:4px!important}
+body.cs-headteacher-final-shell .ht-grid{grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr)!important;gap:14px!important;margin:0 0 14px!important;align-items:stretch!important}
+body.cs-headteacher-final-shell .ht-panel{padding:18px!important;border-radius:15px!important;border-color:#e0e8f3!important;box-shadow:0 6px 18px rgba(15,23,42,.035)!important;margin:0 0 14px!important;background:#fff!important}
+body.cs-headteacher-final-shell .ht-panel-head{margin:0 0 13px!important;gap:10px!important}
+body.cs-headteacher-final-shell .ht-panel-head h3{font-size:17px!important;line-height:1.25!important;margin:3px 0 0!important;color:#172033!important}
+body.cs-headteacher-final-shell .ht-context{gap:9px!important;margin-bottom:13px!important}
+body.cs-headteacher-final-shell .ht-context-item{padding:12px!important;border-radius:11px!important;background:#f7faff!important;border-color:#e5edf8!important}
+body.cs-headteacher-final-shell .ht-context-item span{font-size:10px!important}
+body.cs-headteacher-final-shell .ht-context-item strong{font-size:15px!important;margin-top:5px!important}
+body.cs-headteacher-final-shell .ht-progress-row strong{font-size:13px!important}
+body.cs-headteacher-final-shell .ht-readiness-badge{font-size:10px!important}
+body.cs-headteacher-final-shell .ht-muted{font-size:11px!important;line-height:1.5!important}
+body.cs-headteacher-final-shell .ht-actions{gap:8px!important}
+body.cs-headteacher-final-shell .ht-actions a{min-height:49px!important;padding:9px 10px!important;border-radius:10px!important;gap:10px!important}
+body.cs-headteacher-final-shell .ht-actions a>span{width:30px!important;height:30px!important;font-size:10px!important}
+body.cs-headteacher-final-shell .ht-actions strong{font-size:12px!important}
+body.cs-headteacher-final-shell .ht-actions small{font-size:10.5px!important}
+body.cs-headteacher-final-shell .ht-panel-wide{margin-bottom:14px!important}
+body.cs-headteacher-final-shell .ht-attention-grid{gap:10px!important}
+body.cs-headteacher-final-shell .ht-attention-card{padding:12px!important;gap:10px!important;border-radius:11px!important;min-height:72px!important}
+body.cs-headteacher-final-shell .ht-attention-icon{width:34px!important;height:34px!important;min-width:34px!important;font-size:12px!important}
+body.cs-headteacher-final-shell .ht-attention-card strong{font-size:12px!important}
+body.cs-headteacher-final-shell .ht-attention-card p{font-size:10.5px!important;line-height:1.4!important}
+body.cs-headteacher-final-shell .ht-note-panel{padding:15px!important;margin-bottom:0!important}
+body.cs-headteacher-final-shell .ht-note-panel h3{font-size:15px!important}
+body.cs-headteacher-final-shell .ht-note-panel p{font-size:11.5px!important}
+/* Academic setup: no clipped heading, no content pushed off-screen, blue section titles. */
+body.cs-headteacher-final-shell .csk-ht-main-final>.content{padding-top:22px!important;overflow:visible!important}
+body.cs-headteacher-final-shell .heading{margin:0 0 16px!important;align-items:flex-start!important;gap:14px!important}
+body.cs-headteacher-final-shell .heading h1{font-size:31px!important;line-height:1.18!important;margin:0 0 7px!important;color:#172033!important}
+body.cs-headteacher-final-shell .heading p{font-size:14px!important;line-height:1.5!important}
+body.cs-headteacher-final-shell .card{margin-bottom:14px!important;border-radius:14px!important}
+body.cs-headteacher-final-shell .card-header{padding:16px 20px!important}
+body.cs-headteacher-final-shell .card-header h2,body.cs-headteacher-final-shell .cs-academic-af-scale-title,body.cs-headteacher-final-shell #connectsukuuGradingSystemPanel h2{color:#2563eb!important;font-size:18px!important;line-height:1.25!important}
+body.cs-headteacher-final-shell .card-header p{font-size:12px!important;line-height:1.45!important}
+body.cs-headteacher-final-shell .current-card{margin-bottom:14px!important;padding:20px 23px!important}
+body.cs-headteacher-final-shell .current-name{font-size:28px!important}
+body.cs-headteacher-final-shell .table-wrap{max-width:100%!important;overflow-x:auto!important}
+body.cs-headteacher-final-shell .content,body.cs-headteacher-final-shell .csk-ht-main-final{min-width:0!important}
+body.cs-headteacher-final-shell #connectsukuu-academic-default-af-scale{margin:0 0 14px!important}
+body.cs-headteacher-final-shell #connectsukuu-academic-default-af-scale .cs-academic-af-scale-head{padding:16px 20px!important}
+body.cs-headteacher-final-shell #connectsukuu-academic-default-af-scale .cs-academic-af-scale-bands{grid-template-columns:repeat(6,minmax(0,1fr))!important;padding:14px 20px!important;gap:9px!important}
+body.cs-headteacher-final-shell #connectsukuu-academic-default-af-scale .cs-academic-af-band{min-width:0!important;padding:12px 8px!important}
+/* Other legacy shells used by a small number of HT pages. */
+body[data-role="HEAD_TEACHER"] .cs-sidebar,body[data-role="HEAD_TEACHER"] .sidebar{width:255px!important;min-width:255px!important;max-width:255px!important;padding:16px 12px!important;overflow:hidden!important;box-sizing:border-box!important}
+body[data-role="HEAD_TEACHER"] .cs-main,body[data-role="HEAD_TEACHER"] .main{margin-left:255px!important;width:calc(100% - 255px)!important;min-width:0!important;max-width:calc(100% - 255px)!important}
+body[data-role="HEAD_TEACHER"] .cs-nav,body[data-role="HEAD_TEACHER"] .nav{gap:3px!important}
+body[data-role="HEAD_TEACHER"] .cs-nav a,body[data-role="HEAD_TEACHER"] .nav a{min-height:35px!important;padding:8px 10px!important;font-size:12px!important;font-weight:700!important}
+body[data-role="HEAD_TEACHER"] .cs-nav-label,body[data-role="HEAD_TEACHER"] .nav-section{margin:12px 8px 4px!important;font-size:9px!important}
+body[data-role="HEAD_TEACHER"] .cs-topbar,body[data-role="HEAD_TEACHER"] .topbar{height:64px!important;min-height:64px!important;padding:0 22px!important;position:sticky!important;top:0!important;z-index:100!important}
+body[data-role="HEAD_TEACHER"] .cs-avatar,body[data-role="HEAD_TEACHER"] .avatar{width:34px!important;height:34px!important;min-width:34px!important;max-width:34px!important;flex:0 0 34px!important;overflow:hidden!important;background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important}
+body[data-role="HEAD_TEACHER"] .cs-avatar img,body[data-role="HEAD_TEACHER"] .avatar img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;border-radius:inherit!important;display:block!important}
+@media(max-width:1050px){body.cs-headteacher-final-shell .ht-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}body.cs-headteacher-final-shell .ht-grid{grid-template-columns:1fr!important}body.cs-headteacher-final-shell .ht-attention-grid{grid-template-columns:1fr!important}body.cs-headteacher-final-shell #connectsukuu-academic-default-af-scale .cs-academic-af-scale-bands{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+@media(max-width:720px){body.cs-headteacher-final-shell .csk-ht-sidebar-final{width:210px!important;min-width:210px!important;max-width:210px!important}body.cs-headteacher-final-shell .csk-ht-main-final{margin-left:210px!important;width:calc(100% - 210px)!important;max-width:calc(100% - 210px)!important}body.cs-headteacher-final-shell .csk-ht-main-final>.app-content,body.cs-headteacher-final-shell .csk-ht-main-final>.content,body.cs-headteacher-final-shell .csk-ht-main-final>.page,body.cs-headteacher-final-shell .csk-ht-main-final>section.content{padding:16px 12px 24px!important}body.cs-headteacher-final-shell .ht-hero{padding:19px!important}body.cs-headteacher-final-shell .ht-hero h2{font-size:26px!important}body.cs-headteacher-final-shell .ht-stat-card{padding:12px!important;grid-template-columns:34px minmax(0,1fr)!important;column-gap:8px!important}body.cs-headteacher-final-shell .ht-stat-icon{width:34px!important;height:34px!important;min-width:34px!important}body.cs-headteacher-final-shell .ht-stat-card strong{font-size:25px!important}}
+
+/* HT FINAL REPAIR 2026-10-18: one shell, one profile, full-width content */
+:root{--csk-ht-sidebar:255px!important;--csk-ht-header:58px!important;}
+html,body{width:100%!important;min-width:0!important;max-width:100%!important;overflow-x:hidden!important;}
+body.cs-headteacher-final-shell .cs-shell,body.cs-headteacher-final-shell>.app-shell,body.cs-headteacher-final-shell>.layout,body.cs-headteacher-final-shell>.app{display:block!important;width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:0!important;}
+body.cs-headteacher-final-shell .csk-ht-sidebar-final{left:0!important;top:0!important;bottom:0!important;width:255px!important;min-width:255px!important;max-width:255px!important;height:100vh!important;overflow:hidden!important;}
+body.cs-headteacher-final-shell .csk-ht-nav-final{gap:3px!important;padding:12px 10px!important;overflow-y:auto!important;overscroll-behavior:contain!important;}
+body.cs-headteacher-final-shell .csk-ht-nav-final .nav-label{padding:11px 11px 6px!important;margin-top:2px!important;}
+body.cs-headteacher-final-shell .csk-ht-nav-final a{min-height:36px!important;height:36px!important;padding:0 10px!important;gap:10px!important;font-size:12px!important;line-height:1.15!important;border-radius:9px!important;}
+body.cs-headteacher-final-shell .csk-ht-header-final{left:255px!important;right:0!important;top:0!important;height:58px!important;min-height:58px!important;padding:0 20px!important;}
+body.cs-headteacher-final-shell .csk-ht-main-final{display:block!important;position:relative!important;margin:0 0 0 255px!important;padding:58px 0 0!important;width:calc(100% - 255px)!important;max-width:none!important;min-width:0!important;height:100vh!important;min-height:100vh!important;overflow:hidden!important;box-sizing:border-box!important;}
+body.cs-headteacher-final-shell .csk-ht-main-final>.app-content,body.cs-headteacher-final-shell .csk-ht-main-final>.content,body.cs-headteacher-final-shell .csk-ht-main-final>.page,body.cs-headteacher-final-shell .csk-ht-main-final>section.content,body.cs-headteacher-final-shell .csk-ht-main-final>.cs-scroll{display:block!important;width:100%!important;max-width:none!important;min-width:0!important;height:calc(100vh - 58px)!important;min-height:calc(100vh - 58px)!important;margin:0!important;padding:22px 24px 40px!important;overflow-y:auto!important;overflow-x:hidden!important;box-sizing:border-box!important;background:#f4f7fb!important;}
+body.cs-headteacher-final-shell .csk-ht-main-final>.cs-scroll{padding:0!important;}
+body.cs-headteacher-final-shell .csk-ht-main-final .cs-content{width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:22px 24px 40px!important;box-sizing:border-box!important;}
+body.cs-headteacher-final-shell .csk-ht-main-final .cs-topbar{display:none!important;}
+body.cs-headteacher-final-shell .csk-ht-main-final .ht-hero h2{font-size:clamp(26px,2.1vw,34px)!important;line-height:1.15!important;}
+body.cs-headteacher-final-shell .csk-ht-main-final .ht-stat-grid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:12px!important;width:100%!important;}
+body.cs-headteacher-final-shell .csk-ht-main-final .ht-stat-card{min-width:0!important;padding:18px!important;}
+body.cs-headteacher-final-shell .csk-ht-main-final .ht-stat-label{font-size:11px!important;}
+body.cs-headteacher-final-shell .csk-ht-main-final .ht-stat-card strong{font-size:25px!important;line-height:1.15!important;}
+body.cs-headteacher-final-shell .csk-ht-main-final .ht-panel h3,body.cs-headteacher-final-shell .csk-ht-main-final .cs-content h2{font-size:20px!important;}
+body.cs-headteacher-final-shell .csk-ht-main-final .ht-note-panel,body.cs-headteacher-final-shell .csk-ht-main-final .ht-dashboard-pulse,body.cs-headteacher-final-shell .csk-ht-main-final .ht-dashboard-pulse-rail{display:none!important;}
+@media(max-width:1200px){body.cs-headteacher-final-shell .csk-ht-main-final .ht-stat-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;}}
+@media(max-width:900px){body.cs-headteacher-final-shell .csk-ht-sidebar-final{width:230px!important;min-width:230px!important;max-width:230px!important;}body.cs-headteacher-final-shell .csk-ht-header-final{left:230px!important;}body.cs-headteacher-final-shell .csk-ht-main-final{margin-left:230px!important;width:calc(100% - 230px)!important;}body.cs-headteacher-final-shell .csk-ht-main-final .ht-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}body.cs-headteacher-final-shell .csk-ht-main-final>.app-content,body.cs-headteacher-final-shell .csk-ht-main-final>.content,body.cs-headteacher-final-shell .csk-ht-main-final>.page,body.cs-headteacher-final-shell .csk-ht-main-final>.cs-scroll{padding:18px 16px 30px!important;}}
+@media(max-width:640px){body.cs-headteacher-final-shell .csk-ht-sidebar-final{width:100%!important;min-width:0!important;max-width:none!important;position:relative!important;height:auto!important;min-height:0!important;}body.cs-headteacher-final-shell .csk-ht-nav-final{max-height:280px!important;}body.cs-headteacher-final-shell .csk-ht-header-final{left:0!important;top:0!important;}body.cs-headteacher-final-shell .csk-ht-main-final{margin:0!important;padding-top:58px!important;width:100%!important;}body.cs-headteacher-final-shell .csk-ht-main-final .ht-stat-grid{grid-template-columns:1fr 1fr!important;}}

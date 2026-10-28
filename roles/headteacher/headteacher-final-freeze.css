@@ -1,0 +1,92 @@
+/* ConnectSukuu HT final visual acceptance patch — presentation only. */
+:root{--csk-ht-sidebar:255px!important;--csk-ht-header:58px!important;--cs-sidebar:255px!important;--cs-header:58px!important}
+html,body{width:100%!important;min-width:0!important;max-width:100%!important;overflow-x:hidden!important}
+
+/* Canonical HT shell: fixed 255px sidebar, fixed 58px header, one content scroller. */
+body.cs-headteacher-final-shell .csk-ht-sidebar-final{left:0!important;top:0!important;bottom:0!important;width:255px!important;min-width:255px!important;max-width:255px!important;height:100vh!important;min-height:100vh!important}
+body.cs-headteacher-final-shell .csk-ht-brand-final{height:44px!important;min-height:44px!important;flex-basis:44px!important;margin:0 2px 15px!important;padding:4px 7px!important;gap:9px!important}
+body.cs-headteacher-final-shell .csk-ht-brand-final .brand-mark{width:32px!important;height:32px!important;min-width:32px!important;flex:0 0 32px!important}
+body.cs-headteacher-final-shell .csk-ht-brand-final .brand-mark img{width:100%!important;height:100%!important;object-fit:contain!important}
+body.cs-headteacher-final-shell .csk-ht-brand-final .brand-connect{font-size:16px!important;font-weight:800!important;letter-spacing:-.03em!important}
+body.cs-headteacher-final-shell .csk-ht-nav-final{padding:12px 10px!important;gap:3px!important;overflow-x:hidden!important;overflow-y:auto!important}
+body.cs-headteacher-final-shell .csk-ht-nav-final .nav-label{margin:2px 8px 4px!important;padding:9px 11px 5px!important;font-size:9px!important;line-height:1.2!important;font-weight:850!important;letter-spacing:.11em!important}
+body.cs-headteacher-final-shell .csk-ht-nav-final a{height:36px!important;min-height:36px!important;padding:0 10px!important;gap:10px!important;font-size:12px!important;font-weight:700!important;line-height:1.15!important;border-radius:9px!important}
+body.cs-headteacher-final-shell .csk-ht-nav-final a .nav-icon{width:18px!important;min-width:18px!important;height:18px!important;flex:0 0 18px!important}
+body.cs-headteacher-final-shell .csk-ht-nav-final a .nav-icon svg{width:16px!important;height:16px!important;stroke:currentColor!important;fill:none!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+body.cs-headteacher-final-shell .csk-ht-header-final{position:fixed!important;left:255px!important;right:0!important;top:0!important;width:auto!important;height:58px!important;min-height:58px!important;padding:0 20px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:0!important;z-index:99999!important;box-sizing:border-box!important}
+body.cs-headteacher-final-shell .csk-ht-header-final .csk-ht-header-title-final{flex:0 1 auto!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+body.cs-headteacher-final-shell .csk-ht-header-final .cs-role-bell{margin-left:auto!important;margin-right:8px!important;flex:0 0 36px!important}
+body.cs-headteacher-final-shell .csk-ht-header-final .csk-ht-profile-final{margin-left:0!important;flex:0 0 auto!important;max-width:280px!important}
+body.cs-headteacher-final-shell .csk-ht-profile-email-final{max-width:185px!important}
+body.cs-headteacher-final-shell .csk-ht-main-final{display:block!important;position:relative!important;margin:0 0 0 255px!important;padding:58px 0 0!important;width:calc(100% - 255px)!important;max-width:none!important;min-width:0!important;height:100vh!important;min-height:100vh!important;max-height:100vh!important;overflow:hidden!important;box-sizing:border-box!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.app-content,body.cs-headteacher-final-shell .csk-ht-main-final>.content,body.cs-headteacher-final-shell .csk-ht-main-final>.page,body.cs-headteacher-final-shell .csk-ht-main-final>section.content{display:block!important;width:100%!important;max-width:none!important;min-width:0!important;height:calc(100vh - 58px)!important;min-height:calc(100vh - 58px)!important;max-height:calc(100vh - 58px)!important;margin:0!important;padding:22px 24px 40px!important;overflow-y:auto!important;overflow-x:hidden!important;box-sizing:border-box!important;background:#f4f7fb!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.cs-scroll{display:block!important;width:100%!important;max-width:none!important;min-width:0!important;height:calc(100vh - 58px)!important;min-height:calc(100vh - 58px)!important;margin:0!important;padding:0!important;overflow-y:auto!important;overflow-x:hidden!important}
+body.cs-headteacher-final-shell .csk-ht-main-final>.cs-scroll>.cs-content{width:100%!important;max-width:none!important;margin:0!important;padding:22px 24px 40px!important;box-sizing:border-box!important}
+
+/* The five newer HT pages use a grid shell; do not add a second 255px offset. */
+body[data-role="HEAD_TEACHER"] .cs-shell{display:grid!important;grid-template-columns:255px minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr)!important;width:100%!important;max-width:100%!important;height:100vh!important;min-height:560px!important;margin:0!important;padding:0!important;overflow:hidden!important}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar{grid-column:1!important;grid-row:1!important;position:relative!important;left:auto!important;top:auto!important;bottom:auto!important;width:255px!important;min-width:255px!important;max-width:255px!important;height:100vh!important;min-height:0!important;padding:16px 12px 12px!important;overflow-x:hidden!important;overflow-y:auto!important;box-sizing:border-box!important}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar .cs-brand{height:44px!important;min-height:44px!important;flex:0 0 44px!important;padding:4px 7px!important;margin:0 2px 15px!important;gap:9px!important;font-size:16px!important;letter-spacing:-.03em!important}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar .cs-brand img{width:32px!important;height:32px!important;min-width:32px!important;object-fit:contain!important}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar .cs-nav{display:flex!important;flex-direction:column!important;gap:3px!important;min-height:0!important;overflow:visible!important}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar .cs-nav-label{margin:2px 8px 4px!important;padding:9px 11px 5px!important;font-size:9px!important;line-height:1.2!important;font-weight:850!important;letter-spacing:.11em!important}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar .cs-nav a{height:36px!important;min-height:36px!important;padding:0 10px!important;gap:10px!important;font-size:12px!important;font-weight:700!important;line-height:1.15!important;border-radius:9px!important;box-sizing:border-box!important}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar .cs-nav a.active{background:rgba(37,99,235,.22)!important;color:#fff!important;box-shadow:inset 3px 0 0 #3b82f6!important}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar .cs-nav-icon{width:18px!important;min-width:18px!important;flex:0 0 18px!important;height:18px!important;display:grid!important;place-items:center!important;font-size:15px!important}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar .cs-nav-icon svg{display:block!important;width:16px!important;height:16px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar .cs-logout{height:36px!important;min-height:36px!important;padding:0 10px!important;font-size:12px!important;font-weight:750!important}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-main{grid-column:2!important;grid-row:1!important;display:flex!important;flex-direction:column!important;position:relative!important;left:auto!important;right:auto!important;margin:0!important;padding:0!important;width:auto!important;min-width:0!important;max-width:none!important;height:100vh!important;min-height:0!important;max-height:100vh!important;overflow:hidden!important;box-sizing:border-box!important}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-main>.cs-topbar{position:relative!important;left:auto!important;right:auto!important;top:auto!important;display:flex!important;flex:0 0 58px!important;width:100%!important;height:58px!important;min-height:58px!important;max-height:58px!important;padding:0 20px!important;gap:12px!important;align-items:center!important;z-index:100!important;box-sizing:border-box!important}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-main>.cs-topbar .cs-top-actions{margin-left:auto!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:9px!important;flex:0 0 auto!important}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-main>.cs-topbar .cs-profile{margin-left:0!important;max-width:280px!important}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-main>.cs-scroll{display:block!important;flex:1 1 auto!important;min-height:0!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-main>.cs-scroll>.cs-content{width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:22px 24px 40px!important;box-sizing:border-box!important}
+body[data-role="HEAD_TEACHER"] .cs-shell .cs-panel,body[data-role="HEAD_TEACHER"] .cs-shell .cs-hero,body[data-role="HEAD_TEACHER"] .cs-shell .cs-grid-2,body[data-role="HEAD_TEACHER"] .cs-shell .cs-grid-3{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+
+/* Academic Setup and Assessments pages: first heading/control must sit below the fixed header. */
+body.cs-headteacher-final-shell .csk-ht-main-final>.content,body.cs-headteacher-final-shell .csk-ht-main-final>.page{padding-top:22px!important}
+@media(max-width:900px){body.cs-headteacher-final-shell .csk-ht-main-final>.app-content,body.cs-headteacher-final-shell .csk-ht-main-final>.content,body.cs-headteacher-final-shell .csk-ht-main-final>.page,body.cs-headteacher-final-shell .csk-ht-main-final>section.content{padding-left:18px!important;padding-right:18px!important}}
+@media(max-width:640px){body[data-role="HEAD_TEACHER"] .cs-shell{grid-template-columns:68px minmax(0,1fr)!important}body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar{width:68px!important;min-width:68px!important;max-width:68px!important;padding:12px 7px!important}body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar .cs-brand{justify-content:center!important;padding:0!important}body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar .cs-brand>span,body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar .cs-nav-label,body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar .cs-nav a span:not(.cs-nav-icon),body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar .cs-logout{display:none!important}body[data-role="HEAD_TEACHER"] .cs-shell>.cs-main>.cs-topbar{padding:0 12px!important}body[data-role="HEAD_TEACHER"] .cs-shell>.cs-main>.cs-scroll>.cs-content{padding:16px 12px 28px!important}}
+
+
+/* Final HT consistency pass — profile, notification SVG and newer-shell nav alignment only. */
+body.cs-headteacher-final-shell .csk-ht-profile-final{
+  display:flex!important;flex-direction:row!important;align-items:center!important;gap:9px!important;
+  margin-left:0!important;padding:5px 8px!important;max-width:285px!important;
+}
+body.cs-headteacher-final-shell .csk-ht-avatar-final{
+  order:0!important;width:33px!important;height:33px!important;min-width:33px!important;min-height:33px!important;
+  flex:0 0 33px!important;display:grid!important;place-items:center!important;border-radius:10px!important;
+  overflow:hidden!important;background:#172b55!important;color:#fff!important;font-size:11px!important;font-weight:900!important;
+}
+body.cs-headteacher-final-shell .csk-ht-profile-copy-final{
+  order:1!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;
+  justify-content:center!important;min-width:0!important;line-height:1.15!important;
+}
+body.cs-headteacher-final-shell .csk-ht-profile-email-final{
+  max-width:205px!important;color:#1d2a42!important;font-size:11px!important;font-weight:850!important;
+  overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+}
+body.cs-headteacher-final-shell .csk-ht-profile-role-final{
+  margin-top:2px!important;color:#71819c!important;font-size:9px!important;font-weight:850!important;
+  letter-spacing:.06em!important;text-transform:uppercase!important;white-space:nowrap!important;
+}
+.cs-role-bell svg,.cs-icon-button svg{
+  display:block!important;width:18px!important;height:18px!important;fill:none!important;stroke:currentColor!important;
+  stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important;
+}
+body.cs-headteacher-final-shell .csk-ht-header-final .cs-role-bell{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  width:38px!important;height:38px!important;flex:0 0 38px!important;border-radius:11px!important;
+  margin-left:auto!important;margin-right:8px!important;font-size:0!important;
+}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar .cs-nav a{
+  margin-left:8px!important;width:calc(100% - 8px)!important;
+}
+body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar .cs-nav a .cs-nav-icon{
+  width:18px!important;min-width:18px!important;flex:0 0 18px!important;
+}
+@media(max-width:640px){
+  body[data-role="HEAD_TEACHER"] .cs-shell>.cs-sidebar .cs-nav a{margin-left:0!important;width:100%!important;}
+  body.cs-headteacher-final-shell .csk-ht-profile-email-final{max-width:130px!important;}
+}

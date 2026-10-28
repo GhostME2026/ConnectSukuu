@@ -1,0 +1,618 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Learning &amp; Live Classes</title><script src="/assets/js/config.js"></script><script src="/assets/js/app.js"></script>
+<style id="connectsukuu-teacher-role-canonical-shell">
+:root{--csk-sidebar:255px;--csk-header:72px;--csk-border:#e5e7eb;--csk-ink:#172033;--csk-muted:#667085;--csk-bg:#f6f8fc}
+html,body{margin:0!important;min-height:100%;background:var(--csk-bg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{overflow-x:hidden!important}
+.csk-teacher-sidebar{position:fixed!important;inset:0 auto 0 0!important;width:var(--csk-sidebar)!important;z-index:1000!important;background:#fff!important;border-right:1px solid var(--csk-border)!important;display:flex!important;flex-direction:column!important;box-sizing:border-box!important;overflow:hidden!important}
+.csk-teacher-brand{height:var(--csk-header);display:flex;align-items:center;gap:11px;padding:0 20px;border-bottom:1px solid var(--csk-border);box-sizing:border-box;flex:0 0 var(--csk-header)}
+.csk-teacher-brand img{width:34px;height:34px;object-fit:contain}.csk-teacher-brand strong{font-size:17px;color:var(--csk-ink);letter-spacing:-.02em}
+.csk-teacher-nav{padding:18px 12px;display:flex;flex-direction:column;gap:5px;overflow:auto;flex:1}
+.csk-teacher-nav-label{font-size:10px;font-weight:800;letter-spacing:.12em;color:#98a2b3;padding:8px 12px 5px}
+.csk-teacher-nav a{min-height:44px;display:flex;align-items:center;gap:12px;padding:0 13px;border-radius:11px;text-decoration:none;color:#475467;font-size:13.5px;font-weight:650;box-sizing:border-box;transition:.18s ease}
+.csk-teacher-nav a:hover{background:#f2f4f7;color:#1d2939;transform:translateX(1px)}
+.csk-teacher-nav a.active{background:#eef4ff;color:#175cd3;font-weight:750}
+.csk-icon{width:20px;text-align:center;font-size:17px;line-height:1;flex:0 0 20px}
+.csk-teacher-logout{margin:0 12px 14px;width:calc(100% - 24px);height:44px;border:1px solid #e4e7ec;background:#fff;border-radius:11px;color:#475467;font-weight:700;cursor:pointer}
+.csk-teacher-logout:hover{background:#f9fafb}
+.csk-teacher-main{margin-left:var(--csk-sidebar)!important;min-height:100vh!important;box-sizing:border-box!important}
+.csk-teacher-topbar{position:sticky!important;top:0!important;height:var(--csk-header)!important;z-index:900!important;background:rgba(255,255,255,.96)!important;backdrop-filter:blur(12px);border-bottom:1px solid var(--csk-border)!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:0 30px!important;box-sizing:border-box!important}
+.csk-teacher-title{font-size:20px!important;font-weight:750!important;color:var(--csk-ink)!important;margin:0!important;letter-spacing:-.02em}
+.csk-teacher-profile{margin-left:auto!important;display:flex!important;align-items:center!important;gap:10px!important;min-width:0!important;text-align:right!important}
+.csk-teacher-avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#eef4ff;color:#175cd3;font-size:13px;font-weight:800;flex:0 0 38px}
+.csk-teacher-profile-copy{display:flex;flex-direction:column;align-items:flex-end;line-height:1.2;min-width:0}.csk-teacher-profile-email{font-size:12px;font-weight:700;color:#344054;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.csk-teacher-profile-role{font-size:11px;color:#667085;margin-top:3px}
+.csk-teacher-content{width:100%!important;max-width:none!important;box-sizing:border-box!important;padding:28px 30px 44px!important}
+.csk-teacher-content>*{max-width:1180px;margin-left:auto;margin-right:auto}
+/* Preserve the existing module functionality while making its outer chrome consistent. */
+.csk-teacher-content .page,.csk-teacher-content .content,.csk-teacher-content main{max-width:1180px!important;margin-left:auto!important;margin-right:auto!important}
+.csk-teacher-content table{max-width:100%}
+@media(max-width:900px){:root{--csk-sidebar:0px}.csk-teacher-sidebar{position:static!important;width:100%!important;height:auto!important}.csk-teacher-nav{max-height:360px}.csk-teacher-main{margin-left:0!important}.csk-teacher-topbar{padding:0 16px!important}.csk-teacher-content{padding:20px 16px 34px!important}}
+</style>
+<style>.learn-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-end}.learn-hero{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}.learn-hero>div,.learn-panel{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:18px;box-shadow:0 8px 28px rgba(16,24,40,.05)}.learn-hero h3{margin:0 0 6px}.learn-hero p,.sub{color:#667085;font-size:13px;line-height:1.5}.assignment-note{padding:14px 16px;border-radius:13px;background:#eef4ff;border:1px solid #d1e0ff;color:#344054;font-size:13px;line-height:1.5}.tabs{display:flex;gap:8px;margin:18px 0}.tab{border:1px solid #d0d5dd;background:#fff;padding:10px 15px;border-radius:10px;cursor:pointer;font-weight:700;color:#475467}.tab.active{background:#175cd3;color:#fff;border-color:#175cd3}.panel{display:none}.panel.active{display:block}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:12px;font-weight:700;color:#344054}.field input,.field select,.field textarea{width:100%;box-sizing:border-box;border:1px solid #d0d5dd;border-radius:10px;padding:11px 12px;font:inherit;background:#fff}.field textarea{min-height:92px;resize:vertical}.actions{display:flex;gap:8px;margin-top:15px}.btn{border:0;border-radius:10px;padding:10px 13px;font-weight:750;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}.primary{background:#175cd3;color:#fff}.secondary{background:#fff;color:#344054;border:1px solid #d0d5dd}.danger{background:#fff;color:#b42318;border:1px solid #fecdca}.list{margin-top:18px;display:grid;gap:10px}.item{background:#f9fafb;border:1px solid #eaecf0;border-radius:13px;padding:14px;display:flex;justify-content:space-between;gap:16px;align-items:center}.meta{font-size:12px;color:#667085;line-height:1.55}.item-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.feedback{display:none;margin-top:12px;padding:11px 13px;border-radius:10px;font-size:13px}.feedback.show{display:block;background:#fef3f2;color:#b42318}.feedback.ok{background:#ecfdf3;color:#027a48}.count{font-size:11px;background:#eef2f6;border-radius:20px;padding:2px 7px}.modal{position:fixed;inset:0;background:rgba(16,24,40,.62);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px}.modal.open{display:flex}.modal-card{background:#fff;border-radius:16px;max-width:900px;width:100%;padding:20px}.modal video{width:100%;max-height:70vh;background:#000;border-radius:10px}@media(max-width:900px){.learn-hero,.form-grid{grid-template-columns:1fr}.item{align-items:flex-start;flex-direction:column}.item-actions{justify-content:flex-start}}
+</style>
+
+
+<style id="connectsukuu-teacher-shell-standardized">
+:root{
+  --csk-t-sidebar:255px;
+  --csk-t-header:58px;
+  --csk-t-navy:#0b1730;
+  --csk-t-navy-2:#101d38;
+  --csk-t-blue:#2563eb;
+  --csk-t-ink:#172033;
+  --csk-t-muted:#667085;
+  --csk-t-line:#e4e7ec;
+  --csk-t-bg:#f7f9fc;
+}
+html,body{min-height:100%;}
+body{margin:0!important;background:var(--csk-t-bg)!important;overflow-x:hidden!important;}
+
+/* Legacy shells are hidden. The Teacher pages keep their business logic/content. */
+body>.sidebar,
+body>.app-sidebar,
+body>.layout>.sidebar,
+body>.app-shell>.app-sidebar,
+body>.app-layout>.app-sidebar,
+body>.cs-assessment-sidebar,
+body>.csk-teacher-sidebar:not(.csk-teacher-sidebar-final){display:none!important;}
+.topbar,.app-topbar,.cs-assessment-topbar,
+body header.topbar,body header.app-topbar,
+.csk-teacher-topbar:not(.csk-teacher-topbar-final){display:none!important;}
+.csk-teacher-profile,.cs-assessment-profile,.user-card{display:none!important;}
+
+.csk-teacher-sidebar-final{
+  position:fixed!important;left:0!important;top:0!important;bottom:0!important;
+  width:var(--csk-t-sidebar)!important;min-width:var(--csk-t-sidebar)!important;
+  max-width:var(--csk-t-sidebar)!important;height:100vh!important;
+  z-index:5000!important;display:flex!important;flex-direction:column!important;
+  box-sizing:border-box!important;overflow:hidden!important;
+  background:linear-gradient(180deg,var(--csk-t-navy) 0%,var(--csk-t-navy-2) 100%)!important;
+  border-right:1px solid rgba(255,255,255,.08)!important;color:#fff!important;
+}
+.csk-teacher-brand-final{
+  height:var(--csk-t-header)!important;min-height:var(--csk-t-header)!important;
+  display:flex!important;align-items:center!important;gap:10px!important;
+  padding:0 18px!important;box-sizing:border-box!important;
+  border-bottom:1px solid rgba(255,255,255,.08)!important;flex:0 0 var(--csk-t-header)!important;
+}
+.csk-teacher-brand-final .brand-mark{
+  width:34px!important;height:34px!important;min-width:34px!important;border-radius:9px!important;
+  display:grid!important;place-items:center!important;background:#2563eb!important;color:#fff!important;
+  font-size:17px!important;font-weight:900!important;box-shadow:0 6px 16px rgba(37,99,235,.28)!important;overflow:hidden!important;
+}
+.csk-teacher-brand-final .brand-mark img{width:34px!important;height:34px!important;display:block!important;object-fit:cover!important;}
+.csk-teacher-brand-final .brand-connect{color:#fff!important;font-size:19px!important;font-weight:800!important;letter-spacing:-.035em!important;}
+.csk-teacher-brand-final .brand-sukuu{color:#60a5fa!important;}
+.csk-teacher-nav-final{
+  padding:16px 12px!important;display:flex!important;flex-direction:column!important;gap:4px!important;
+  overflow-y:auto!important;overflow-x:hidden!important;flex:1!important;
+}
+.csk-teacher-nav-final .nav-label{
+  font-size:10px!important;font-weight:800!important;letter-spacing:.12em!important;
+  color:#8492aa!important;padding:10px 12px 6px!important;
+}
+.csk-teacher-nav-final a{
+  min-height:44px!important;height:44px!important;display:flex!important;align-items:center!important;
+  gap:11px!important;padding:0 12px!important;border-radius:9px!important;text-decoration:none!important;
+  color:#c2ccdc!important;font-size:13px!important;font-weight:650!important;box-sizing:border-box!important;
+  white-space:nowrap!important;overflow:hidden!important;transition:background .16s ease,color .16s ease!important;
+}
+.csk-teacher-nav-final a:hover{background:rgba(255,255,255,.07)!important;color:#fff!important;transform:none!important;}
+.csk-teacher-nav-final a.active{background:rgba(37,99,235,.22)!important;color:#fff!important;box-shadow:inset 3px 0 0 #3b82f6!important;}
+.csk-teacher-nav-final .nav-icon{width:20px!important;min-width:20px!important;text-align:center!important;color:inherit!important;font-size:16px!important;line-height:1!important;}
+.csk-teacher-logout-final{
+  margin:0 14px 14px!important;width:calc(100% - 28px)!important;height:42px!important;
+  border:1px solid rgba(255,255,255,.14)!important;background:rgba(255,255,255,.035)!important;
+  color:#e5eaf3!important;border-radius:8px!important;font-size:12px!important;font-weight:750!important;cursor:pointer!important;
+}
+.csk-teacher-logout-final:hover{background:rgba(255,255,255,.09)!important;color:#fff!important;}
+
+.csk-teacher-main-final{
+  margin-left:var(--csk-t-sidebar)!important;min-height:100vh!important;width:calc(100% - var(--csk-t-sidebar))!important;
+  box-sizing:border-box!important;background:var(--csk-t-bg)!important;position:relative!important;
+  padding-top:var(--csk-t-header)!important;
+}
+.csk-teacher-header-final{
+  position:fixed!important;left:var(--csk-t-sidebar)!important;right:0!important;top:0!important;
+  height:var(--csk-t-header)!important;min-height:var(--csk-t-header)!important;
+  z-index:4900!important;background:#fff!important;border-bottom:1px solid var(--csk-t-line)!important;
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  padding:0 20px!important;box-sizing:border-box!important;
+}
+.csk-teacher-header-title-final{
+  margin:0!important;padding:0!important;color:var(--csk-t-ink)!important;
+  font-size:19px!important;font-weight:750!important;line-height:1!important;letter-spacing:-.025em!important;
+}
+.csk-teacher-profile-final{
+  display:flex!important;align-items:center!important;gap:10px!important;min-width:0!important;
+  padding:6px 9px!important;border:1px solid #e5e7eb!important;border-radius:10px!important;
+  background:#fff!important;box-shadow:0 2px 8px rgba(15,23,42,.04)!important;
+}
+.csk-teacher-profile-copy-final{
+  display:flex!important;flex-direction:column!important;align-items:flex-end!important;
+  min-width:0!important;line-height:1.15!important;
+}
+.csk-teacher-profile-email-final{
+  max-width:210px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+  color:#344054!important;font-size:11px!important;font-weight:750!important;
+}
+.csk-teacher-profile-role-final{margin-top:3px!important;color:#98a2b3!important;font-size:10px!important;font-weight:500!important;}
+.csk-teacher-avatar-final{
+  width:34px!important;height:34px!important;min-width:34px!important;border-radius:50%!important;
+  display:grid!important;place-items:center!important;background:#eff6ff!important;color:#2563eb!important;
+  font-size:12px!important;font-weight:850!important;
+}
+
+/* Same usable content width on every Teacher menu: the attendance canvas width is the standard. */
+.csk-teacher-content-final{
+  width:100%!important;max-width:none!important;box-sizing:border-box!important;
+  padding:24px 28px 44px!important;margin:0!important;min-height:calc(100vh - var(--csk-t-header))!important;
+}
+.csk-teacher-content-final>*{max-width:none!important;margin-left:0!important;margin-right:0!important;}
+.csk-teacher-content-final .content,.csk-teacher-content-final .page,.csk-teacher-content-final main{max-width:none!important;margin-left:0!important;margin-right:0!important;}
+.csk-teacher-content-final table{max-width:100%!important;}
+
+@media(max-width:900px){
+  :root{--csk-t-sidebar:0px;}
+  .csk-teacher-sidebar-final{position:relative!important;width:100%!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:0!important;}
+  .csk-teacher-brand-final{flex-basis:58px!important;}
+  .csk-teacher-nav-final{max-height:360px!important;}
+  .csk-teacher-main-final{margin-left:0!important;width:100%!important;padding-top:58px!important;}
+  .csk-teacher-header-final{left:0!important;padding:0 14px!important;}
+  .csk-teacher-content-final{padding:20px 16px 34px!important;}
+  .csk-teacher-profile-email-final{max-width:150px!important;}
+}
+</style>
+
+<style id="connectsukuu-teacher-learning-content-finish">
+/* CONTENT-ONLY FINISH: Learning & Live Classes. The established Teacher shell is intentionally untouched. */
+.csk-teacher-main-final .csk-teacher-content-final{
+  width:100%!important;
+  max-width:none!important;
+  padding:26px 30px 48px!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final > .learn-head,
+.csk-teacher-main-final .csk-teacher-content-final > .learn-hero,
+.csk-teacher-main-final .csk-teacher-content-final > .assignment-note,
+.csk-teacher-main-final .csk-teacher-content-final > .tabs,
+.csk-teacher-main-final .csk-teacher-content-final > .learn-panel,
+.csk-teacher-main-final .csk-teacher-content-final > #feedback{
+  width:100%!important;
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  box-sizing:border-box!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final > .learn-head{
+  padding:2px 2px 0!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final > .learn-head h2{
+  font-size:29px!important;
+  line-height:1.15!important;
+  letter-spacing:-.03em!important;
+  margin:7px 0 8px!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final > .learn-head .sub{
+  max-width:1050px!important;
+  margin:0!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final > .learn-hero{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:16px!important;
+  margin:18px 0!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final > .learn-hero > div{
+  min-width:0!important;
+  min-height:124px!important;
+  padding:20px!important;
+  border-radius:17px!important;
+  box-sizing:border-box!important;
+  box-shadow:0 8px 24px rgba(16,24,40,.055)!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final > .learn-hero > div:nth-child(1){background:linear-gradient(135deg,#eff6ff,#fff 75%)!important;border-color:#bfdbfe!important}
+.csk-teacher-main-final .csk-teacher-content-final > .learn-hero > div:nth-child(2){background:linear-gradient(135deg,#fff7ed,#fff 75%)!important;border-color:#fed7aa!important}
+.csk-teacher-main-final .csk-teacher-content-final > .learn-hero > div:nth-child(3){background:linear-gradient(135deg,#ecfdf3,#fff 75%)!important;border-color:#bbf7d0!important}
+.csk-teacher-main-final .csk-teacher-content-final > .learn-hero h3{font-size:18px!important;margin:0 0 8px!important}
+.csk-teacher-main-final .csk-teacher-content-final > .learn-hero p{margin:0!important;max-width:none!important}
+.csk-teacher-main-final .csk-teacher-content-final > .assignment-note{
+  margin:0!important;
+  padding:15px 17px!important;
+  border-radius:13px!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final > .tabs{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:9px!important;
+  margin:18px 0 14px!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final > .tabs .tab{
+  min-height:42px!important;
+  padding:10px 16px!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final > .learn-panel{
+  padding:22px!important;
+  border-radius:17px!important;
+  box-shadow:0 8px 26px rgba(16,24,40,.055)!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final > .learn-panel h3{
+  font-size:20px!important;
+  margin-top:0!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final > .learn-panel .form-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:16px!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final > .learn-panel .field.full{grid-column:1/-1!important}
+.csk-teacher-main-final .csk-teacher-content-final > .learn-panel .actions{margin-top:17px!important}
+.csk-teacher-main-final .csk-teacher-content-final > .learn-panel .list{width:100%!important}
+@media(max-width:900px){
+  .csk-teacher-main-final .csk-teacher-content-final > .learn-hero{grid-template-columns:1fr!important}
+  .csk-teacher-main-final .csk-teacher-content-final > .learn-panel .form-grid{grid-template-columns:1fr!important}
+}
+@media(max-width:700px){
+  .csk-teacher-main-final .csk-teacher-content-final{padding:20px 16px 36px!important}
+  .csk-teacher-main-final .csk-teacher-content-final > .learn-panel{padding:18px!important}
+}
+</style>
+
+
+<style id="connectsukuu-teacher-learning-content-finish-v2">
+/* CONTENT-ONLY FINISH: Learning & Live Classes. The established Teacher shell is intentionally untouched. */
+.csk-teacher-main-final .csk-teacher-content-final{
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  display:block!important;
+  padding:26px 28px 48px!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final .learn-head,
+.csk-teacher-main-final .csk-teacher-content-final .learn-hero,
+.csk-teacher-main-final .csk-teacher-content-final .assignment-note,
+.csk-teacher-main-final .csk-teacher-content-final .tabs,
+.csk-teacher-main-final .csk-teacher-content-final .learn-panel{
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  box-sizing:border-box!important;
+}
+  max-width:none!important;
+  padding:26px 30px 48px!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final .learn-head,
+.csk-teacher-main-final .csk-teacher-content-final .learn-hero,
+.csk-teacher-main-final .csk-teacher-content-final .assignment-note,
+.csk-teacher-main-final .csk-teacher-content-final .tabs,
+.csk-teacher-main-final .csk-teacher-content-final .learn-panel,
+.csk-teacher-main-final .csk-teacher-content-final > #feedback{
+  width:100%!important;
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  box-sizing:border-box!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final .learn-head{
+  padding:2px 2px 0!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final .learn-head h2{
+  font-size:29px!important;
+  line-height:1.15!important;
+  letter-spacing:-.03em!important;
+  margin:7px 0 8px!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final .learn-head .sub{
+  max-width:1050px!important;
+  margin:0!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final .learn-hero{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:16px!important;
+  margin:18px 0!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final .learn-hero > div{
+  min-width:0!important;
+  min-height:124px!important;
+  padding:20px!important;
+  border-radius:17px!important;
+  box-sizing:border-box!important;
+  box-shadow:0 8px 24px rgba(16,24,40,.055)!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final .learn-hero > div:nth-child(1){background:linear-gradient(135deg,#eff6ff,#fff 75%)!important;border-color:#bfdbfe!important}
+.csk-teacher-main-final .csk-teacher-content-final .learn-hero > div:nth-child(2){background:linear-gradient(135deg,#fff7ed,#fff 75%)!important;border-color:#fed7aa!important}
+.csk-teacher-main-final .csk-teacher-content-final .learn-hero > div:nth-child(3){background:linear-gradient(135deg,#ecfdf3,#fff 75%)!important;border-color:#bbf7d0!important}
+.csk-teacher-main-final .csk-teacher-content-final .learn-hero h3{font-size:18px!important;margin:0 0 8px!important}
+.csk-teacher-main-final .csk-teacher-content-final .learn-hero p{margin:0!important;max-width:none!important}
+.csk-teacher-main-final .csk-teacher-content-final .assignment-note{
+  margin:0!important;
+  padding:15px 17px!important;
+  border-radius:13px!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final .tabs{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:9px!important;
+  margin:18px 0 14px!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final .tabs .tab{
+  min-height:42px!important;
+  padding:10px 16px!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final .learn-panel{
+  padding:22px!important;
+  border-radius:17px!important;
+  box-shadow:0 8px 26px rgba(16,24,40,.055)!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final .learn-panel h3{
+  font-size:20px!important;
+  margin-top:0!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final .learn-panel .form-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:16px!important;
+}
+.csk-teacher-main-final .csk-teacher-content-final .learn-panel .field.full{grid-column:1/-1!important}
+.csk-teacher-main-final .csk-teacher-content-final .learn-panel .actions{margin-top:17px!important}
+.csk-teacher-main-final .csk-teacher-content-final .learn-panel .list{width:100%!important}
+@media(max-width:900px){
+  .csk-teacher-main-final .csk-teacher-content-final .learn-hero{grid-template-columns:1fr!important}
+  .csk-teacher-main-final .csk-teacher-content-final .learn-panel .form-grid{grid-template-columns:1fr!important}
+}
+@media(max-width:700px){
+  .csk-teacher-main-final .csk-teacher-content-final{padding:20px 16px 36px!important}
+  .csk-teacher-main-final .csk-teacher-content-final .learn-panel{padding:18px!important}
+}
+</style>
+
+
+<style id="connectsukuu-teacher-learning-compact-actions">
+/* Reduce only action-button footprint; preserve all existing font sizes and font families. */
+.csk-teacher-content .item-actions{gap:6px;align-items:center}
+.csk-teacher-content .item-actions .btn{padding:7px 10px;min-height:32px;line-height:1.2;white-space:nowrap}
+.csk-teacher-content .item-actions .btn:hover{transform:translateY(-1px)}
+</style>
+
+<style id="connectsukuu-teacher-learning-modern-cards">
+/* Learning & Live Classes content-only polish. The frozen Teacher shell dimensions remain unchanged. */
+.csk-teacher-content-final .learn-head{margin-bottom:16px}
+.csk-teacher-content-final .learn-hero{gap:12px;margin:16px 0}
+.csk-teacher-content-final .learn-hero>div{border:1px solid #e3eaf5;border-radius:15px;padding:17px;background:linear-gradient(145deg,#fff 0%,#f8fbff 100%);box-shadow:0 5px 18px rgba(15,35,75,.045)}
+.csk-teacher-content-final .learn-hero h3{font-size:15px;letter-spacing:-.02em;color:#16233b}
+.csk-teacher-content-final .learn-hero p{margin:7px 0 0}
+.csk-teacher-content-final .assignment-note{border-radius:12px;padding:13px 16px}
+.csk-teacher-content-final .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:17px 0 14px}
+.csk-teacher-content-final .tab{padding:9px 13px;border-radius:10px;font-size:12.5px;transition:background .16s,border-color .16s,transform .16s}
+.csk-teacher-content-final .tab:hover{transform:translateY(-1px)}
+.csk-teacher-content-final .learn-panel{padding:20px;border:1px solid #e2e8f2;border-radius:16px;box-shadow:0 8px 24px rgba(16,24,40,.045);min-width:0}
+.csk-teacher-content-final .learn-panel>h3{margin:0 0 6px;font-size:18px;letter-spacing:-.025em;color:#172033}
+.csk-teacher-content-final .learn-panel>.sub{margin:0 0 17px;max-width:760px}
+.csk-teacher-content-final .form-grid{gap:14px 16px}
+.csk-teacher-content-final .field label{font-size:12px;color:#344054;font-weight:750}
+.csk-teacher-content-final .field input:not([type=file]),.csk-teacher-content-final .field select,.csk-teacher-content-final .field textarea{border:1px solid #d5deeb;border-radius:10px;background:#fff;min-height:42px;padding:10px 12px;box-shadow:0 1px 2px rgba(16,24,40,.025);transition:border-color .15s,box-shadow .15s}
+.csk-teacher-content-final .field textarea{min-height:100px;line-height:1.5}
+.csk-teacher-content-final .field input:focus,.csk-teacher-content-final .field select:focus,.csk-teacher-content-final .field textarea:focus{outline:none;border-color:#6698ff;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.csk-teacher-content-final input[type=file]{width:100%;max-width:100%;box-sizing:border-box;border:1px dashed #b8c8df;border-radius:10px;background:#f8fbff;padding:9px;font-size:12px;color:#344054}
+.csk-teacher-content-final .file-hint{display:block;color:#718096;font-size:11px;line-height:1.45;margin-top:2px}
+.csk-teacher-content-final .actions{gap:8px;flex-wrap:wrap}
+.csk-teacher-content-final .btn{min-height:35px;padding:8px 11px;border-radius:9px;font-size:12px;line-height:1.15;white-space:nowrap;gap:5px;transition:transform .14s,box-shadow .14s,background .14s}
+.csk-teacher-content-final .btn:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(15,23,42,.08)}
+.csk-teacher-content-final .btn:disabled{opacity:.6;cursor:wait;transform:none;box-shadow:none}
+.csk-teacher-content-final .list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:12px;margin-top:18px}
+.csk-teacher-content-final .item{height:100%;min-width:0;box-sizing:border-box;align-items:stretch;gap:12px;padding:15px;border:1px solid #e0e7f1;border-radius:13px;background:linear-gradient(145deg,#fff 0%,#fbfdff 100%);box-shadow:0 3px 12px rgba(16,24,40,.035)}
+.csk-teacher-content-final .item>div:first-child{flex:1 1 auto;min-width:0}
+.csk-teacher-content-final .item h3{margin:0 0 7px;font-size:15px;line-height:1.35;letter-spacing:-.015em;color:#172033;overflow-wrap:anywhere}
+.csk-teacher-content-final .item .meta{font-size:11.5px;line-height:1.55;overflow-wrap:anywhere}
+.csk-teacher-content-final .item-actions{flex:0 0 auto;display:flex;align-items:center;justify-content:flex-end;gap:5px;flex-wrap:nowrap;align-self:flex-start;max-width:100%}
+.csk-teacher-content-final .item-actions .btn{min-height:31px;padding:7px 9px;font-size:11.5px;border-radius:8px}
+.csk-teacher-content-final .item-actions .primary{background:#2563eb}
+.csk-teacher-content-final .item-actions .secondary{background:#fff}
+.csk-teacher-content-final .item-actions .danger{background:#fff7f6}
+.csk-teacher-content-final .item-description{margin-top:9px;border:1px solid #e6edf6;border-radius:9px;background:#f8faff;overflow:hidden}
+.csk-teacher-content-final .item-description summary{cursor:pointer;list-style:none;padding:8px 10px;color:#315a9e;font-size:11.5px;font-weight:750}
+.csk-teacher-content-final .item-description summary::-webkit-details-marker{display:none}
+.csk-teacher-content-final .item-description summary:after{content:'＋';float:right;color:#2563eb}
+.csk-teacher-content-final .item-description[open] summary:after{content:'−'}
+.csk-teacher-content-final .item-description p{margin:0;padding:0 10px 10px;font-size:12px;line-height:1.55;color:#475467;white-space:pre-wrap;overflow-wrap:anywhere}
+.csk-teacher-content-final .feedback{border-radius:10px;border:1px solid #fecdca}
+.csk-teacher-content-final .feedback.ok{border-color:#abefc6}
+.csk-teacher-content-final .count{font-weight:800;color:#175cd3;background:#eef4ff}
+.csk-teacher-content-final .modal-card{max-height:calc(100vh - 40px);overflow:auto;box-sizing:border-box;box-shadow:0 24px 70px rgba(0,0,0,.24)}
+@media(max-width:1100px){.csk-teacher-content-final .list{grid-template-columns:1fr}.csk-teacher-content-final .item-actions{flex-wrap:wrap}}
+@media(max-width:760px){.csk-teacher-content-final .learn-hero{grid-template-columns:1fr}.csk-teacher-content-final .learn-panel{padding:15px}.csk-teacher-content-final .item{flex-direction:column}.csk-teacher-content-final .item-actions{align-self:stretch;justify-content:flex-start;flex-wrap:wrap}.csk-teacher-content-final .item-actions .btn{flex:0 0 auto}}
+</style>
+
+
+<style id="connectsukuu-teacher-profile-dialog">
+.csk-profile-trigger,.csk-teacher-profile-final{cursor:pointer!important}
+.csk-profile-trigger:focus-visible{outline:3px solid #93c5fd!important;outline-offset:2px!important}
+.csk-profile-modal{position:fixed;inset:0;z-index:12000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(10,20,40,.58);backdrop-filter:blur(4px)}
+.csk-profile-modal.open{display:flex}
+.csk-profile-dialog{width:min(560px,100%);max-height:min(86vh,760px);overflow:auto;background:#fff;border:1px solid #e4eaf3;border-radius:18px;box-shadow:0 24px 80px rgba(0,0,0,.25);color:#172033}
+.csk-profile-head{position:sticky;top:0;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:20px 22px;background:#fff;border-bottom:1px solid #edf0f5}
+.csk-profile-head h2{margin:0 0 5px;font-size:20px;letter-spacing:-.02em}.csk-profile-head p{margin:0;color:#667085;font-size:12px;line-height:1.5}
+.csk-profile-close{width:34px;height:34px;border:1px solid #e4e7ec;border-radius:10px;background:#fff;font-size:22px;cursor:pointer;color:#475467}
+.csk-profile-body{display:grid;gap:13px;padding:18px 22px 22px}
+.csk-profile-section{border:1px solid #e5eaf2;border-radius:13px;padding:15px;background:#fbfcff}
+.csk-profile-section h3{margin:0 0 5px;font-size:14px}.csk-profile-section p{margin:0 0 12px;color:#667085;font-size:12px;line-height:1.5}
+.csk-profile-identity{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.csk-profile-photo{width:52px;height:52px;flex:0 0 52px;border-radius:50%;display:grid;place-items:center;overflow:hidden;background:#eaf1ff;color:#175cd3;font-weight:800}
+.csk-profile-photo img{width:100%;height:100%;object-fit:cover}
+.csk-profile-name{font-size:14px;font-weight:800}.csk-profile-role{margin-top:3px;font-size:11px;color:#667085}
+.csk-profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.csk-profile-field{display:flex;flex-direction:column;gap:5px;min-width:0}.csk-profile-field label{font-size:11px;font-weight:750;color:#475467}
+.csk-profile-field input{box-sizing:border-box;width:100%;min-height:38px;border:1px solid #d5deeb;border-radius:9px;padding:9px 10px;font:inherit;font-size:12px;background:#fff}
+.csk-profile-field input[readonly]{background:#f2f4f7;color:#667085}
+.csk-profile-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:11px}
+.csk-profile-help{font-size:11px!important;margin:8px 0 0!important}
+.csk-profile-status{display:none;margin-top:10px;padding:9px 11px;border-radius:9px;background:#fef3f2;color:#b42318;font-size:12px;line-height:1.45}
+.csk-profile-status.show{display:block}.csk-profile-status.ok{background:#ecfdf3;color:#027a48}
+@media(max-width:560px){.csk-profile-grid{grid-template-columns:1fr}.csk-profile-head{padding:17px}.csk-profile-body{padding:14px}.csk-profile-dialog{max-height:92vh}}
+</style>
+<link rel="stylesheet" href="/assets/css/teacher-communications.css?v=20261015-1">
+<link rel="stylesheet" href="/assets/css/mobile-shell.css" media="(max-width:820px)"><script src="/assets/js/mobile-shell.js" defer></script></head><body><aside class="csk-teacher-sidebar"><div class="csk-teacher-brand"><img src="/assets/images/favicon.svg" alt="ConnectSukuu"><strong>ConnectSukuu</strong></div><nav class="csk-teacher-nav">
+<div class="csk-teacher-nav-label">WORKSPACE</div>
+<a href="/roles/teacher/teacher-dashboard.html" data-csk-teacher-link="dashboard"><span class="csk-icon">⌂</span><span>Dashboard</span></a>
+<a href="/roles/teacher/teacher-attendance.html" data-csk-teacher-link="attendance"><span class="csk-icon">✓</span><span>Attendance</span></a>
+<div class="csk-teacher-nav-label">TEACHING</div>
+<a href="/roles/teacher/teacher-teaching-assignments.html" data-csk-teacher-link="assignments"><span class="csk-icon">⇄</span><span>Teaching Assignments</span></a>
+<a href="/roles/teacher/teacher-timetable.html" data-csk-teacher-link="timetable"><span class="csk-icon">▦</span><span>Timetable</span></a>
+<a href="/roles/teacher/teacher-assessments.html" data-csk-teacher-link="assessments"><span class="csk-icon">★</span><span>Assessments &amp; Reports</span></a>
+<a href="/roles/teacher/teacher-learning.html" data-csk-teacher-link="learning"><span class="csk-icon">▶</span><span>Learning &amp; Live Classes</span></a>
+</nav><button type="button" class="csk-teacher-logout" id="cskTeacherLogout">↪ Log out</button><button type="button" id="logoutBtn" hidden aria-hidden="true"></button></aside><main class="csk-teacher-main"><header class="csk-teacher-topbar"><h1 class="csk-teacher-title">Learning &amp; Live Classes</h1><div class="csk-teacher-profile"><div class="csk-teacher-profile-copy"><span class="csk-teacher-profile-email" id="teacherEmail">Teacher</span><span class="csk-teacher-profile-role">Teacher</span></div><div class="csk-teacher-avatar" id="teacherAvatar">T</div></div></header><div class="csk-teacher-content"><div class="learn-head"><div><div style="font-size:11px;color:#2563eb;font-weight:800;letter-spacing:.12em;text-transform:uppercase">Teacher Workspace</div><h2 style="margin:7px 0;color:#172033">Learning &amp; Live Classes</h2><p class="sub">Publish recorded lessons, share learning materials and schedule live classes for your assigned classes and subjects.</p></div></div><div class="learn-hero"><div><h3>🎥 Recorded lessons</h3><p>Upload a lesson video, publish it, let students play it in-app and provide a download option.</p></div><div><h3>🔴 Live classes</h3><p>Schedule Zoom, Google Meet, Teams or another live meeting and edit it later.</p></div><div><h3>📚 Learning materials</h3><p>Upload or link worksheets, documents, slides and other resources.</p></div></div><div class="assignment-note"><strong style="font-size:15px">Assignment-scoped:</strong> You can only publish content against teaching assignments currently owned by your Teacher account.</div><div class="tabs"><button class="tab active" data-tab="recorded">Recorded Lessons <span class="count" id="recordedCount">0</span></button><button class="tab" data-tab="materials">Learning Materials <span class="count" id="materialCount">0</span></button><button class="tab" data-tab="live">Live Classes <span class="count" id="liveCount">0</span></button></div><div id="feedback" class="feedback"></div><section id="recorded" class="learn-panel panel active"><h3>Publish recorded lesson</h3><p class="sub">Choose your teaching assignment, enter lesson details, then upload the video file or use a hosted video URL.</p><div class="form-grid"><div class="field full"><label>Teaching assignment</label><select id="rAssignment"></select></div><div class="field"><label>Lesson title</label><input id="rTitle" placeholder="Fractions — Introduction"></div><div class="field"><label>Video file</label><input id="rFile" type="file" accept=".mp4,.m4v,.webm,.mov,.avi,.mkv,.ogv,.ogg,.mpeg,.mpg,.3gp,.wmv"><small class="file-hint" id="rFileHint">Choose an MP4, WebM, MOV, AVI or other video file. If your video is not listed, choose “All files” in the file picker.</small></div><div class="field"><label>Video URL (optional)</label><input id="rVideo" type="url" placeholder="https://..."></div><div class="field"><label>Download URL (optional)</label><input id="rDownload" type="url" placeholder="https://..."></div><div class="field full"><label>Description</label><textarea id="rDesc"></textarea></div></div><div class="actions"><button class="btn primary" id="saveRecorded">Upload &amp; Publish Lesson</button></div><div class="list" id="recordedList"></div></section><section id="materials" class="learn-panel panel"><h3>Publish learning material</h3><p class="sub">Upload a file or use a hosted resource URL.</p><div class="form-grid"><div class="field full"><label>Teaching assignment</label><select id="mAssignment"></select></div><div class="field"><label>Material title</label><input id="mTitle" placeholder="Week 3 revision worksheet"></div><div class="field"><label>Material type</label><select id="mType"><option>PDF</option><option>DOCUMENT</option><option>SLIDES</option><option>WORKSHEET</option><option>LINK</option><option>OTHER</option></select></div><div class="field"><label>Material file</label><input id="mFile" type="file"></div><div class="field"><label>Resource URL (optional)</label><input id="mUrl" type="url" placeholder="https://..."></div><div class="field"><label>Download URL (optional)</label><input id="mDownload" type="url" placeholder="https://..."></div><div class="field full"><label>Description</label><textarea id="mDesc"></textarea></div></div><div class="actions"><button class="btn primary" id="saveMaterial">Upload &amp; Publish Material</button></div><div class="list" id="materialList"></div></section><section id="live" class="learn-panel panel"><h3>Schedule live class</h3><p class="sub">Create, publish and later edit your scheduled live class.</p><div class="form-grid"><div class="field full"><label>Teaching assignment</label><select id="lAssignment"></select></div><div class="field"><label>Class title</label><input id="lTitle" placeholder="Algebra revision"></div><div class="field"><label>Platform</label><select id="lPlatform"><option>Zoom</option><option>Google Meet</option><option>Microsoft Teams</option><option>Other</option></select></div><div class="field"><label>Date &amp; time</label><input id="lDate" type="datetime-local"></div><div class="field"><label>Duration (minutes)</label><input id="lDuration" type="number" min="15" max="480" value="60"></div><div class="field full"><label>Meeting URL</label><input id="lUrl" type="url" placeholder="https://..."></div><div class="field full"><label>Instructions</label><textarea id="lDesc"></textarea></div></div><div class="actions"><button class="btn primary" id="saveLive">Publish Live Class</button></div><div class="list" id="liveList"></div></section></div></main><div class="modal" id="videoModal"><div class="modal-card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><strong id="videoTitle">Lesson</strong><button class="btn secondary" id="closeVideo">Close</button></div><video id="videoPlayer" controls playsinline></video></div></div><div class="modal" id="editModal"><div class="modal-card"><h3>Edit learning item</h3><div id="editBody"></div><div class="actions"><button class="btn primary" id="saveEdit">Save changes</button><button class="btn secondary" id="cancelEdit">Cancel</button></div></div></div>
+<div class="csk-profile-modal" id="cskProfileModal" aria-hidden="true">
+  <section class="csk-profile-dialog" role="dialog" aria-modal="true" aria-labelledby="cskProfileTitle">
+    <header class="csk-profile-head"><div><h2 id="cskProfileTitle">My profile</h2><p>Manage your profile photo and password. School-managed contact details are read-only here.</p></div><button class="csk-profile-close" id="cskProfileClose" type="button" aria-label="Close profile">×</button></header>
+    <div class="csk-profile-body">
+      <section class="csk-profile-section">
+        <div class="csk-profile-identity"><div class="csk-profile-photo" id="cskProfilePhoto">T</div><div><div class="csk-profile-name" id="cskProfileName">Teacher</div><div class="csk-profile-role" id="cskProfileRole">Teacher</div></div></div>
+        <div class="csk-profile-field"><label for="cskProfilePhotoFile">Profile picture (PNG, JPG, WEBP or GIF; maximum 5 MB)</label><input type="file" id="cskProfilePhotoFile" accept=".png,.jpg,.jpeg,.webp,.gif"></div>
+        <div class="csk-profile-actions"><button class="btn primary" id="cskProfileUpload" type="button">Upload photo</button></div>
+      </section>
+      <section class="csk-profile-section"><h3>Account details</h3><p>Email and phone are shown for reference. Ask the school Owner or authorized administrator to change them.</p>
+        <div class="csk-profile-grid"><div class="csk-profile-field"><label for="cskProfileEmail">Email address</label><input id="cskProfileEmail" readonly></div><div class="csk-profile-field"><label for="cskProfilePhone">Phone number</label><input id="cskProfilePhone" readonly></div><div class="csk-profile-field"><label for="cskProfileFirst">First name</label><input id="cskProfileFirst" readonly></div><div class="csk-profile-field"><label for="cskProfileLast">Last name</label><input id="cskProfileLast" readonly></div></div>
+      </section>
+      <section class="csk-profile-section"><h3>Change password</h3><p>Use at least 8 characters. Your current password is required.</p>
+        <form id="cskProfilePasswordForm"><div class="csk-profile-grid"><div class="csk-profile-field"><label for="cskProfileCurrent">Current password</label><input id="cskProfileCurrent" name="currentPassword" type="password" autocomplete="current-password" required></div><div class="csk-profile-field"><label for="cskProfileNew">New password</label><input id="cskProfileNew" name="newPassword" type="password" minlength="8" autocomplete="new-password" required></div></div><div class="csk-profile-actions"><button class="btn primary" type="submit" id="cskProfilePasswordSave">Update password</button></div></form>
+      </section>
+      <div class="csk-profile-status" id="cskProfileStatus" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+</div>
+
+<script id="connectsukuu-teacher-learning-runtime">(function(){'use strict';function getUser(){try{return AUTH.getUser()||{}}catch(_){return {}}}var u=getUser();if(String(u.role||'').toUpperCase()!=='TEACHER'){location.replace('/roles/teacher/teacher-dashboard.html');return}document.getElementById('teacherEmail').textContent=u.email||[u.firstName,u.lastName].filter(Boolean).join(' ')||'Teacher';document.getElementById('teacherAvatar').textContent=([u.firstName,u.lastName].filter(Boolean).join('')||'T').slice(0,2).toUpperCase();document.getElementById('cskTeacherLogout').onclick=function(){AUTH.logout()};var videoInput=document.getElementById('rFile');if(videoInput){videoInput.addEventListener('change',function(){var f=videoInput.files&&videoInput.files[0],hint=document.getElementById('rFileHint');if(!hint)return;if(!f){hint.textContent='Choose an MP4, WebM, MOV, AVI or other video file. If your video is not listed, choose “All files” in the file picker.';return}hint.textContent=f.name+' · '+(f.size<1048576?(f.size/1024).toFixed(0)+' KB':(f.size/1048576).toFixed(1)+' MB');var ext=(f.name.split('.').pop()||'').toLowerCase();var allowed=['mp4','m4v','mov','webm','ogv','ogg','avi','mkv','mpeg','mpg','3gp','wmv'];if(!(f.type&&f.type.indexOf('video/')===0)&&allowed.indexOf(ext)<0){hint.textContent='This file does not look like a supported video. Select a video file or use the hosted video URL.';videoInput.value=''}})};var S={a:[],r:[],m:[],l:[]},E={kind:null,id:null};function $(x){return document.getElementById(x)}function esc(v){return String(v??'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]})}function note(t,ok){var e=$('feedback');e.textContent=t;e.className='feedback show'+(ok?' ok':'');if(ok)setTimeout(function(){e.className='feedback'},2500)}async function req(p,o){var r=await apiFetch(p,o);if(!r)throw Error('Your session has expired. Please sign in again.');var d=await r.json().catch(function(){return {}});if(!r.ok)throw Error(d.error||'Request failed.');return d}function fill(){['rAssignment','mAssignment','lAssignment'].forEach(function(id){$(id).innerHTML='<option value="">Select teaching assignment…</option>'+S.a.map(function(x){return '<option value="'+esc(x.id)+'">'+esc((x.schoolClass?.name||'Class')+' · '+(x.subject?.name||'Subject')+' · '+(x.academicYear?.name||'Academic year'))+'</option>'}).join('')})}function meta(x){var a=x.teachingAssignment;return (a?(a.schoolClass?.name||'Class')+' · '+(a.subject?.name||'Subject')+' · '+(a.academicYear?.name||'Academic year'):'Teaching assignment unavailable')}function render(){ $('recordedCount').textContent=S.r.length;$('materialCount').textContent=S.m.length;$('liveCount').textContent=S.l.length;$('recordedList').innerHTML=S.r.length?S.r.map(function(x){return '<article class="item"><div><h3>'+esc(x.title)+'</h3><div class="meta">'+esc(meta(x))+'</div>'+(x.description?'<details class="item-description"><summary>Lesson details</summary><p>'+esc(x.description)+'</p></details>':'')+'</div><div class="item-actions"><button class="btn secondary" data-play="'+esc(x.id)+'">▶ Play</button>'+(x.downloadUrl?'<a class="btn primary" href="'+esc(forceDownload(x.downloadUrl))+'" target="_blank" rel="noopener">Download</a>':'')+'<button class="btn secondary" data-edit-r="'+esc(x.id)+'">Edit</button><button class="btn danger" data-del-r="'+esc(x.id)+'">Delete</button></div></article>'}).join(''):'<div class="sub">No recorded lessons yet.</div>';$('materialList').innerHTML=S.m.length?S.m.map(function(x){return '<article class="item"><div><h3>'+esc(x.title)+'</h3><div class="meta">'+esc(meta(x))+'<br>'+esc(x.materialType||'OTHER')+'</div>'+(x.description?'<details class="item-description"><summary>Material description</summary><p>'+esc(x.description)+'</p></details>':'')+'</div><div class="item-actions"><a class="btn secondary" href="'+esc(x.resourceUrl)+'" target="_blank" rel="noopener">Open</a>'+(x.downloadUrl?'<a class="btn primary" href="'+esc(forceDownload(x.downloadUrl))+'" target="_blank" rel="noopener">Download</a>':'')+'<button class="btn secondary" data-edit-m="'+esc(x.id)+'">Edit</button><button class="btn danger" data-del-m="'+esc(x.id)+'">Delete</button></div></article>'}).join(''):'<div class="sub">No learning materials yet.</div>';$('liveList').innerHTML=S.l.length?S.l.map(function(x){return '<article class="item"><div><h3>'+esc(x.title)+'</h3><div class="meta">'+esc(meta(x))+'<br>'+esc(x.platform)+' · '+new Date(x.scheduledAt).toLocaleString()+' · '+esc(x.durationMinutes)+' min</div>'+(x.instructions?'<details class="item-description"><summary>Class instructions</summary><p>'+esc(x.instructions)+'</p></details>':'')+'</div><div class="item-actions"><a class="btn primary" href="'+esc(x.meetingUrl)+'" target="_blank" rel="noopener">Join</a><button class="btn secondary" data-edit-l="'+esc(x.id)+'">Edit</button><button class="btn danger" data-del-l="'+esc(x.id)+'">Delete</button></div></article>'}).join(''):'<div class="sub">No live classes scheduled yet.</div>'}async function load(){try{var z=await Promise.all([req('/api/learning/assignments'),req('/api/learning/recorded-lessons'),req('/api/learning/materials'),req('/api/learning/live-classes')]);S.a=z[0]||[];S.r=z[1]||[];S.m=z[2]||[];S.l=z[3]||[];fill();render()}catch(e){note(e.message,false)}}function forceDownload(url){url=String(url||'');if(!url.includes('/uploads/learning/'))return url;return url+(url.includes('?')?'&':'?')+'download=1'}async function upload(file,kind){var fd=new FormData();fd.append('file',file);var base=(typeof API_BASE!=='undefined'&&API_BASE)||window.API_BASE||'http://localhost:4000';var authToken=(window.AUTH&&typeof AUTH.getToken==='function'&&AUTH.getToken())||localStorage.getItem('cs_token')||'';if(!authToken)throw Error('Your session has expired. Please sign in again.');var r=await fetch(String(base).replace(/\/$/,'')+'/api/learning/uploads'+(kind==='video'?'/video':''),{method:'POST',headers:{Authorization:'Bearer '+authToken},body:fd});var d=await r.json().catch(function(){return {}});if(!r.ok)throw Error(d.error||'Upload failed.');if(!d.url)throw Error('Upload completed but the server did not return a file URL.');return d.url}function bindTabs(){document.querySelectorAll('.tab').forEach(function(b){b.onclick=function(){document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active')});document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('active')});b.classList.add('active');$(b.dataset.tab).classList.add('active')}})}$('saveRecorded').onclick=async function(){try{var file=$('rFile').files[0],url=$('rVideo').value.trim();if(file)url=await upload(file,'video');if(!$('rAssignment').value||!$('rTitle').value.trim()||!url)throw Error('Select a teaching assignment, title and video file or URL.');await req('/api/learning/recorded-lessons',{method:'POST',body:JSON.stringify({teachingAssignmentId:$('rAssignment').value,title:$('rTitle').value.trim(),videoUrl:url,downloadUrl:$('rDownload').value.trim()||url,description:$('rDesc').value.trim()||null})});note('Recorded lesson uploaded and published successfully.',true);['rTitle','rVideo','rDownload','rDesc'].forEach(function(i){$(i).value=''});$('rFile').value='';load()}catch(e){note(e.message,false)}};$('saveMaterial').onclick=async function(){try{var file=$('mFile').files[0],url=$('mUrl').value.trim();if(file)url=await upload(file);if(!$('mAssignment').value||!$('mTitle').value.trim()||!url)throw Error('Select a teaching assignment, title and material file or URL.');await req('/api/learning/materials',{method:'POST',body:JSON.stringify({teachingAssignmentId:$('mAssignment').value,title:$('mTitle').value.trim(),materialType:$('mType').value,resourceUrl:url,downloadUrl:$('mDownload').value.trim()||url,description:$('mDesc').value.trim()||null})});note('Learning material uploaded and published successfully.',true);['mTitle','mUrl','mDownload','mDesc'].forEach(function(i){$(i).value=''});$('mFile').value='';load()}catch(e){note(e.message,false)}};$('saveLive').onclick=async function(){try{var d=new Date($('lDate').value);if(!$('lAssignment').value||!$('lTitle').value.trim()||Number.isNaN(d.getTime())||!$('lUrl').value.trim())throw Error('Select an assignment and provide title, date/time and meeting URL.');await req('/api/learning/live-classes',{method:'POST',body:JSON.stringify({teachingAssignmentId:$('lAssignment').value,title:$('lTitle').value.trim(),platform:$('lPlatform').value,scheduledAt:d.toISOString(),durationMinutes:Number($('lDuration').value||60),meetingUrl:$('lUrl').value.trim(),instructions:$('lDesc').value.trim()||null})});note('Live class published successfully.',true);['lTitle','lDate','lUrl','lDesc'].forEach(function(i){$(i).value=''});load()}catch(e){note(e.message,false)}};document.addEventListener('click',async function(e){var b=e.target.closest('[data-play],[data-del-r],[data-del-m],[data-del-l],[data-edit-r],[data-edit-m],[data-edit-l]');if(!b)return;try{if(b.dataset.play){var x=S.r.find(function(v){return v.id===b.dataset.play});if(x){$('videoTitle').textContent=x.title;$('videoPlayer').src=x.videoUrl;$('videoModal').classList.add('open');$('videoPlayer').play().catch(function(){})}}else if(b.dataset.delR){await req('/api/learning/recorded-lessons/'+b.dataset.delR,{method:'DELETE'});load()}else if(b.dataset.delM){await req('/api/learning/materials/'+b.dataset.delM,{method:'DELETE'});load()}else if(b.dataset.delL){await req('/api/learning/live-classes/'+b.dataset.delL,{method:'DELETE'});load()}else{var kind=b.dataset.editR?'r':b.dataset.editM?'m':'l';var id=b.dataset.editR||b.dataset.editM||b.dataset.editL;var arr=kind==='r'?S.r:kind==='m'?S.m:S.l;var x=arr.find(function(v){return v.id===id});if(!x)return;var a=x.teachingAssignmentId;var body=kind==='r'?'<div class="field"><label>Title</label><input id="eTitle" value="'+esc(x.title)+'"></div><div class="field"><label>Video URL</label><input id="eUrl" value="'+esc(x.videoUrl)+'"></div><div class="field"><label>Download URL</label><input id="eDownload" value="'+esc(x.downloadUrl||'')+'"></div>':kind==='m'?'<div class="field"><label>Title</label><input id="eTitle" value="'+esc(x.title)+'"></div><div class="field"><label>Resource URL</label><input id="eUrl" value="'+esc(x.resourceUrl)+'"></div><div class="field"><label>Download URL</label><input id="eDownload" value="'+esc(x.downloadUrl||'')+'"></div>':'<div class="field"><label>Title</label><input id="eTitle" value="'+esc(x.title)+'"></div><div class="field"><label>Date &amp; time</label><input id="eDate" type="datetime-local" value="'+new Date(x.scheduledAt).toISOString().slice(0,16)+'"></div><div class="field"><label>Meeting URL</label><input id="eUrl" value="'+esc(x.meetingUrl)+'"></div><div class="field"><label>Duration</label><input id="eDuration" type="number" value="'+esc(x.durationMinutes)+'"></div>';$('editBody').innerHTML=body;$('editModal').classList.add('open');$('saveEdit').onclick=async function(){var payload={teachingAssignmentId:a,title:$('eTitle').value.trim()};if(kind==='r'){payload.videoUrl=$('eUrl').value.trim();payload.downloadUrl=$('eDownload').value.trim()||payload.videoUrl}else if(kind==='m'){payload.resourceUrl=$('eUrl').value.trim();payload.downloadUrl=$('eDownload').value.trim()||payload.resourceUrl}else{payload.scheduledAt=new Date($('eDate').value).toISOString();payload.meetingUrl=$('eUrl').value.trim();payload.durationMinutes=Number($('eDuration').value||60)}await req('/api/learning/'+(kind==='r'?'recorded-lessons':kind==='m'?'materials':'live-classes')+'/'+id,{method:'PATCH',body:JSON.stringify(payload)});$('editModal').classList.remove('open');load()}}}catch(err){note(err.message,false)}});$('closeVideo').onclick=function(){$('videoPlayer').pause();$('videoPlayer').removeAttribute('src');$('videoModal').classList.remove('open')};$('cancelEdit').onclick=function(){$('editModal').classList.remove('open')};bindTabs();load()})();</script>
+
+
+<script id="connectsukuu-teacher-shell-standardized-runtime">
+(function(){
+'use strict';
+var PAGES={
+ '/roles/teacher/teacher-dashboard.html':{key:'dashboard',title:'Dashboard'},
+ '/roles/teacher/teacher-attendance.html':{key:'attendance',title:'Attendance'},
+ '/roles/teacher/teacher-teaching-assignments.html':{key:'assignments',title:'Teaching Assignments'},
+ '/roles/teacher/teacher-timetable.html':{key:'timetable',title:'Timetable'},
+ '/roles/teacher/teacher-assessments.html':{key:'assessments',title:'Assessments & Reports'},
+ '/roles/teacher/teacher-learning.html':{key:'learning',title:'Learning & Live Classes'}
+};
+var file=(location.pathname.split('/').pop()||'').toLowerCase(), page=PAGES[file];
+if(!page){
+  var t=(document.title||'').toLowerCase();
+  if(t.indexOf('learning')>=0) page=PAGES['/roles/teacher/teacher-learning.html'];
+  else if(t.indexOf('assessment')>=0 || t.indexOf('report')>=0) page=PAGES['/roles/teacher/teacher-assessments.html'];
+  else if(t.indexOf('timetable')>=0) page=PAGES['/roles/teacher/teacher-timetable.html'];
+  else if(t.indexOf('teaching assignment')>=0) page=PAGES['/roles/teacher/teacher-teaching-assignments.html'];
+  else if(t.indexOf('attendance')>=0) page=PAGES['/roles/teacher/teacher-attendance.html'];
+  else if(t.indexOf('dashboard')>=0) page=PAGES['/roles/teacher/teacher-dashboard.html'];
+  else page={key:'dashboard',title:'Teacher Workspace'};
+}
+function user(){try{if(window.AUTH&&typeof AUTH.getUser==='function')return AUTH.getUser()||{};return JSON.parse(localStorage.getItem('cs_user')||'null')||{};}catch(e){return {};}}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function initials(u){var n=[u.firstName,u.lastName].filter(Boolean).join(' ').trim()||u.email||'Teacher';return n.split(/\s+/).map(function(x){return x.charAt(0);}).join('').slice(0,2).toUpperCase();}
+function nav(){return '<div class="nav-label">WORKSPACE</div>'+
+'<a href="/roles/teacher/teacher-dashboard.html" data-t="dashboard"><span class="nav-icon">⌂</span><span>Dashboard</span></a>'+ 
+'<a href="/roles/teacher/teacher-attendance.html" data-t="attendance"><span class="nav-icon">✓</span><span>Attendance</span></a>'+ 
+'<div class="nav-label">TEACHING</div>'+ 
+'<a href="/roles/teacher/teacher-teaching-assignments.html" data-t="assignments"><span class="nav-icon">⇄</span><span>Teaching Assignments</span></a>'+ 
+'<a href="/roles/teacher/teacher-timetable.html" data-t="timetable"><span class="nav-icon">▦</span><span>Timetable</span></a>'+ 
+'<a href="/roles/teacher/teacher-assessments.html" data-t="assessments"><span class="nav-icon">★</span><span>Assessments &amp; Reports</span></a>'+ 
+'<a href="/roles/teacher/teacher-learning.html" data-t="learning"><span class="nav-icon">▶</span><span>Learning &amp; Live Classes</span></a>';}
+function hideLegacy(){
+ document.querySelectorAll('.topbar,.app-topbar,.cs-assessment-topbar,header.topbar,header.app-topbar,.user-card,.cs-assessment-profile,.csk-teacher-profile').forEach(function(el){el.style.display='none';});
+ document.querySelectorAll('body>.sidebar,body>.app-sidebar,body>.cs-assessment-sidebar').forEach(function(el){el.style.display='none';});
+}
+function build(){
+ var u=user();
+ /* Existing page authentication guards remain authoritative.
+    Do not redirect from the visual shell runtime; this prevents a race
+    with AUTH/localStorage initialization from deleting the shell. */
+ hideLegacy();
+ document.querySelectorAll('.csk-teacher-sidebar-final,.csk-teacher-header-final').forEach(function(el){el.remove();});
+ var side=document.createElement('aside');side.className='csk-teacher-sidebar-final';
+ side.innerHTML='<div class="csk-teacher-brand-final"><span class="brand-mark"><img src="/assets/images/favicon.svg" alt="" aria-hidden="true"></span><span class="brand-connect">Connect<span class="brand-sukuu">Sukuu</span></span></div><nav class="csk-teacher-nav-final">'+nav()+'</nav><button type="button" class="csk-teacher-logout-final" id="cskTeacherLogoutFinal">↪ Log out</button>';
+ document.body.insertBefore(side,document.body.firstChild);
+ side.querySelectorAll('[data-t]').forEach(function(a){a.classList.toggle('active',a.getAttribute('data-t')===page.key);});
+ var main=document.querySelector('body>main') || document.querySelector('main.main,main.app-main,main');
+ if(!main){main=document.createElement('main');document.body.appendChild(main);}
+ main.classList.add('csk-teacher-main-final');
+ var legacyHeaders=[];
+ Array.prototype.slice.call(main.children).forEach(function(el){if(el.matches&&el.matches('.topbar,.app-topbar,header.topbar,header.app-topbar,.cs-assessment-topbar'))legacyHeaders.push(el);});
+ legacyHeaders.forEach(function(el){el.remove();});
+ var content=main.querySelector('.csk-teacher-content-final');
+ if(!content){
+   content=document.createElement('div');content.className='csk-teacher-content-final';
+   var children=Array.prototype.slice.call(main.children);
+   children.forEach(function(el){content.appendChild(el);});
+   main.appendChild(content);
+ }
+ var header=document.createElement('header');header.className='csk-teacher-header-final';
+ header.innerHTML='<h1 class="csk-teacher-header-title-final">'+page.title+'</h1><div class="csk-teacher-profile-final"><div class="csk-teacher-profile-copy-final"><span class="csk-teacher-profile-email-final">'+esc(u.email||'Teacher')+'</span><span class="csk-teacher-profile-role-final">Teacher</span></div><div class="csk-teacher-avatar-final">'+initials(u)+'</div></div>';
+ main.appendChild(header);
+ var logout=document.getElementById('cskTeacherLogoutFinal');
+ logout.addEventListener('click',function(){try{if(window.AUTH&&typeof AUTH.logout==='function'){AUTH.logout();return;}}catch(e){} localStorage.removeItem('cs_token');localStorage.removeItem('cs_user');location.href='/auth/signin.html';});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',build);else build();
+})();
+</script>
+<script id="connectsukuu-homework-projects-integration">
+(function(){'use strict';
+var tabs=document.querySelector('.tabs'),live=document.getElementById('live');if(!tabs||!live)return;
+var tab=document.createElement('button');tab.type='button';tab.className='tab';tab.dataset.tab='homework';tab.innerHTML='Homework &amp; Projects <span class="count" id="homeworkCount">0</span>';tabs.appendChild(tab);
+var panel=document.createElement('section');panel.id='homework';panel.className='learn-panel panel';panel.innerHTML='<h3>Assign homework or project work</h3><p class="sub">Create take-home work for one of your teaching assignments. Students receive a notification, submit their work here, and the score appears in their ongoing academic performance.</p><div class="form-grid"><div class="field full"><label>Teaching assignment</label><select id="hAssignment" required><option value="">Loading teaching assignments…</option></select></div><div class="field"><label>Homework / project title</label><input id="hTitle" required maxlength="160" placeholder="e.g. Fractions practice project"></div><div class="field"><label>Maximum score</label><input id="hMaxScore" type="number" min="1" max="10000" value="100" required></div><div class="field"><label>Due date &amp; time</label><input id="hDueAt" type="datetime-local"></div><div class="field"><label>Task file (optional)</label><input id="hFile" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.txt,.doc,.docx,.xlsx,.ppt,.pptx,.zip"></div><div class="field"><label>Attachment URL (optional)</label><input id="hAttachment" type="url" placeholder="https://…"></div><div class="field full"><label>Instructions / description</label><textarea id="hDescription" placeholder="Explain the task, expected format and submission requirements…"></textarea></div></div><div class="actions"><button type="button" class="btn primary" id="hPublish">Publish homework / project</button></div><div id="hFeedback" class="feedback"></div><div class="list" id="homeworkList"><div class="sub">Loading homework and projects…</div></div>';
+live.insertAdjacentElement('afterend',panel);
+var style=document.createElement('style');style.textContent='#homework .submission-card{background:#fff;border:1px solid #e4e7ec;border-radius:12px;padding:13px;margin-top:10px}#homework .submission-card h4{margin:0 0 6px;font-size:14px}#homework .submission-card .form-grid{margin-top:10px}#homework .submissions{margin-top:12px;padding-top:12px;border-top:1px solid #eaecf0}#homework .submissions-toggle{margin-top:10px}#homework .homework-status{font-size:12px;color:#667085;margin-top:6px}#homework .score-row{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:8px;align-items:end}@media(max-width:760px){#homework .score-row{grid-template-columns:1fr}}';document.head.appendChild(style);
+function $(id){return document.getElementById(id)}function esc(v){return String(v??'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]})}
+function notice(message,ok){var el=$('hFeedback');el.textContent=message;el.className='feedback show'+(ok?' ok':'')}
+async function request(path,opts){var response=await apiFetch(path,opts||{});if(!response)throw Error('Your session has expired. Please sign in again.');var data=await response.json().catch(function(){return {}});if(!response.ok)throw Error(data.error||'Request failed.');return data}
+var assignments=[],homework=[];
+function assignmentLabel(a){return (a.schoolClass?.name||'Class')+' · '+(a.subject?.name||'Subject')+' · '+(a.academicYear?.name||'Academic year')}
+async function loadAssignments(){assignments=await request('/api/learning/assignments');$('hAssignment').innerHTML='<option value="">Select teaching assignment…</option>'+assignments.map(function(a){return '<option value="'+esc(a.id)+'">'+esc(assignmentLabel(a))+'</option>'}).join('')}
+function render(){ $('homeworkCount').textContent=homework.length;$('homeworkList').innerHTML=homework.length?homework.map(function(a){var submissions=a.submissions||[];return '<article class="item"><div style="flex:1;min-width:0"><h3>'+esc(a.title)+'</h3><div class="meta">'+esc(assignmentLabel(a.teachingAssignment||{}))+'<br>Due: '+esc(a.dueAt?new Date(a.dueAt).toLocaleString():'No deadline')+' · Max score: '+esc(a.maxScore)+'<br>'+esc(a.description||a.instructions||'No extra instructions.')+'</div><div class="homework-status">'+submissions.length+' submission(s) · '+submissions.filter(function(s){return s.score!==null&&s.score!==undefined}).length+' graded</div><div class="submissions" id="submissions-'+esc(a.id)+'" hidden></div></div><div class="item-actions"><button class="btn secondary" type="button" data-view-submissions="'+esc(a.id)+'">View / grade submissions ('+submissions.length+')</button></div></article>'}).join(''):'<div class="sub">No homework or projects assigned yet.</div>'}
+async function loadHomework(){homework=await request('/api/learning/homework');render()}
+$('hPublish').addEventListener('click',async function(){try{var title=$('hTitle').value.trim(),teachingAssignmentId=$('hAssignment').value,maxScore=Number($('hMaxScore').value||100),dueRaw=$('hDueAt').value;if(!teachingAssignmentId||!title)throw Error('Choose a teaching assignment and enter a title.');var attachmentUrl=$('hAttachment').value.trim()||null;var file=$('hFile').files[0];if(file){var fd=new FormData();fd.append('file',file);var up=await fetch(API_BASE+'/api/learning/uploads',{method:'POST',headers:{Authorization:'Bearer '+(AUTH.getToken()||'')},body:fd});if(up.status===401){AUTH.logout();throw Error('Your session has expired. Please sign in again.')} var upData=await up.json().catch(function(){return {}});if(!up.ok)throw Error(upData.error||'Task file upload failed.');attachmentUrl=upData.url;}var body={teachingAssignmentId:teachingAssignmentId,title:title,description:$('hDescription').value.trim(),instructions:$('hDescription').value.trim(),attachmentUrl:attachmentUrl,maxScore:maxScore,dueAt:dueRaw?new Date(dueRaw).toISOString():null};await request('/api/learning/homework',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});notice('Homework or project published. Students in the selected class have been notified.',true);['hTitle','hDueAt','hAttachment','hDescription'].forEach(function(id){$(id).value=''});$('hFile').value='';await loadHomework()}catch(e){notice(e.message,false)}});
+async function viewSubmissions(id){var host=$('submissions-'+id);if(!host)return;if(!host.hidden){host.hidden=true;return}host.hidden=false;host.innerHTML='<div class="sub">Loading submissions…</div>';try{var d=await request('/api/learning/homework/'+encodeURIComponent(id)+'/submissions');var rows=d.submissions||[];host.innerHTML=rows.length?rows.map(function(s){return '<article class="submission-card"><h4>'+esc((s.student?.firstName||'')+' '+(s.student?.lastName||''))+'</h4><div class="meta">Admission: '+esc(s.student?.admissionNumber||'—')+' · Submitted '+esc(new Date(s.submittedAt).toLocaleString())+'</div><p>'+esc(s.submissionText||'No written response attached.')+'</p>'+(s.attachmentUrl?'<p><a href="'+esc(s.attachmentUrl)+'" target="_blank" rel="noopener">Open student attachment</a></p>':'')+'<div class="score-row"><div class="field"><label>Score / '+esc((homework.find(function(a){return a.id===id})||{}).maxScore||100)+'</label><input type="number" min="0" max="'+esc((homework.find(function(a){return a.id===id})||{}).maxScore||100)+'" step="0.1" id="score-'+esc(s.id)+'" value="'+(s.score==null?'':esc(s.score))+'"></div><div class="field"><label>Feedback</label><input id="feedback-'+esc(s.id)+'" value="'+esc(s.feedback||'')+'" placeholder="Feedback for the student"></div><button type="button" class="btn primary" data-grade-submission="'+esc(s.id)+'">Save score</button></div><div class="homework-status">'+(s.gradedAt?'Last graded '+esc(new Date(s.gradedAt).toLocaleString()):'Not graded yet')+'</div></article>'}).join(''):'<div class="sub">No submissions yet. Students will appear here when they submit their work.</div>'}catch(e){host.innerHTML='<div class="feedback show">'+esc(e.message)+'</div>'}}
+document.addEventListener('click',async function(e){var view=e.target.closest('[data-view-submissions]');if(view){viewSubmissions(view.dataset.viewSubmissions);return}var grade=e.target.closest('[data-grade-submission]');if(grade){try{var id=grade.dataset.gradeSubmission;var score=$('score-'+id).value,feedback=$('feedback-'+id).value;await request('/api/learning/homework/submissions/'+encodeURIComponent(id)+'/grade',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({score:Number(score),feedback:feedback})});notice('Score saved. The student will see it in Academic results and receive a notification.',true);var parent=grade.closest('.submissions');var assignmentId=parent?parent.id.replace('submissions-',''):null;await loadHomework();if(assignmentId){var refreshed=$('submissions-'+assignmentId);if(refreshed)refreshed.hidden=true;await viewSubmissions(assignmentId)}}catch(err){notice(err.message,false)}}});
+tab.addEventListener('click',function(){document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('active',x===tab)});document.querySelectorAll('.panel').forEach(function(x){x.classList.toggle('active',x===panel)});});
+// Existing tabs were bound by the original page script. Rebind their shared state so returning from this tab works consistently.
+document.querySelectorAll('.tabs .tab:not([data-tab="homework"])').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('active',x===b)});document.querySelectorAll('.panel').forEach(function(x){x.classList.toggle('active',x.id===b.dataset.tab)});})});
+Promise.all([loadAssignments(),loadHomework()]).catch(function(e){notice(e.message,false)});
+})();
+</script>
+
+<script id="connectsukuu-teacher-profile-dialog-runtime">
+(function(){
+'use strict';
+var modal=document.getElementById('cskProfileModal');
+if(!modal)return;
+var API=String(typeof API_BASE!=='undefined'?API_BASE:(window.API_BASE||'http://localhost:4000')).replace(/\/$/,'');
+function $(id){return document.getElementById(id)}
+function user(){try{return (window.AUTH&&AUTH.getUser&&AUTH.getUser())||JSON.parse(localStorage.getItem('cs_user')||'{}')||{}}catch(_){return {}}}
+function token(){try{return (window.AUTH&&AUTH.getToken&&AUTH.getToken())||localStorage.getItem('cs_token')||''}catch(_){return localStorage.getItem('cs_token')||''}}
+function initials(u){return ((u.firstName||'T').trim().charAt(0)+(u.lastName||'').trim().charAt(0)).toUpperCase()}
+function status(msg,ok){var e=$('cskProfileStatus');e.textContent=msg;e.className='csk-profile-status show'+(ok?' ok':'')}
+function photoUrl(value){if(!value)return '';if(/^https?:\/\//i.test(value))return value;return API+(value.startsWith('/')?value:'/'+value)}
+var photoObjectUrls=[];
+async function setProfileImage(img,value,fallback){if(!value){fallback();return}try{var src=photoUrl(value),response;if(src.indexOf('/api/auth/profile/photo')!==-1){response=await fetch(src,{headers:{Authorization:'Bearer '+token()},cache:'no-store'});if(!response.ok)throw Error('Photo unavailable');var blob=await response.blob();var objectUrl=URL.createObjectURL(blob);photoObjectUrls.push(objectUrl);img.src=objectUrl}else{img.src=src}}catch(_){fallback()}}
+function paintHeaderPhoto(u){var avatar=document.querySelector('.csk-teacher-profile-final .csk-teacher-avatar-final');if(!avatar)return;var fallback=initials(u||user()),value=u&&u.photoUrl?String(u.photoUrl):'';avatar.innerHTML='';if(!value){avatar.textContent=fallback;return}var img=document.createElement('img');img.alt='';img.loading='eager';img.decoding='async';img.style.cssText='display:block;width:100%;height:100%;object-fit:cover;border-radius:50%';img.onerror=function(){avatar.textContent=fallback};avatar.appendChild(img);setProfileImage(img,value,function(){avatar.textContent=fallback})}
+function showUser(u){u=u||user();$('cskProfileName').textContent=[u.firstName,u.lastName].filter(Boolean).join(' ')||u.email||'Teacher';$('cskProfileRole').textContent=String(u.role||'TEACHER').replace(/_/g,' ');$('cskProfileEmail').value=u.email||'Not provided';$('cskProfilePhone').value=u.phone||'Not provided';$('cskProfileFirst').value=u.firstName||'—';$('cskProfileLast').value=u.lastName||'—';var box=$('cskProfilePhoto');if(u.photoUrl){box.innerHTML='';var image=document.createElement('img');image.alt='Profile photo';image.onerror=function(){box.textContent=initials(u)};box.appendChild(image);setProfileImage(image,u.photoUrl,function(){box.textContent=initials(u)})}else box.textContent=initials(u);paintHeaderPhoto(u)}
+async function refreshSavedProfile(){var cached=user();showUser(cached);if(!token())return;try{var r=await fetch(API+'/api/auth/profile',{headers:{Authorization:'Bearer '+token()},cache:'no-store'});var d=await r.json().catch(function(){return {}});if(!r.ok||!d.user)return;var merged=Object.assign({},cached,d.user);localStorage.setItem('cs_user',JSON.stringify(merged));showUser(merged)}catch(_){/* Cached profile remains visible if the API is temporarily unavailable. */}}
+async function open(){modal.classList.add('open');modal.setAttribute('aria-hidden','false');showUser();$('cskProfileStatus').className='csk-profile-status';var controller=new AbortController();var timer=setTimeout(function(){controller.abort()},10000);try{var r=await fetch(API+'/api/auth/profile',{headers:{Authorization:'Bearer '+token()},signal:controller.signal});var d=await r.json().catch(function(){return {}});if(!r.ok)throw Error(d.error||('Profile refresh failed (HTTP '+r.status+').'));if(d.user){var merged=Object.assign({},user(),d.user);localStorage.setItem('cs_user',JSON.stringify(merged));showUser(merged)}else{throw Error('The profile endpoint returned no user record.')}}catch(e){status((e.name==='AbortError'?'Profile refresh timed out. ':'Could not refresh profile from the server. ')+ 'Showing saved account details. '+(e.message||''),false)}finally{clearTimeout(timer)}}
+function close(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}
+// Render the saved photo immediately, then refresh the persisted profile in the background.
+refreshSavedProfile();
+document.addEventListener('click',function(e){var trigger=e.target.closest('.csk-teacher-profile-final,.csk-teacher-profile');if(trigger){e.preventDefault();open()}});
+$('cskProfileClose').addEventListener('click',close);
+modal.addEventListener('click',function(e){if(e.target===modal)close()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
+$('cskProfileUpload').addEventListener('click',async function(){var file=$('cskProfilePhotoFile').files[0];if(!file){status('Choose a profile photo first.',false);return}if(file.size>5*1024*1024){status('Profile photos must be 5 MB or smaller.',false);return}var fd=new FormData();fd.append('photo',file);var btn=$('cskProfileUpload');btn.disabled=true;btn.textContent='Uploading…';try{var r=await fetch(API+'/api/auth/profile/photo',{method:'POST',headers:{Authorization:'Bearer '+token()},body:fd});var d=await r.json().catch(function(){return {}});if(!r.ok)throw Error(d.error||'Photo upload failed');var merged=Object.assign({},user(),d.user||{});localStorage.setItem('cs_user',JSON.stringify(merged));showUser(merged);status('Profile photo updated.',true);$('cskProfilePhotoFile').value=''}catch(e){status(e.message,false)}finally{btn.disabled=false;btn.textContent='Upload photo'}});
+$('cskProfilePasswordForm').addEventListener('submit',async function(e){e.preventDefault();var currentPassword=$('cskProfileCurrent').value,newPassword=$('cskProfileNew').value;if(newPassword.length<8){status('New password must be at least 8 characters.',false);return}var btn=$('cskProfilePasswordSave');btn.disabled=true;btn.textContent='Updating…';try{var r=await fetch(API+'/api/auth/change-password',{method:'POST',headers:{Authorization:'Bearer '+token(),'Content-Type':'application/json'},body:JSON.stringify({currentPassword:currentPassword,newPassword:newPassword})});var d=await r.json().catch(function(){return {}});if(!r.ok)throw Error(d.error||'Password update failed');$('cskProfilePasswordForm').reset();status('Password changed successfully.',true)}catch(err){status(err.message,false)}finally{btn.disabled=false;btn.textContent='Update password'}});
+var profile=document.querySelector('.csk-teacher-profile-final');if(profile){profile.classList.add('csk-profile-trigger');profile.setAttribute('role','button');profile.setAttribute('tabindex','0');profile.setAttribute('aria-haspopup','dialog');profile.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}})}
+})();
+</script>
+<script src="/assets/js/teacher-communications.js?v=20261015-1"></script>
+</body></html>
