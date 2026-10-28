@@ -291,12 +291,18 @@ function initAppPage(activePage) {
   ];
 
   function getUser(){
-    try{
-      if(typeof requireAuthOrRedirect==='function')return requireAuthOrRedirect();
-    }catch(e){}
-    try{
-      return JSON.parse(localStorage.getItem('connectsukuu_user')||'null');
-    }catch(e){return null;}
+    // This helper is also loaded on public pages such as signup. Read cached user
+    // data without invoking requireAuthOrRedirect(), which would redirect visitors
+    // who are not signed in. Protected app pages still enforce auth through initAppPage().
+    try {
+      return JSON.parse(
+        localStorage.getItem('cs_user') ||
+        localStorage.getItem('connectsukuu_user') ||
+        'null'
+      );
+    } catch (e) {
+      return null;
+    }
   }
 
   function install(){
