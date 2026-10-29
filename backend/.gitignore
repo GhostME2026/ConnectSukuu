@@ -11,3 +11,6 @@ yarn-debug.log*
 yarn-error.log*
 
 .DS_Store
+
+# User-uploaded files must not be committed
+/uploads/
