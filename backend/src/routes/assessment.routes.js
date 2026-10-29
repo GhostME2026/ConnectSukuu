@@ -1,0 +1,28 @@
+
+const express=require('express');
+const router=express.Router();
+const {listAssessments, getAssessment, createAssessment, updateAssessment, saveScores, submitAssessment, closeAssessment, listReportCards, getReportCard, createReportCard, updateReportCard, submitReportCard, decideReportCard, saveReportCardSubject, dashboardSummary, deleteAssessment, getAssessmentPerformance, syncReportCardSubjects,listReportCardStudents}=require('../controllers/assessment.controller');
+const {requireAuth}=require('../middleware/auth');
+const {requireRole}=require('../middleware/roles');
+const {requireActiveSubscription}=require('../middleware/subscription');
+router.use(requireAuth,requireActiveSubscription);
+router.get('/dashboard-summary',requireRole('HEAD_TEACHER','HEAD_OF_ACADEMICS','TEACHER'),dashboardSummary);
+router.get('/assessments',requireRole('HEAD_TEACHER','HEAD_OF_ACADEMICS','TEACHER'),listAssessments);
+router.get('/assessments/:id/performance',requireRole('HEAD_TEACHER','HEAD_OF_ACADEMICS'),getAssessmentPerformance);
+router.get('/assessments/:id',requireRole('HEAD_TEACHER','HEAD_OF_ACADEMICS','TEACHER'),getAssessment);
+router.post('/assessments',requireRole('TEACHER'),createAssessment);
+router.patch('/assessments/:id',requireRole('TEACHER'),updateAssessment);
+router.delete('/assessments/:id',requireRole('TEACHER'),deleteAssessment);
+router.put('/assessments/:id/scores',requireRole('TEACHER'),saveScores);
+router.post('/assessments/:id/submit',requireRole('TEACHER'),submitAssessment);
+router.post('/assessments/:id/close',requireRole('HEAD_TEACHER','HEAD_OF_ACADEMICS'),closeAssessment);
+router.get('/report-cards',requireRole('HEAD_TEACHER','HEAD_OF_ACADEMICS','TEACHER'),listReportCards);
+router.get('/report-cards/:id',requireRole('HEAD_TEACHER','HEAD_OF_ACADEMICS','TEACHER'),getReportCard);
+router.get('/report-card-students',requireRole('HEAD_TEACHER','HEAD_OF_ACADEMICS','TEACHER'),listReportCardStudents);
+router.post('/report-cards/:id/sync-subjects',requireRole('HEAD_TEACHER','HEAD_OF_ACADEMICS','TEACHER'),syncReportCardSubjects);
+router.put('/report-cards/:id/subjects',requireRole('TEACHER','HEAD_OF_ACADEMICS','HEAD_TEACHER'),saveReportCardSubject);
+router.post('/report-cards',requireRole('TEACHER'),createReportCard);
+router.patch('/report-cards/:id',requireRole('TEACHER'),updateReportCard);
+router.post('/report-cards/:id/submit',requireRole('TEACHER'),submitReportCard);
+router.post('/report-cards/:id/decision',requireRole('HEAD_TEACHER','HEAD_OF_ACADEMICS'),decideReportCard);
+module.exports=router;

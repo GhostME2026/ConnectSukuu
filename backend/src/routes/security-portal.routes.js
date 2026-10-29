@@ -1,0 +1,16 @@
+'use strict';
+const express = require('express');
+const router = express.Router();
+const { requireAuth } = require('../middleware/auth');
+const { requireRole } = require('../middleware/roles');
+const c = require('../controllers/securityPortal.controller');
+router.use(requireAuth);
+router.get('/students', requireRole('SECURITY'), c.listStudents);
+router.get('/students/:studentId/guardians', requireRole('SECURITY'), c.listStudentGuardians);
+router.get('/gate-logs', requireRole('SECURITY','ADMINISTRATOR','HEAD_TEACHER'), c.listGateLogs);
+router.post('/gate-logs', requireRole('SECURITY'), c.createGateLog);
+router.get('/announcements', requireRole('SECURITY'), c.listAnnouncements);
+router.get('/notifications', requireRole('SECURITY'), c.listNotifications);
+router.patch('/notifications/read-all', requireRole('SECURITY'), c.markAllNotificationsRead);
+router.patch('/notifications/:id/read', requireRole('SECURITY'), c.markNotificationRead);
+module.exports = router;

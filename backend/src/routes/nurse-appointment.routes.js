@@ -1,0 +1,10 @@
+const express = require('express');
+const { requireAuth } = require('../middleware/auth');
+const { requireActiveSubscription } = require('../middleware/subscription');
+const { requireRole } = require('../middleware/roles');
+const c = require('../controllers/nurse-appointment.controller');
+const router = express.Router();
+router.use(requireAuth, requireActiveSubscription, requireRole('NURSE'));
+router.get('/', c.listAppointments);
+router.post('/', c.createAppointment);
+module.exports = router;

@@ -1,0 +1,12 @@
+const express = require('express');
+const { requireAuth } = require('../middleware/auth');
+const { requireActiveSubscription } = require('../middleware/subscription');
+const { listBranches, createBranch, getBranch, updateBranch, deleteBranch } = require('../controllers/branch.controller');
+const router = express.Router();
+router.use(requireAuth, requireActiveSubscription);
+router.get('/', listBranches);
+router.post('/', createBranch);
+router.get('/:id', getBranch);
+router.patch('/:id', updateBranch);
+router.delete('/:id', deleteBranch);
+module.exports = router;

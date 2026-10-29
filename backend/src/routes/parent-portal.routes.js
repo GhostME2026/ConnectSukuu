@@ -1,0 +1,17 @@
+const express=require('express');
+const router=express.Router();
+const {requireAuth}=require('../middleware/auth');
+const {requireRole}=require('../middleware/roles');
+const c=require('../controllers/parentPortal.controller');
+router.use(requireAuth,requireRole('PARENT'));
+router.get('/me',c.getMe);
+router.get('/wards',c.getWards);
+router.get('/academics',c.getAcademics);
+router.get('/attendance',c.getAttendance);
+router.get('/fees',c.getFees);
+router.get('/announcements',c.getAnnouncements);
+router.get('/notifications',c.getNotifications);
+router.get('/security-logs',c.getSecurityLogs);
+router.patch('/notifications/read-all',c.markAllNotificationsRead);
+router.patch('/notifications/:id/read',c.markNotificationRead);
+module.exports=router;

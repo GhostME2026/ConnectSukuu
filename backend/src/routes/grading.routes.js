@@ -1,0 +1,10 @@
+const express=require('express');
+const router=express.Router();
+const {getDefaultGradingScale,updateDefaultGradingScale}=require('../controllers/grading.controller');
+const {requireAuth}=require('../middleware/auth');
+const {requireRole}=require('../middleware/roles');
+const {requireActiveSubscription}=require('../middleware/subscription');
+router.use(requireAuth,requireActiveSubscription);
+router.get('/default',requireRole('HEAD_OF_ACADEMICS','HEAD_TEACHER'),getDefaultGradingScale);
+router.put('/default',requireRole('HEAD_OF_ACADEMICS','HEAD_TEACHER'),updateDefaultGradingScale);
+module.exports=router;

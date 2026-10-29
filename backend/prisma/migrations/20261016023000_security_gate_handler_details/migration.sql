@@ -1,0 +1,4 @@
+ALTER TABLE "StudentGateLog"
+  ADD COLUMN IF NOT EXISTS "handlerType" TEXT,
+  ADD COLUMN IF NOT EXISTS "handlerName" TEXT,
+  ADD COLUMN IF NOT EXISTS "handlerPhone" TEXT;

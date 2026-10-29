@@ -1,0 +1,13 @@
+'use strict';
+const express=require('express');
+const {requireAuth}=require('../middleware/auth');
+const {requireRole}=require('../middleware/roles');
+const {requireActiveSubscription}=require('../middleware/subscription');
+const c=require('../controllers/school-events.controller');
+const router=express.Router();
+router.use(requireAuth,requireActiveSubscription,requireRole('HEAD_OF_ACADEMICS','HEAD_TEACHER'));
+router.get('/',c.listSchoolEvents);
+router.get('/classes',c.listSchoolClasses);
+router.post('/',c.createSchoolEvent);
+router.delete('/:id',c.deleteSchoolEvent);
+module.exports=router;
