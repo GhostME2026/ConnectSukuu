@@ -43,7 +43,23 @@ const publicContentRoutes = require('./routes/public-content.routes');
 
 const app = express();
 
-app.use(cors({ origin: process.env.FRONTEND_URL }));
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+'https://connectsukuu.vercel.app',
+'https://ghostme2026.github.io',
+'http://localhost:5500',
+'http://127.0.0.1:5500'
+].filter(Boolean);
+
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    
+    return callback(new Error('Not allowed by CORS'));
+  }
+}));
 
 // Compress eligible API responses to reduce transfer time for larger JSON payloads.
 app.use(compression());
