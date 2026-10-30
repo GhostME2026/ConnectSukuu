@@ -1813,7 +1813,7 @@ var PAGES={
  support:{title:'Support',file:'/roles/headteacher/headteacher-support.html'},
  settings:{title:'Settings',file:'/roles/headteacher/headteacher-settings.html'}
 };
-function currentKey(){var p=(location.pathname.split('/').pop()||'headteacher-dashboard').toLowerCase().replace(/\.html$/,'');for(var k in PAGES){if(k===p||PAGES[k].file.toLowerCase().replace(/\.html$/,'')===p)return k;}return 'dashboard';}
+function currentKey(){var p=(location.pathname.split('/').pop()||'headteacher-dashboard.html').toLowerCase();for(var k in PAGES){var file=(PAGES[k].file.split('/').pop()||'').toLowerCase();if(file===p)return k;}return 'dashboard';}
 var pageKey=currentKey();
 function getUser(){try{if(window.AUTH&&typeof AUTH.getUser==='function'){var u=AUTH.getUser();if(u)return u;}}catch(e){}try{return JSON.parse(localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user')||'null')||{};}catch(e){return {};}}
 function isHT(){return String(getUser().role||document.body.dataset.role||'').toUpperCase()===ROLE;}
