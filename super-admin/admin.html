@@ -281,4 +281,5 @@ $('login-form').addEventListener('submit',login);$('refresh-btn').addEventListen
 try{const savedUser=JSON.parse(localStorage.getItem('cs_user')||'null');const savedToken=localStorage.getItem('cs_token')||'';if(savedUser?.role==='SUPER_ADMIN'&&savedToken){user=savedUser;token=savedToken;showApp();}}catch{}
 })();
 </script>
+<script src="../assets/js/session-timeout.js?v=20261030-1"></script>
 </body></html>

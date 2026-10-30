@@ -349,5 +349,6 @@ if(guard()){bind();load();}
 <script id="connectsukuu-hoa-activities-shell-runtime">
 (function(){'use strict';var expected='HEAD_OF_ACADEMICS';var user={};try{user=(window.AUTH&&AUTH.getUser&&AUTH.getUser())||JSON.parse(localStorage.getItem('cs_user')||localStorage.getItem('connectsukuu_user')||'{}')}catch(_){}if(user.role&&String(user.role).toUpperCase()!==expected){location.replace('/auth/signin.html');return;}document.querySelectorAll('.cs-hoa-final-nav a[data-cs-hoa-nav]').forEach(function(a){var active=a.getAttribute('data-cs-hoa-nav')==='activities';a.classList.toggle('active',active);if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});var title=document.querySelector('.cs-hoa-final-title');if(title)title.textContent='Activities';document.title='Activities';})();
 </script>
+<script src="../../assets/js/session-timeout.js?v=20261030-1"></script>
 </body>
 </html>

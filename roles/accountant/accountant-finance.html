@@ -1876,7 +1876,8 @@ $('savePlan').onclick=savePlan;$('individualFeeBtn').onclick=openIndividualFees;
     if(!w){toastR('Allow pop-ups to print this report.');return}
     w.document.write(`<html><head><title>${escR(title)}</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#172033}h1{font-size:20px}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{padding:8px;border:1px solid #ddd;text-align:left;font-size:11px}.finance-report-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.finance-report-card{padding:10px;border:1px solid #ddd}.finance-report-card span{display:block;font-size:9px;color:#667085}.finance-report-card strong{display:block;margin-top:5px;font-size:16px}</style>
 
-\n</head><body><h1>${escR(title)}</h1>${el.innerHTML}</body></html>`);
+\n</head><body><h1>${escR(title)}</h1>${el.innerHTML}<script src="../../assets/js/session-timeout.js?v=20261030-1"></script>
+</body></html>`);
     w.document.close();w.focus();setTimeout(()=>w.print(),300);
   }
   function clearSummary(){
