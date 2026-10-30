@@ -30,6 +30,7 @@
 
   // Public pages, sign-in, and sign-up must not start an idle session.
   if (!getToken()) return;
+  document.documentElement.setAttribute('data-csk-idle-timeout', 'active');
 
   function signInUrl() {
     var path = window.location.pathname || '';
@@ -154,7 +155,7 @@
   }
 
   // Meaningful user interaction resets the inactivity clock.
-  ['pointerdown', 'keydown', 'touchstart', 'scroll', 'mousemove'].forEach(function (eventName) {
+  ['pointerdown', 'keydown', 'touchstart', 'scroll', 'wheel'].forEach(function (eventName) {
     document.addEventListener(eventName, function () {
       recordActivity(false);
     }, { passive: true, capture: true });
@@ -176,6 +177,8 @@
     lastActivity = Date.now();
   }
 
+  // Re-check when the tab becomes active so sleeping/background tabs cannot
+  // postpone the timeout beyond the configured 30-minute idle limit.
   checkIdleState();
   timer = window.setInterval(checkIdleState, 1000);
 })();

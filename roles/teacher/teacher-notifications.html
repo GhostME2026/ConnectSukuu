@@ -402,7 +402,7 @@ body header.topbar,body header.app-topbar,
 .csk-profile-status.show{display:block}.csk-profile-status.ok{background:#ecfdf3;color:#027a48}
 @media(max-width:560px){.csk-profile-grid{grid-template-columns:1fr}.csk-profile-head{padding:17px}.csk-profile-body{padding:14px}.csk-profile-dialog{max-height:92vh}}
 </style>
-<link rel="stylesheet" href="/assets/css/teacher-communications.css?v=20261015-3">
+<link rel="stylesheet" href="/assets/css/teacher-communications.css?v=20261030-2">
 <link rel="stylesheet" href="/assets/css/mobile-shell.css" media="(max-width:820px)"><script src="/assets/js/mobile-shell.js" defer></script></head><body><aside class="csk-teacher-sidebar"><div class="csk-teacher-brand"><img src="/assets/images/favicon.svg" alt="ConnectSukuu"><strong>ConnectSukuu</strong></div><nav class="csk-teacher-nav">
 <div class="csk-teacher-nav-label">WORKSPACE</div>
 <a href="/roles/teacher/teacher-dashboard.html" data-csk-teacher-link="dashboard"><span class="csk-icon">⌂</span><span>Dashboard</span></a>
@@ -501,7 +501,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
         <div class="csk-profile-grid"><div class="csk-profile-field"><label for="cskProfileEmail">Email address</label><input id="cskProfileEmail" readonly></div><div class="csk-profile-field"><label for="cskProfilePhone">Phone number</label><input id="cskProfilePhone" readonly></div><div class="csk-profile-field"><label for="cskProfileFirst">First name</label><input id="cskProfileFirst" readonly></div><div class="csk-profile-field"><label for="cskProfileLast">Last name</label><input id="cskProfileLast" readonly></div></div>
       </section>
       <section class="csk-profile-section"><h3>Change password</h3><p>Use at least 8 characters. Your current password is required.</p>
-        <form id="cskProfilePasswordForm"><div class="csk-profile-grid"><div class="csk-profile-field"><label for="cskProfileCurrent">Current password</label><input id="cskProfileCurrent" name="currentPassword" type="password" autocomplete="current-password" required></div><div class="csk-profile-field"><label for="cskProfileNew">New password</label><input id="cskProfileNew" name="newPassword" type="password" minlength="8" autocomplete="new-password" required></div></div><div class="csk-profile-actions"><button class="btn primary" type="submit" id="cskProfilePasswordSave">Update password</button></div></form>
+        <form id="cskProfilePasswordForm"><div class="csk-profile-grid"><div class="csk-profile-field"><label for="cskProfileCurrent">Current password</label><span class="csk-password-wrap"><input id="cskProfileCurrent" name="currentPassword" type="password" autocomplete="current-password" required><button class="csk-password-toggle" type="button" data-password-toggle="cskProfileCurrent" aria-label="Show current password" aria-pressed="false" title="Show current password"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></span></div><div class="csk-profile-field"><label for="cskProfileNew">New password</label><span class="csk-password-wrap"><input id="cskProfileNew" name="newPassword" type="password" minlength="8" autocomplete="new-password" required><button class="csk-password-toggle" type="button" data-password-toggle="cskProfileNew" aria-label="Show new password" aria-pressed="false" title="Show new password"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></span></div></div><div class="csk-profile-actions"><button class="btn primary" type="submit" id="cskProfilePasswordSave">Update password</button></div></form>
       </section>
       <div class="csk-profile-status" id="cskProfileStatus" role="status" aria-live="polite"></div>
     </div>
@@ -614,6 +614,6 @@ $('cskProfilePasswordForm').addEventListener('submit',async function(e){e.preven
 var profile=document.querySelector('.csk-teacher-profile-final');if(profile){profile.classList.add('csk-profile-trigger');profile.setAttribute('role','button');profile.setAttribute('tabindex','0');profile.setAttribute('aria-haspopup','dialog');profile.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}})}
 })();
 </script>
-<script src="/assets/js/teacher-communications.js?v=20261015-3"></script>
-<script src="../../assets/js/session-timeout.js?v=20261030-1"></script>
-<script src="/assets/js/teacher-navigation-state.js?v=20261030-1"></script></body></html>
+<script src="/assets/js/teacher-communications.js?v=20261030-2"></script>
+<script src="../../assets/js/session-timeout.js?v=20261030-2"></script>
+<script src="/assets/js/teacher-navigation-state.js?v=20261030-2"></script></body></html>
