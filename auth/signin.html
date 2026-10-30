@@ -70,9 +70,26 @@
 
         <div class="remember-row">
           <label><input type="checkbox" name="remember"> Remember me</label>
-          <a href="#">Forgot password?</a>
+          <a href="#" id="forgot-password-link">Forgot password?</a>
         </div>
 
+        <div class="field"><label for="otp-channel">OTP delivery</label><select id="otp-channel"><option value="EMAIL">Email</option><option value="SMS">SMS</option></select></div>
+        <div id="otp-step" hidden style="margin:14px 0;padding:14px;border:1px solid #d9e1ef;border-radius:12px">
+          <label for="otp-code">Verification code</label>
+          <input id="otp-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6-digit code">
+          <button type="button" id="verify-otp" class="btn btn-primary btn-block" style="margin-top:10px">Verify and continue</button>
+          <p id="otp-help" class="lead"></p>
+        </div>
+        <div id="reset-step" hidden style="margin:14px 0;padding:14px;border:1px solid #d9e1ef;border-radius:12px">
+          <strong>Reset your password</strong>
+          <p class="lead">Enter your email or phone number. We will send a reset code if the account is eligible.</p>
+          <label for="reset-identifier">Email or phone</label><input id="reset-identifier" autocomplete="username">
+          <label for="reset-channel">Delivery method</label><select id="reset-channel"><option value="EMAIL">Email</option><option value="SMS">SMS</option></select>
+          <button type="button" id="send-reset-code" class="btn btn-primary btn-block">Send reset code</button>
+          <label for="reset-code">Reset code</label><input id="reset-code" inputmode="numeric" maxlength="6">
+          <label for="reset-new-password">New password</label><input id="reset-new-password" type="password" autocomplete="new-password">
+          <button type="button" id="complete-reset" class="btn btn-primary btn-block">Reset password</button>
+        </div>
         <button type="submit" class="btn btn-primary btn-block">Sign in</button>
       </form>
 
@@ -178,7 +195,8 @@
           email: identifier,
           phone: identifier,
           identifier: identifier,
-          password: password
+          password: password,
+          otpChannel: byId('otp-channel')?.value || 'EMAIL'
         })
       });
 
@@ -194,6 +212,13 @@
         );
       }
 
+      if (data.otpRequired) {
+        window.__csOtpChallengeId = data.challengeId;
+        byId('otp-step').hidden = false;
+        byId('otp-help').textContent = 'A code was sent by ' + String(data.channel || 'EMAIL').toLowerCase() + '. Enter it to finish signing in.';
+        setBusy(button, false);
+        return;
+      }
       var token = data.token || data.accessToken || data.jwt;
       var user = data.user || data.account || data.profile || {};
 
@@ -211,12 +236,37 @@
     }
   }
 
+  async function postJson(path, body) {
+    var response=await fetch(`${API_BASE}${path}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    var data=await response.json().catch(function(){return {};});
+    if(!response.ok) throw new Error(data.error||'Request failed.');
+    return data;
+  }
+  function finishSession(data) {
+    storeSession(data.token,data.user||{});
+    var role=String((data.user||{}).role||'').toUpperCase();
+    var paths={OWNER:'/roles/owner/owner-dashboard.html',HEAD_TEACHER:'/roles/headteacher/headteacher-dashboard.html',HEAD_OF_ACADEMICS:'/roles/hoa/hoa-dashboard.html',ADMINISTRATOR:'/roles/administrator/administrator-dashboard.html',ACCOUNTANT:'/roles/accountant/accountant-dashboard.html',TEACHER:'/roles/teacher/teacher-dashboard.html',STUDENT:'/roles/student/student-dashboard.html',PARENT:'/roles/parent/parent-dashboard.html',NURSE:'/roles/nurse/nurse-dashboard.html',SECURITY:'/roles/security/security-dashboard.html'};
+    window.location.replace(paths[role]||'app-dashboard.html');
+  }
   function install() {
     var form = byId('signin-form');
     if (!form || form.dataset.csSigninBound === '1') return;
 
     form.dataset.csSigninBound = '1';
     form.addEventListener('submit', submitSignIn);
+    byId('verify-otp')?.addEventListener('click',async function(){
+      try{this.disabled=true;var d=await postJson('/api/auth/verify-login-otp',{challengeId:window.__csOtpChallengeId,code:byId('otp-code').value.trim()});finishSession(d);}
+      catch(e){showError(e.message);}finally{this.disabled=false;}
+    });
+    byId('forgot-password-link')?.addEventListener('click',function(e){e.preventDefault();byId('reset-step').hidden=false;byId('reset-identifier').value=byId('email').value.trim();});
+    byId('send-reset-code')?.addEventListener('click',async function(){
+      try{this.disabled=true;var d=await postJson('/api/auth/password-reset/request',{identifier:byId('reset-identifier').value.trim(),channel:byId('reset-channel').value});showError(d.message||'If eligible, a reset code has been sent.');}
+      catch(e){showError(e.message);}finally{this.disabled=false;}
+    });
+    byId('complete-reset')?.addEventListener('click',async function(){
+      try{this.disabled=true;var d=await postJson('/api/auth/password-reset/complete',{identifier:byId('reset-identifier').value.trim(),code:byId('reset-code').value.trim(),newPassword:byId('reset-new-password').value});showError(d.message||'Password reset.');byId('reset-step').hidden=true;}
+      catch(e){showError(e.message);}finally{this.disabled=false;}
+    });
 
     var toggle = form.querySelector('.password-toggle');
     var password = byId('password');
