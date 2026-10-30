@@ -403,7 +403,7 @@ body header.topbar,body header.app-topbar,
 @media(max-width:560px){.csk-profile-grid{grid-template-columns:1fr}.csk-profile-head{padding:17px}.csk-profile-body{padding:14px}.csk-profile-dialog{max-height:92vh}}
 </style>
 <link rel="stylesheet" href="/assets/css/teacher-communications.css?v=20261030-2">
-<link rel="stylesheet" href="/assets/css/mobile-shell.css" media="(max-width:820px)"><script src="/assets/js/mobile-shell.js" defer></script></head><body><aside class="csk-teacher-sidebar"><div class="csk-teacher-brand"><img src="/assets/images/favicon.svg" alt="ConnectSukuu"><strong>ConnectSukuu</strong></div><nav class="csk-teacher-nav">
+</head><body><aside class="csk-teacher-sidebar"><div class="csk-teacher-brand"><img src="/assets/images/favicon.svg" alt="ConnectSukuu"><strong>ConnectSukuu</strong></div><nav class="csk-teacher-nav">
 <div class="csk-teacher-nav-label">WORKSPACE</div>
 <a href="/roles/teacher/teacher-dashboard.html" data-csk-teacher-link="dashboard"><span class="csk-icon">⌂</span><span>Dashboard</span></a>
 <a href="/roles/teacher/teacher-attendance.html" data-csk-teacher-link="attendance"><span class="csk-icon">✓</span><span>Attendance</span></a>
@@ -508,82 +508,6 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   </section>
 </div>
 
-<script id="connectsukuu-teacher-shell-standardized-runtime">
-(function(){
-'use strict';
-var PAGES={
- '/roles/teacher/teacher-dashboard.html':{key:'dashboard',title:'Dashboard'},
- '/roles/teacher/teacher-attendance.html':{key:'attendance',title:'Attendance'},
- '/roles/teacher/teacher-teaching-assignments.html':{key:'assignments',title:'Teaching Assignments'},
- '/roles/teacher/teacher-timetable.html':{key:'timetable',title:'Timetable'},
- '/roles/teacher/teacher-assessments.html':{key:'assessments',title:'Assessments & Reports'},
- '/roles/teacher/teacher-learning.html':{key:'learning',title:'Learning & Live Classes'},
- '/roles/teacher/teacher-announcements.html':{key:'announcements',title:'Announcements'},
- '/roles/teacher/teacher-notifications.html':{key:'notifications',title:'Notifications'}
-};
-var routeName=(location.pathname.replace(/\/+$/,'').split('/').pop()||'').toLowerCase();
-var file=routeName.indexOf('.html')>=0?routeName:(routeName?routeName+'.html':'');
-var page=PAGES[file];
-if(!page){
-  var t=(document.title||'').toLowerCase();
-  if(t.indexOf('announcement')>=0) page=PAGES['/roles/teacher/teacher-announcements.html'];
-  else if(t.indexOf('notification')>=0) page=PAGES['/roles/teacher/teacher-notifications.html'];
-  else if(t.indexOf('learning')>=0) page=PAGES['/roles/teacher/teacher-learning.html'];
-  else if(t.indexOf('assessment')>=0 || t.indexOf('report')>=0) page=PAGES['/roles/teacher/teacher-assessments.html'];
-  else if(t.indexOf('timetable')>=0) page=PAGES['/roles/teacher/teacher-timetable.html'];
-  else if(t.indexOf('teaching assignment')>=0) page=PAGES['/roles/teacher/teacher-teaching-assignments.html'];
-  else if(t.indexOf('attendance')>=0) page=PAGES['/roles/teacher/teacher-attendance.html'];
-  else if(t.indexOf('dashboard')>=0) page=PAGES['/roles/teacher/teacher-dashboard.html'];
-  else page={key:'dashboard',title:'Teacher Workspace'};
-}
-function user(){try{if(window.AUTH&&typeof AUTH.getUser==='function')return AUTH.getUser()||{};return JSON.parse(localStorage.getItem('cs_user')||'null')||{};}catch(e){return {};}}
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-function initials(u){var n=[u.firstName,u.lastName].filter(Boolean).join(' ').trim()||u.email||'Teacher';return n.split(/\s+/).map(function(x){return x.charAt(0);}).join('').slice(0,2).toUpperCase();}
-function nav(){return '<div class="nav-label">WORKSPACE</div>'+
-'<a href="/roles/teacher/teacher-dashboard.html" data-t="dashboard"><span class="nav-icon">⌂</span><span>Dashboard</span></a>'+ 
-'<a href="/roles/teacher/teacher-attendance.html" data-t="attendance"><span class="nav-icon">✓</span><span>Attendance</span></a>'+ 
-'<div class="nav-label">TEACHING</div>'+ 
-'<a href="/roles/teacher/teacher-teaching-assignments.html" data-t="assignments"><span class="nav-icon">⇄</span><span>Teaching Assignments</span></a>'+ 
-'<a href="/roles/teacher/teacher-timetable.html" data-t="timetable"><span class="nav-icon">▦</span><span>Timetable</span></a>'+ 
-'<a href="/roles/teacher/teacher-assessments.html" data-t="assessments"><span class="nav-icon">★</span><span>Assessments &amp; Reports</span></a>'+ 
-'<a href="/roles/teacher/teacher-learning.html" data-t="learning"><span class="nav-icon">▶</span><span>Learning &amp; Live Classes</span></a>';}
-function hideLegacy(){
- document.querySelectorAll('.topbar,.app-topbar,.cs-assessment-topbar,header.topbar,header.app-topbar,.user-card,.cs-assessment-profile,.csk-teacher-profile').forEach(function(el){el.style.display='none';});
- document.querySelectorAll('body>.sidebar,body>.app-sidebar,body>.cs-assessment-sidebar').forEach(function(el){el.style.display='none';});
-}
-function build(){
- var u=user();
- /* Existing page authentication guards remain authoritative.
-    Do not redirect from the visual shell runtime; this prevents a race
-    with AUTH/localStorage initialization from deleting the shell. */
- hideLegacy();
- document.querySelectorAll('.csk-teacher-sidebar-final,.csk-teacher-header-final').forEach(function(el){el.remove();});
- var side=document.createElement('aside');side.className='csk-teacher-sidebar-final';
- side.innerHTML='<div class="csk-teacher-brand-final"><span class="brand-mark"><img src="/assets/images/favicon.svg" alt="" aria-hidden="true"></span><span class="brand-connect">Connect<span class="brand-sukuu">Sukuu</span></span></div><nav class="csk-teacher-nav-final">'+nav()+'</nav><button type="button" class="csk-teacher-logout-final" id="cskTeacherLogoutFinal">↪ Log out</button>';
- document.body.insertBefore(side,document.body.firstChild);
- side.querySelectorAll('[data-t]').forEach(function(a){a.classList.toggle('active',a.getAttribute('data-t')===page.key);});
- var main=document.querySelector('body>main') || document.querySelector('main.main,main.app-main,main');
- if(!main){main=document.createElement('main');document.body.appendChild(main);}
- main.classList.add('csk-teacher-main-final');
- var legacyHeaders=[];
- Array.prototype.slice.call(main.children).forEach(function(el){if(el.matches&&el.matches('.topbar,.app-topbar,header.topbar,header.app-topbar,.cs-assessment-topbar'))legacyHeaders.push(el);});
- legacyHeaders.forEach(function(el){el.remove();});
- var content=main.querySelector('.csk-teacher-content-final');
- if(!content){
-   content=document.createElement('div');content.className='csk-teacher-content-final';
-   var children=Array.prototype.slice.call(main.children);
-   children.forEach(function(el){content.appendChild(el);});
-   main.appendChild(content);
- }
- var header=document.createElement('header');header.className='csk-teacher-header-final';
- header.innerHTML='<h1 class="csk-teacher-header-title-final">'+page.title+'</h1><div class="csk-teacher-profile-final"><div class="csk-teacher-profile-copy-final"><span class="csk-teacher-profile-email-final">'+esc(u.email||'Teacher')+'</span><span class="csk-teacher-profile-role-final">Teacher</span></div><div class="csk-teacher-avatar-final">'+initials(u)+'</div></div>';
- main.appendChild(header);
- var logout=document.getElementById('cskTeacherLogoutFinal');
- logout.addEventListener('click',function(){try{if(window.AUTH&&typeof AUTH.logout==='function'){AUTH.logout();return;}}catch(e){} localStorage.removeItem('cs_token');localStorage.removeItem('cs_user');location.href='/auth/signin.html';});
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',build);else build();
-})();
-</script>
 <script id="connectsukuu-teacher-profile-dialog-runtime">
 (function(){
 'use strict';
@@ -614,6 +538,6 @@ $('cskProfilePasswordForm').addEventListener('submit',async function(e){e.preven
 var profile=document.querySelector('.csk-teacher-profile-final');if(profile){profile.classList.add('csk-profile-trigger');profile.setAttribute('role','button');profile.setAttribute('tabindex','0');profile.setAttribute('aria-haspopup','dialog');profile.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}})}
 })();
 </script>
-<script src="/assets/js/teacher-communications.js?v=20261030-2"></script>
+<script src="/assets/js/teacher-communications.js?v=20261030-3"></script>
 <script src="../../assets/js/session-timeout.js?v=20261030-2"></script>
 <script src="/assets/js/teacher-navigation-state.js?v=20261030-2"></script></body></html>

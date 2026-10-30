@@ -9,8 +9,11 @@
   var WARNING_AT_MS = 25 * 60 * 1000;
   var ACTIVITY_WRITE_THROTTLE_MS = 10 * 1000;
   var LAST_ACTIVITY_KEY = 'cs_last_activity_at';
-  var TOKEN_KEYS = ['cs_token', 'connectsukuu_token'];
-  var USER_KEYS = ['cs_user', 'connectsukuu_user'];
+  // Staff roles sign in at auth/signin.html; students sign in at auth/student-signin.html with their own keys.
+  var STAFF_TOKEN_KEYS = ['cs_token', 'connectsukuu_token'];
+  var STUDENT_TOKEN_KEY = 'connectsukuu_student_token';
+  var TOKEN_KEYS = STAFF_TOKEN_KEYS.concat([STUDENT_TOKEN_KEY]);
+  var USER_KEYS = ['cs_user', 'connectsukuu_user', 'connectsukuu_student'];
   var timer = null;
   var countdownTimer = null;
   var lastActivity = 0;
@@ -30,14 +33,15 @@
 
   // Public pages, sign-in, and sign-up must not start an idle session.
   if (!getToken()) return;
-  document.documentElement.setAttribute('data-csk-idle-timeout', 'active');
+
+  var isStudentSession = !STAFF_TOKEN_KEYS.some(function (key) { return !!localStorage.getItem(key); });
 
   function signInUrl() {
     var path = window.location.pathname || '';
     var depth = path.split('/').filter(Boolean).length;
     // Role pages are /roles/{role}/{page}; Super Admin is /super-admin/admin.html.
     var prefix = path.indexOf('/super-admin/') !== -1 ? '../' : '../../';
-    return prefix + 'auth/signin.html?reason=idle';
+    return prefix + 'auth/' + (isStudentSession ? 'student-signin.html' : 'signin.html') + '?reason=idle';
   }
 
   function clearSessionAndRedirect() {
@@ -155,7 +159,7 @@
   }
 
   // Meaningful user interaction resets the inactivity clock.
-  ['pointerdown', 'keydown', 'touchstart', 'scroll', 'wheel'].forEach(function (eventName) {
+  ['pointerdown', 'keydown', 'touchstart', 'scroll', 'mousemove'].forEach(function (eventName) {
     document.addEventListener(eventName, function () {
       recordActivity(false);
     }, { passive: true, capture: true });
@@ -177,8 +181,6 @@
     lastActivity = Date.now();
   }
 
-  // Re-check when the tab becomes active so sleeping/background tabs cannot
-  // postpone the timeout beyond the configured 30-minute idle limit.
   checkIdleState();
   timer = window.setInterval(checkIdleState, 1000);
 })();

@@ -2,7 +2,7 @@
 (function(){'use strict';
 var API=String((typeof API_BASE!=='undefined'&&API_BASE)||window.API_BASE||'http://localhost:4000').replace(/\/$/,'');
 var routeName=(location.pathname.replace(/\/+$/,'').split('/').pop()||'/roles/teacher/teacher-dashboard.html').toLowerCase();
-var currentFile=routeName.indexOf('.html')>=0?routeName:routeName+'.html';
+var currentFile='/roles/teacher/'+(routeName.indexOf('.html')>=0?routeName:routeName+'.html');
 var state={notifications:[],announcements:[],loaded:false,profileLoaded:false,profileLoadInFlight:false};
 var photoPickerBound=false;
 var routeMap={OWNER:'/roles/owner/owner-dashboard.html',HEAD_TEACHER:'/roles/headteacher/headteacher-dashboard.html',HEAD_OF_ACADEMICS:'/roles/hoa/hoa-dashboard.html',ADMINISTRATOR:'/roles/administrator/administrator-dashboard.html',ACCOUNTANT:'/roles/accountant/accountant-dashboard.html',STUDENT:'/roles/student/student-dashboard.html',PARENT:'/roles/parent/parent-dashboard.html',NURSE:'/roles/nurse/nurse-dashboard.html',SECURITY:'/roles/security/security-dashboard.html'};
@@ -95,7 +95,7 @@ function enhanceShell(){
   var profile=header&&header.querySelector('.csk-teacher-profile-final');
   if(header&&profile){
     var actions=header.querySelector('.tc-header-actions');
-    if(!actions){actions=document.createElement('div');actions.className='tc-header-actions';header.insertBefore(actions,profile);actions.appendChild(profile)}
+    if(!actions){actions=document.createElement('div');actions.className='tc-header-actions';(profile.parentNode||header).insertBefore(actions,profile);actions.appendChild(profile)}
     var bell=actions.querySelector('.tc-bell-link')||header.querySelector('.tc-bell-link');
     if(!bell){bell=document.createElement('a');bell.className='tc-bell-link';bell.href='/roles/teacher/teacher-notifications.html';bell.setAttribute('aria-label','Notifications');bell.title='Notifications';bell.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="tc-bell-count" id="tc-header-unread" hidden>0</span>'}
     if(bell.parentElement!==actions)actions.insertBefore(bell,profile);
