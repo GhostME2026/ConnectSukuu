@@ -43,22 +43,29 @@ const publicContentRoutes = require('./routes/public-content.routes');
 
 const app = express();
 
-const allowedOrigins = [
-  process.env.FRONTEND_URL,
-'https://connectsukuu.vercel.app',
-'https://ghostme2026.github.io',
-'http://localhost:5500',
-'http://127.0.0.1:5500'
-].filter(Boolean);
+// Explicitly allow both production frontends. FRONTEND_URL remains an
+// optional additional origin, not the sole source of CORS configuration.
+const allowedOrigins = new Set([
+  'https://connectsukuu.vercel.app',
+  'https://ghostme2026.github.io',
+  'http://localhost:5500',
+  'http://127.0.0.1:5500',
+  process.env.FRONTEND_URL
+].map(value => String(value || '').trim().replace(/\/$/, '')).filter(Boolean));
 
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    const normalizedOrigin = String(origin || '').trim().replace(/\/$/, '');
+    if (!normalizedOrigin || allowedOrigins.has(normalizedOrigin)) {
       return callback(null, true);
     }
-    
-    return callback(new Error('Not allowed by CORS'));
-  }
+    console.warn('[CORS] Rejected frontend origin:', normalizedOrigin);
+    return callback(new Error('Origin not allowed by ConnectSukuu CORS policy'));
+  },
+  methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  credentials: false,
+  optionsSuccessStatus: 204
 }));
 
 // Compress eligible API responses to reduce transfer time for larger JSON payloads.
