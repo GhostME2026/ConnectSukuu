@@ -349,7 +349,7 @@ body.cs-headteacher-final-shell .csk-ht-header-final .csk-ht-profile-final{margi
 <div class="modal" id="copyModal"><div class="modal-box copy-modal-box"><div class="modal-head"><div><span class="kicker">Efficiency tool</span><h3>Copy class timetable</h3><p>Copy the complete timetable structure. Empty periods stay empty; assigned lessons are matched to destination teaching assignments by subject.</p></div><button class="close" data-close="copyModal">×</button></div><div class="modal-body"><div class="copy-columns"><section class="copy-side"><div class="copy-side-head"><span class="copy-step">1</span><div><strong>Source</strong><small>Timetable to copy</small></div></div><div class="field"><label>Academic year</label><select id="srcYear"></select></div><div class="field"><label>Term</label><select id="srcTerm"></select></div><div class="field"><label>Class</label><select id="srcClass"></select></div></section><section class="copy-side"><div class="copy-side-head"><span class="copy-step">2</span><div><strong>Destination</strong><small>Where the timetable will be copied</small></div></div><div class="field"><label>Academic year</label><select id="dstYear"></select></div><div class="field"><label>Term</label><select id="dstTerm"></select></div><div class="field"><label>Class</label><select id="dstClass"></select></div></section></div><label class="overwrite-option"><input type="checkbox" id="overwrite"><span><strong>Replace destination timetable</strong><small>Leave this off to protect existing periods. Turn it on only when intentionally replacing the destination schedule.</small></span></label><div id="copyPreview" class="preview hidden"></div></div><div class="modal-actions"><button class="btn" data-close="copyModal">Cancel</button><button class="btn" id="previewCopyBtn">Preview copy</button><button class="btn btn-primary" id="executeCopyBtn" disabled>Copy timetable</button></div></div></div>
 
 <div class="toast" id="toast"></div>
-<script src="/assets/js/config.js"></script>
+<script src="/assets/js/config.js?v=20261030-htfix1"></script>
 <script src="/assets/js/app.js"></script>
 <script>
 (() => {
@@ -809,7 +809,7 @@ function run(){if(!isHT())return;document.body.classList.add('cs-headteacher-fin
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();[80,250,700,1400,2500].forEach(function(ms){setTimeout(run,ms);});try{new MutationObserver(function(){if(isHT())hideLegacy();}).observe(document.body,{childList:true,subtree:true});}catch(e){}
 })();
 </script>
-<script src="/assets/js/role-shell-extension.js"></script>
+<script src="/assets/js/role-shell-extension.js?v=20261030-htfix1"></script>
 <link rel="stylesheet" href="/roles/headteacher/headteacher-final-freeze.css">
 <script src="../../assets/js/session-timeout.js?v=20261030-1"></script>
 </body>
