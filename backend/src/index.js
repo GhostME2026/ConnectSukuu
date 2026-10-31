@@ -19,6 +19,7 @@ const assessmentRoutes = require('./routes/assessment.routes');
 const financeRoutes = require('./routes/finance.routes');
 const billingRoutes = require('./routes/billing.routes');
 const adminRoutes = require('./routes/admin.routes');
+const adminOtpRoutes = require('./routes/admin-otp.routes');
 const staffRoutes = require('./routes/staff.routes');
 const studentPortalRoutes =
 require('./routes/studentPortal.routes');
@@ -121,6 +122,8 @@ app.use('/api/assessments', assessmentRoutes);
 app.use('/api/assessment-engine', assessmentEngineRoutes);
 app.use('/api/finance', financeRoutes);
 app.use('/api/billing', billingRoutes);
+// Dedicated Super Admin OTP/security endpoints must be mounted explicitly.
+app.use('/api/admin/otp', adminOtpRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/staff', staffRoutes);
 app.use('/api/settings', settingsRoutes);

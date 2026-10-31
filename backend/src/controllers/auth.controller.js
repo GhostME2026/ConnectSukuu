@@ -237,7 +237,9 @@ async function login(req, res) {
     }
     
     const otpSettings = await prisma.otpPlatformSettings.upsert({ where: { id: 'global' }, create: { id: 'global' }, update: {} });
-    if (otpSettings.enabled && !user.otpExempt) {
+    // Super Admin is the platform recovery/control account. Never gate this role
+    // behind the global staff OTP switch; it must remain able to manage OTP.
+    if (otpSettings.enabled && user.role !== 'SUPER_ADMIN' && !user.otpExempt) {
       const channel = String(req.body.otpChannel || 'EMAIL').toUpperCase();
       const schoolOtp = user.schoolId ? await prisma.otpSchoolSettings.findUnique({ where: { schoolId: user.schoolId } }) : null;
       const allowed = (channel === 'EMAIL' && otpSettings.emailEnabled && (!schoolOtp || (schoolOtp.enabled && schoolOtp.emailEnabled))) ||
@@ -317,6 +319,9 @@ async function changePassword(req, res) {
         error: 'User account not found',
       });
     }
+
+    const passwordPolicyError = validateNewPasswordForRole(newPassword, user.role);
+    if (passwordPolicyError) return res.status(400).json({ error: passwordPolicyError });
     
     const valid = await bcrypt.compare(
       currentPassword,
