@@ -145,6 +145,7 @@ model User {
   gateLogsRecorded          StudentGateLog[]     @relation("StudentGateLogRecorder")
   authOtpChallenges         AuthOtpChallenge[]
   passwordResetTokens       PasswordResetToken[]
+  trustedDevices            TrustedDevice[]
 }
 
 model Student {
@@ -1046,6 +1047,7 @@ model SupportTicket {
   status         String   @default("OPEN")
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  messages       SupportTicketMessage[]
 
   @@index([schoolId, createdAt])
   @@index([createdById, createdAt])
@@ -1424,4 +1426,46 @@ model PasswordResetToken {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@index([userId, createdAt])
   @@index([expiresAt])
+}
+
+
+// A browser is trusted only after a successful OTP challenge and explicit opt-in.
+// The raw token is stored only in the user's browser; the database stores its HMAC hash.
+model TrustedDevice {
+  id         String   @id @default(cuid())
+  userId     String
+  tokenHash  String   @unique
+  label      String?
+  expiresAt  DateTime
+  lastUsedAt DateTime @default(now())
+  revokedAt  DateTime?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+  @@index([userId, revokedAt])
+}
+
+model SupportTicketMessage {
+  id           String   @id @default(cuid())
+  ticketId     String
+  authorUserId String?
+  authorRole   String
+  message      String
+  createdAt    DateTime @default(now())
+  ticket       SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId, createdAt])
+}
+
+model PlatformNotification {
+  id        String   @id @default(cuid())
+  type      String   @default("SUPPORT")
+  title     String
+  content   String
+  targetUrl String?
+  readAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([readAt, createdAt])
 }

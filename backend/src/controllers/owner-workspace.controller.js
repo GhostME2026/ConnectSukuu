@@ -172,7 +172,38 @@ async function createSupportTicket(req,res){
   if(!SUPPORT_ROLES.includes(req.user.role)) return fail(res,403,'Support access is limited to the Owner, Head Teacher and Administrator.');
   const category=clean(req.body.category),subject=clean(req.body.subject),content=clean(req.body.content);
   if(!category||!subject||!content) return fail(res,400,'Choose an issue category and enter a subject and description.');
-  try{const ticket=await prisma.supportTicket.create({data:{schoolId:req.user.schoolId,branchId:req.user.branchId||null,createdById:req.user.id,category,subject,content,attachmentName:req.file?.originalname||clean(req.body.attachmentName)||null,attachmentPath:req.file?.filename||null}});res.status(201).json({...ticket,attachmentPath:undefined});}
+  try{
+    const ticket=await prisma.supportTicket.create({data:{schoolId:req.user.schoolId,branchId:req.user.branchId||null,createdById:req.user.id,category,subject,content,attachmentName:req.file?.originalname||clean(req.body.attachmentName)||null,attachmentPath:req.file?.filename||null}});
+    const [school, requester, admins] = await Promise.all([
+      prisma.school.findUnique({where:{id:req.user.schoolId},select:{name:true}}),
+      prisma.user.findUnique({where:{id:req.user.id},select:{firstName:true,lastName:true,email:true,role:true}}),
+      prisma.user.findMany({where:{role:'SUPER_ADMIN',isActive:true,email:{not:null}},select:{email:true}})
+    ]);
+    // Platform notifications work without a custom email domain or Resend configuration.
+    try {
+      await prisma.platformNotification.create({data:{
+        type:'SUPPORT_TICKET',
+        title:'New support ticket',
+        content:`${school?.name||'A school'} submitted: ${subject}`,
+        targetUrl:'admin.html?view=support'
+      }});
+    } catch(notificationError) {
+      console.warn('[support-ticket-notification]',notificationError.message);
+    }
+    // Email is best-effort. Ticket creation must never fail because email is not configured.
+    const apiKey=String(process.env.RESEND_API_KEY||'').trim(), from=String(process.env.RESEND_FROM||'').trim();
+    if(apiKey&&from&&admins.length){
+      const esc=v=>String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:`Bearer ${apiKey}`,'Content-Type':'application/json'},body:JSON.stringify({
+        from,to:admins.map(a=>a.email),subject:`New ConnectSukuu support ticket: ${subject}`,
+        html:`<div style="font-family:Arial,sans-serif;background:#f3f6fc;padding:28px;color:#17233c"><div style="max-width:620px;margin:auto;background:#fff;border-radius:16px;overflow:hidden"><header style="padding:24px;background:#101d3a;color:white"><b style="color:#93c5fd">CONNECTSUKUU</b><h2>New support request</h2></header><main style="padding:26px"><p><b>School:</b> ${esc(school?.name)}</p><p><b>From:</b> ${esc((requester?.firstName||'')+' '+(requester?.lastName||''))} (${esc(requester?.email)})</p><p><b>Category:</b> ${esc(category)}</p><h3>${esc(subject)}</h3><p style="white-space:pre-wrap;line-height:1.6">${esc(content)}</p><p><a href="${esc(process.env.FRONTEND_URL||'https://connectsukuu.vercel.app')}/super-admin/admin.html?view=support">Open Support Inbox</a></p></main></div></div>`,
+        text:`New support ticket from ${school?.name||'a school'}: ${subject}\n${content}`
+      }),signal:AbortSignal.timeout(12000)}).catch(e=>console.warn('[support-ticket-email]',e.message));
+    } else {
+      console.info('[support-ticket-email] Email alert deferred: RESEND_API_KEY/RESEND_FROM or Super Admin email is missing.');
+    }
+    res.status(201).json({...ticket,attachmentPath:undefined});
+  }
   catch(e){console.error('createSupportTicket:',e);res.status(500).json({error:'Unable to submit support request.'});}
 }
 async function listSupportTickets(req,res){

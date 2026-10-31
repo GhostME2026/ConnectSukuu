@@ -40,6 +40,8 @@ router.post('/profile/photo', requireAuth, (req, res, next) => {
 }, saveProfilePhoto);
 router.post('/change-password', requireAuth, changePassword);
 router.post('/verify-login-otp', security.verifyLoginOtp);
+router.get('/trusted-devices', requireAuth, security.listTrustedDevices);
+router.delete('/trusted-devices/:id', requireAuth, security.revokeTrustedDevice);
 router.post('/password-reset/request', security.requestPasswordReset);
 router.post('/password-reset/complete', security.completePasswordReset);
 

@@ -226,6 +226,64 @@ async function updateSupportTicketStatus(req, res) {
 }
 
 
+// GET /api/admin/support-notifications — platform-wide alerts; available without Resend.
+async function listSupportNotifications(req,res){
+  try{
+    const rows=await prisma.platformNotification.findMany({where:{type:'SUPPORT_TICKET'},orderBy:{createdAt:'desc'},take:30});
+    const unread=rows.filter(x=>!x.readAt).length;
+    return res.json({unread,items:rows});
+  }catch(e){console.error('admin.listSupportNotifications:',e);return res.status(500).json({error:'Could not load platform support alerts.'});}
+}
+async function markSupportNotificationRead(req,res){
+  try{
+    const row=await prisma.platformNotification.findUnique({where:{id:req.params.id}});
+    if(!row)return res.status(404).json({error:'Alert not found.'});
+    const updated=await prisma.platformNotification.update({where:{id:row.id},data:{readAt:row.readAt||new Date()}});
+    return res.json(updated);
+  }catch(e){console.error('admin.markSupportNotificationRead:',e);return res.status(500).json({error:'Could not update the alert.'});}
+}
+async function listSupportMessages(req,res){
+  try{
+    const ticket=await prisma.supportTicket.findUnique({where:{id:req.params.id}});
+    if(!ticket)return res.status(404).json({error:'Support request not found.'});
+    const rows=await prisma.supportTicketMessage.findMany({where:{ticketId:ticket.id},orderBy:{createdAt:'asc'}});
+    return res.json(rows);
+  }catch(e){console.error('admin.listSupportMessages:',e);return res.status(500).json({error:'Could not load ticket conversation.'});}
+}
+async function replySupportTicket(req,res){
+  const message=String(req.body?.message||'').trim();
+  if(!message)return res.status(400).json({error:'Write a reply before sending.'});
+  if(message.length>10000)return res.status(400).json({error:'Replies must be 10,000 characters or fewer.'});
+  try{
+    const ticket=await prisma.supportTicket.findUnique({where:{id:req.params.id}});
+    if(!ticket)return res.status(404).json({error:'Support request not found.'});
+    const creator=await prisma.user.findUnique({where:{id:ticket.createdById},select:{id:true,email:true,firstName:true,lastName:true}});
+    const admin=await prisma.user.findUnique({where:{id:req.user.id},select:{firstName:true,lastName:true,email:true}});
+    const saved=await prisma.$transaction(async tx=>{
+      const row=await tx.supportTicketMessage.create({data:{ticketId:ticket.id,authorUserId:req.user.id,authorRole:'SUPER_ADMIN',message}});
+      if(['OPEN','CLOSED'].includes(ticket.status))await tx.supportTicket.update({where:{id:ticket.id},data:{status:'IN_PROGRESS'}});
+      return row;
+    });
+    // Save the reply first. Email is best-effort and never rolls back the conversation.
+    const apiKey=String(process.env.RESEND_API_KEY||'').trim(),from=String(process.env.RESEND_FROM||'').trim();
+    let emailSent=false;
+    if(apiKey&&from&&creator?.email){
+      const esc=v=>String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      try{
+        const response=await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:`Bearer ${apiKey}`,'Content-Type':'application/json'},body:JSON.stringify({
+          from,to:[creator.email],subject:`ConnectSukuu support update: ${ticket.subject}`,
+          html:`<div style="font-family:Arial,sans-serif;background:#f3f6fc;padding:28px;color:#17233c"><div style="max-width:620px;margin:auto;background:#fff;border-radius:16px;overflow:hidden"><header style="padding:24px;background:linear-gradient(125deg,#101d3a,#2563eb);color:white"><b style="color:#bfdbfe">CONNECTSUKUU</b><h2>Support team response</h2></header><main style="padding:26px"><p>Hello ${esc(creator.firstName||'there')},</p><p>Our support team has replied to your request: <b>${esc(ticket.subject)}</b>.</p><div style="white-space:pre-wrap;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:18px;line-height:1.6">${esc(message)}</div><p>Sign in to ConnectSukuu to review your support request.</p><p>Regards,<br><b>ConnectSukuu Support Team</b></p></main></div></div>`,
+          text:`Hello ${creator.firstName||'there'},\n\nOur support team replied to "${ticket.subject}":\n\n${message}\n\nConnectSukuu Support Team`
+        }),signal:AbortSignal.timeout(12000)});
+        emailSent=response.ok;
+        if(!response.ok)console.warn('[support-reply-email] Resend rejected:',response.status);
+      }catch(e){console.warn('[support-reply-email]',e.message);}
+    }
+    return res.status(201).json({message:saved,emailSent,notice:emailSent?'Reply saved and email sent.':'Reply saved. Email delivery is pending domain/provider configuration.'});
+  }catch(e){console.error('admin.replySupportTicket:',e);return res.status(500).json({error:'Could not save the support reply.'});}
+}
+
+
 async function listCancellationRequests(req,res){
   try{
     const requests=await prisma.subscriptionCancellationRequest.findMany({orderBy:[{status:'asc'},{requestedAt:'desc'}],take:200,include:{school:{select:{id:true,name:true,slug:true,plan:true,subscriptionStatus:true,billingProvider:true,billingCycle:true,subscriptionRenewsAt:true}}}});
@@ -250,4 +308,4 @@ async function reviewCancellationRequest(req,res){
   }catch(e){console.error('admin.reviewCancellationRequest:',e);return res.status(500).json({error:'Could not review the cancellation request.'});}
 }
 
-module.exports = { listCancellationRequests, reviewCancellationRequest, listSchools, getSchool, updateSchool, archiveSchool, restoreSchool, deleteSchool, listSupportTickets, updateSupportTicketStatus };
+module.exports = { listCancellationRequests, reviewCancellationRequest, listSchools, getSchool, updateSchool, archiveSchool, restoreSchool, deleteSchool, listSupportTickets, updateSupportTicketStatus, listSupportNotifications, markSupportNotificationRead, listSupportMessages, replySupportTicket };

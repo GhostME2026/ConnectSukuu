@@ -83,6 +83,8 @@
         <div id="otp-step" hidden style="margin:14px 0;padding:14px;border:1px solid #d9e1ef;border-radius:12px">
           <label for="otp-code">Verification code</label>
           <input id="otp-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6-digit code">
+          <label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px"><input id="remember-this-browser" type="checkbox"> Remember this browser for 30 days</label>
+          <small style="display:block;color:#64748b;margin-top:5px">Only select this on a private device you control. Signing out and inactivity timeouts still apply.</small>
           <button type="button" id="verify-otp" class="btn btn-primary btn-block" style="margin-top:10px">Verify and continue</button>
           <p id="otp-help" class="lead"></p>
         </div>
@@ -192,6 +194,7 @@
           phone: identifier,
           identifier: identifier,
           password: password,
+          trustedDeviceToken: localStorage.getItem('cs_trusted_device') || ''
         })
       });
 
@@ -239,6 +242,7 @@
   }
   function finishSession(data) {
     storeSession(data.token,data.user||{});
+    if(data.trustedDeviceToken && data.user && data.user.id){localStorage.setItem('cs_trusted_device',data.trustedDeviceToken);}
     var role=String((data.user||{}).role||'').toUpperCase();
     var paths={OWNER:'/roles/owner/owner-dashboard.html',HEAD_TEACHER:'/roles/headteacher/headteacher-dashboard.html',HEAD_OF_ACADEMICS:'/roles/hoa/hoa-dashboard.html',ADMINISTRATOR:'/roles/administrator/administrator-dashboard.html',ACCOUNTANT:'/roles/accountant/accountant-dashboard.html',TEACHER:'/roles/teacher/teacher-dashboard.html',STUDENT:'/roles/student/student-dashboard.html',PARENT:'/roles/parent/parent-dashboard.html',NURSE:'/roles/nurse/nurse-dashboard.html',SECURITY:'/roles/security/security-dashboard.html'};
     window.location.replace(paths[role]||'app-dashboard.html');
@@ -259,7 +263,7 @@
       passwordToggle.setAttribute('aria-pressed', reveal ? 'true' : 'false');
     });
     byId('verify-otp')?.addEventListener('click',async function(){
-      try{this.disabled=true;var d=await postJson('/api/auth/verify-login-otp',{challengeId:window.__csOtpChallengeId,code:byId('otp-code').value.trim()});finishSession(d);}
+      try{this.disabled=true;var d=await postJson('/api/auth/verify-login-otp',{challengeId:window.__csOtpChallengeId,code:byId('otp-code').value.trim(),rememberThisBrowser:!!byId('remember-this-browser')?.checked,deviceLabel:(navigator.userAgent||'This browser').slice(0,80)});finishSession(d);}
       catch(e){showError(e.message);}finally{this.disabled=false;}
     });
   }

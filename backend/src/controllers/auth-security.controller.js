@@ -99,7 +99,18 @@ exports.verifyLoginOtp = async(req,res,next)=>{
   await prisma.authOtpChallenge.update({where:{id},data:{usedAt:new Date()}});
   if(c.user.isActive===false) return res.status(403).json({error:'This account is inactive.'});
   const u=c.user, token=signToken({userId:u.id,schoolId:u.schoolId,role:u.role});
-  res.json({token,user:{id:u.id,email:u.email,role:u.role,schoolId:u.schoolId,branchId:u.branchId,isActive:u.isActive,mustChangePassword:u.mustChangePassword},requiresPasswordChange:u.mustChangePassword});
+  let trustedDeviceToken = null;
+  if (req.body.rememberThisBrowser === true && u.role !== 'SUPER_ADMIN') {
+    trustedDeviceToken = crypto.randomBytes(32).toString('base64url');
+    await prisma.trustedDevice.create({data:{
+      userId:u.id,
+      tokenHash:sha(trustedDeviceToken),
+      label:String(req.body.deviceLabel || 'This browser').slice(0,80),
+      expiresAt:new Date(Date.now()+30*24*60*60*1000),
+      lastUsedAt:new Date()
+    }});
+  }
+  res.json({token,trustedDeviceToken,user:{id:u.id,email:u.email,role:u.role,schoolId:u.schoolId,branchId:u.branchId,isActive:u.isActive,mustChangePassword:u.mustChangePassword},requiresPasswordChange:u.mustChangePassword});
  }catch(e){next(e);}
 };
 exports.requestPasswordReset=async(req,res)=>{
@@ -139,4 +150,31 @@ exports.completePasswordReset=async(req,res)=>{
   ]);
   res.json({ok:true,message:'Password reset successfully. Sign in with your new password.'});
  }catch(e){console.error('completePasswordReset',e);res.status(500).json({error:'Could not reset password. Please try again.'});}
+};
+
+
+// A user can review and revoke browsers they previously trusted.
+exports.listTrustedDevices = async (req,res) => {
+  try {
+    const rows = await prisma.trustedDevice.findMany({
+      where:{userId:req.user.id,revokedAt:null,expiresAt:{gt:new Date()}},
+      select:{id:true,label:true,createdAt:true,lastUsedAt:true,expiresAt:true},
+      orderBy:{lastUsedAt:'desc'}
+    });
+    return res.json(rows);
+  } catch(e) {
+    console.error('listTrustedDevices:',e);
+    return res.status(500).json({error:'Could not load trusted browsers.'});
+  }
+};
+exports.revokeTrustedDevice = async (req,res) => {
+  try {
+    const row = await prisma.trustedDevice.findFirst({where:{id:req.params.id,userId:req.user.id,revokedAt:null}});
+    if(!row) return res.status(404).json({error:'Trusted browser not found.'});
+    await prisma.trustedDevice.update({where:{id:row.id},data:{revokedAt:new Date()}});
+    return res.json({ok:true,message:'Trusted browser revoked. It will require OTP at the next sign-in.'});
+  } catch(e) {
+    console.error('revokeTrustedDevice:',e);
+    return res.status(500).json({error:'Could not revoke this browser.'});
+  }
 };

@@ -237,22 +237,52 @@ async function login(req, res) {
     }
     
     const otpSettings = await prisma.otpPlatformSettings.upsert({ where: { id: 'global' }, create: { id: 'global' }, update: {} });
-    // Super Admin is the platform recovery/control account. Never gate this role
-    // behind the global staff OTP switch; it must remain able to manage OTP.
-    if (otpSettings.enabled && user.role !== 'SUPER_ADMIN' && !user.otpExempt) {
-      const channel = String(req.body.otpChannel || 'EMAIL').toUpperCase();
-      const schoolOtp = user.schoolId ? await prisma.otpSchoolSettings.findUnique({ where: { schoolId: user.schoolId } }) : null;
-      const allowed = (channel === 'EMAIL' && otpSettings.emailEnabled && (!schoolOtp || (schoolOtp.enabled && schoolOtp.emailEnabled))) ||
-                      (channel === 'SMS' && otpSettings.smsEnabled && (!schoolOtp || (schoolOtp.enabled && schoolOtp.smsEnabled)));
-      if (!allowed) return res.status(403).json({ error: 'The selected OTP method is not enabled for this account.' });
-      try {
-        const challengeId = await authSecurity.beginLoginOtp(user, channel);
-        return res.json({ otpRequired: true, challengeId, channel, message: 'A verification code has been sent.' });
-      } catch (otpError) {
-        console.error('login OTP delivery error:', otpError.message);
-        return res.status(503).json({ error: 'Could not send your verification code. Check your contact details or contact support.' });
+    // Trusted-browser bypass is available only while global OTP is enabled.
+    // A random browser token is HMAC-hashed before lookup; browser fingerprints are not trusted.
+    let trustedBrowser = false;
+    const rawTrustedToken = String(req.body.trustedDeviceToken || '').trim();
+    if (otpSettings.enabled && user.role !== 'SUPER_ADMIN' && rawTrustedToken) {
+      const crypto = require('crypto');
+      const secret = String(process.env.JWT_SECRET || '').trim();
+      if (secret) {
+        const tokenHash = crypto.createHmac('sha256', secret).update(rawTrustedToken).digest('hex');
+        const device = await prisma.trustedDevice.findFirst({
+          where:{userId:user.id,tokenHash,revokedAt:null,expiresAt:{gt:new Date()}}
+        });
+        if (device) {
+          trustedBrowser = true;
+          await prisma.trustedDevice.update({where:{id:device.id},data:{lastUsedAt:new Date()}});
+        }
       }
     }
+    // Super Admin is the platform recovery/control account. Never gate this role
+    // behind staff OTP. School-level OFF also means the school's staff use normal login.
+    if (otpSettings.enabled && user.role !== 'SUPER_ADMIN' && !user.otpExempt && !trustedBrowser) {
+      const schoolOtp = user.schoolId
+        ? await prisma.otpSchoolSettings.findUnique({ where: { schoolId: user.schoolId } })
+        : null;
+      const schoolOtpEnabled = !schoolOtp || schoolOtp.enabled;
+      if (schoolOtpEnabled) {
+        // Prefer email, then SMS. The UI no longer asks users to choose a channel.
+        const emailAllowed = Boolean(otpSettings.emailEnabled && (!schoolOtp || schoolOtp.emailEnabled) && user.email);
+        const smsAllowed = Boolean(otpSettings.smsEnabled && (!schoolOtp || schoolOtp.smsEnabled) && user.phone);
+        const channel = emailAllowed ? 'EMAIL' : smsAllowed ? 'SMS' : null;
+        if (!channel) {
+          return res.status(503).json({
+            error: 'Staff OTP is enabled, but no permitted delivery method is configured for this account. Contact Super Admin.',
+            code: 'OTP_DELIVERY_UNAVAILABLE'
+          });
+        }
+        try {
+          const challengeId = await authSecurity.beginLoginOtp(user, channel);
+          return res.json({ otpRequired: true, challengeId, channel, message: 'A verification code has been sent.' });
+        } catch (otpError) {
+          console.error('login OTP delivery error:', otpError.message);
+          return res.status(503).json({ error: 'Could not send your verification code. Check your contact details or contact support.' });
+        }
+      }
+    }
+
     const token = signToken({
       userId: user.id,
       schoolId: user.schoolId,

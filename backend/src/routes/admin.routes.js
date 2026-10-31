@@ -19,7 +19,11 @@ router.post('/sms/test', adminSmsController.testSend);
 
 router.get('/subscription-cancellation-requests', requireRole('SUPER_ADMIN'), require('../controllers/admin.controller').listCancellationRequests);
 router.patch('/subscription-cancellation-requests/:id', requireRole('SUPER_ADMIN'), require('../controllers/admin.controller').reviewCancellationRequest);
+router.get('/support-notifications', require('../controllers/admin.controller').listSupportNotifications);
+router.patch('/support-notifications/:id/read', require('../controllers/admin.controller').markSupportNotificationRead);
 router.get('/support-tickets', listSupportTickets);
+router.get('/support-tickets/:id/messages', require('../controllers/admin.controller').listSupportMessages);
+router.post('/support-tickets/:id/replies', require('../controllers/admin.controller').replySupportTicket);
 router.patch('/support-tickets/:id', updateSupportTicketStatus);
 router.get('/schools', listSchools);
 router.get('/schools/:id', getSchool);
