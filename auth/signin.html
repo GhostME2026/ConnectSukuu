@@ -80,8 +80,6 @@
           <label><input type="checkbox" name="remember"> Remember me</label>
           <a href="/request-password-reset/" class="forgot-link">Forgot password?</a>
         </div>
-
-        <div class="field"><label for="otp-channel">Verification method <span style="font-weight:400;color:#71809a">(if required)</span></label><select id="otp-channel"><option value="EMAIL">Email</option><option value="SMS">SMS</option></select></div>
         <div id="otp-step" hidden style="margin:14px 0;padding:14px;border:1px solid #d9e1ef;border-radius:12px">
           <label for="otp-code">Verification code</label>
           <input id="otp-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6-digit code">
@@ -194,7 +192,6 @@
           phone: identifier,
           identifier: identifier,
           password: password,
-          otpChannel: byId('otp-channel')?.value || 'EMAIL'
         })
       });
 
@@ -252,6 +249,15 @@
 
     form.dataset.csSigninBound = '1';
     form.addEventListener('submit', submitSignIn);
+    var passwordToggle = form.querySelector('.password-toggle');
+    if (passwordToggle) passwordToggle.addEventListener('click', function () {
+      var field = byId('password');
+      if (!field) return;
+      var reveal = field.type === 'password';
+      field.type = reveal ? 'text' : 'password';
+      passwordToggle.setAttribute('aria-label', reveal ? 'Hide password' : 'Show password');
+      passwordToggle.setAttribute('aria-pressed', reveal ? 'true' : 'false');
+    });
     byId('verify-otp')?.addEventListener('click',async function(){
       try{this.disabled=true;var d=await postJson('/api/auth/verify-login-otp',{challengeId:window.__csOtpChallengeId,code:byId('otp-code').value.trim()});finishSession(d);}
       catch(e){showError(e.message);}finally{this.disabled=false;}

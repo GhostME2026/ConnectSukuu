@@ -136,7 +136,7 @@
                 <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a18.5 18.5 0 0 1 4.22-5.19M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 7 11 7a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/></svg>
               </button>
             </div>
-            <p class="field-hint">At least 8 characters, with an uppercase letter, a lowercase letter, a number and a symbol.</p>
+            <p class="field-hint">At least 12 characters, including uppercase, lowercase, a number and a symbol.</p>
             <p class="field-error" id="password-error">Password doesn't meet the requirements above yet.</p>
           </div>
           <div class="field">
@@ -206,5 +206,22 @@
 <script src="/assets/js/states.js?v=20261029-1"></script>
 <script src="/assets/js/marketing.js?v=20261029-1"></script>
 <script src="/assets/js/signup-runtime.js?v=20261029-1"></script>
+<script id="connectsukuu-owner-password-policy">
+(function(){
+  var password=document.getElementById('signup-password');
+  var confirm=document.getElementById('signup-password-confirm');
+  var error=document.getElementById('password-error');
+  var match=document.getElementById('password-match-msg');
+  function validOwnerPassword(value){return value.length>=12&&/[A-Z]/.test(value)&&/[a-z]/.test(value)&&/[0-9]/.test(value)&&/[^A-Za-z0-9]/.test(value)}
+  function update(){
+    if(password&&error){error.textContent=validOwnerPassword(password.value)?'Password meets the Owner account requirements.':'Use at least 12 characters with uppercase, lowercase, a number and a symbol.';error.style.display=password.value&&!validOwnerPassword(password.value)?'block':'none'}
+    if(confirm&&match){match.textContent=!confirm.value?'':(password.value===confirm.value?'Passwords match.':'Passwords do not match.');match.style.color=password.value===confirm.value?'#047857':'#be123c'}
+  }
+  [password,confirm].forEach(function(el){if(el)el.addEventListener('input',update)});
+  document.querySelectorAll('form .password-toggle').forEach(function(btn){btn.addEventListener('click',function(){var input=btn.parentElement.querySelector('input');if(!input)return;var show=input.type==='password';input.type=show?'text':'password';btn.setAttribute('aria-label',show?'Hide password':'Show password');btn.setAttribute('aria-pressed',show?'true':'false')})});
+  var form=document.getElementById('signup-form');
+  if(form)form.addEventListener('submit',function(e){if(password&&!validOwnerPassword(password.value)){e.preventDefault();password.focus();update()}});
+})();
+</script>
 </body>
 </html>
