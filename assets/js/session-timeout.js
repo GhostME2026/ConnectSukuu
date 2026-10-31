@@ -9,7 +9,8 @@
   var WARNING_AT_MS = 25 * 60 * 1000;
   var ACTIVITY_WRITE_THROTTLE_MS = 10 * 1000;
   var LAST_ACTIVITY_KEY = 'cs_last_activity_at';
-  // Staff roles sign in at auth/signin.html; students sign in at auth/student-signin.html with their own keys.
+  // Keep the user's existing staff and student token names.
+  // Student portal pages use their own token and must return to student-signin.html.
   var STAFF_TOKEN_KEYS = ['cs_token', 'connectsukuu_token'];
   var STUDENT_TOKEN_KEY = 'connectsukuu_student_token';
   var TOKEN_KEYS = STAFF_TOKEN_KEYS.concat([STUDENT_TOKEN_KEY]);
@@ -34,14 +35,33 @@
   // Public pages, sign-in, and sign-up must not start an idle session.
   if (!getToken()) return;
 
-  var isStudentSession = !STAFF_TOKEN_KEYS.some(function (key) { return !!localStorage.getItem(key); });
+  function isStudentSession() {
+    var path = window.location.pathname || '';
+    // Prefer the actual student token, but also recognise student routes.
+    // This covers student portal pages even if another stale staff token exists.
+    return !!localStorage.getItem(STUDENT_TOKEN_KEY) ||
+      path.indexOf('/roles/student/') !== -1 ||
+      path.indexOf('/student/') !== -1 ||
+      path.indexOf('/student-portal/') !== -1 ||
+      path.indexOf('/auth/student-signin') !== -1;
+  }
+
+  function appBasePath() {
+    // Resolve the deployment base from this script's own URL. This works both
+    // at the domain root (Vercel/custom domain) and under /ConnectSukuu/ (Pages).
+    var scripts = document.getElementsByTagName('script');
+    for (var i = 0; i < scripts.length; i += 1) {
+      var src = scripts[i].src || '';
+      var match = src.match(/^(https?:\/\/[^/]+)?(.*?)(?:assets\/js\/session-timeout\.js)(?:\?.*)?$/);
+      if (match) return (match[2] || '/').replace(/\/?$/, '/');
+    }
+    // Fallback for pages served from the project root.
+    return '/';
+  }
 
   function signInUrl() {
-    var path = window.location.pathname || '';
-    var depth = path.split('/').filter(Boolean).length;
-    // Role pages are /roles/{role}/{page}; Super Admin is /super-admin/admin.html.
-    var prefix = path.indexOf('/super-admin/') !== -1 ? '../' : '../../';
-    return prefix + 'auth/' + (isStudentSession ? 'student-signin.html' : 'signin.html') + '?reason=idle';
+    var base = appBasePath();
+    return base + 'auth/' + (isStudentSession() ? 'student-signin.html' : 'signin.html') + '?reason=idle';
   }
 
   function clearSessionAndRedirect() {

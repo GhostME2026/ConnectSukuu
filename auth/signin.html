@@ -10,7 +10,15 @@
 <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
 <link rel="shortcut icon" href="/assets/images/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap"></noscript><link rel="stylesheet" href="/assets/css/marketing.css">
-</head>
+<style>
+.forgot-link{color:#2563eb!important;font-weight:700;text-decoration:none!important}.forgot-link:hover{text-decoration:underline!important}
+#signin-form .field select,#otp-channel{width:100%;height:48px;border:1px solid #dce5f2;border-radius:11px;padding:0 13px;background:#fff;color:#17233c;font:500 14px Inter, sans-serif;outline:none}
+#signin-form .field select:focus,#otp-channel:focus{border-color:#76a1fa;box-shadow:0 0 0 4px #2563eb16}
+#signin-form #otp-step{background:linear-gradient(145deg,#f7faff,#eef4ff)!important;border:1px solid #d9e6ff!important;border-radius:15px!important;padding:18px!important}
+#otp-step input{width:100%;height:48px;border:1px solid #d5e0ef;border-radius:10px;padding:0 13px;font:600 17px Inter;letter-spacing:.2em}
+#otp-step #otp-help{font-size:12px;color:#667894;margin:10px 0 0}
+@media(max-width:700px){#signin-form #otp-step{padding:14px!important}}
+</style></head>
 <body>
 
 <div class="auth-topbar">
@@ -70,27 +78,17 @@
 
         <div class="remember-row">
           <label><input type="checkbox" name="remember"> Remember me</label>
-          <a href="#" id="forgot-password-link">Forgot password?</a>
+          <a href="/request-password-reset/" class="forgot-link">Forgot password?</a>
         </div>
 
-        <div class="field"><label for="otp-channel">OTP delivery</label><select id="otp-channel"><option value="EMAIL">Email</option><option value="SMS">SMS</option></select></div>
+        <div class="field"><label for="otp-channel">Verification method <span style="font-weight:400;color:#71809a">(if required)</span></label><select id="otp-channel"><option value="EMAIL">Email</option><option value="SMS">SMS</option></select></div>
         <div id="otp-step" hidden style="margin:14px 0;padding:14px;border:1px solid #d9e1ef;border-radius:12px">
           <label for="otp-code">Verification code</label>
           <input id="otp-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6-digit code">
           <button type="button" id="verify-otp" class="btn btn-primary btn-block" style="margin-top:10px">Verify and continue</button>
           <p id="otp-help" class="lead"></p>
         </div>
-        <div id="reset-step" hidden style="margin:14px 0;padding:14px;border:1px solid #d9e1ef;border-radius:12px">
-          <strong>Reset your password</strong>
-          <p class="lead">Enter your email or phone number. We will send a reset code if the account is eligible.</p>
-          <label for="reset-identifier">Email or phone</label><input id="reset-identifier" autocomplete="username">
-          <label for="reset-channel">Delivery method</label><select id="reset-channel"><option value="EMAIL">Email</option><option value="SMS">SMS</option></select>
-          <button type="button" id="send-reset-code" class="btn btn-primary btn-block">Send reset code</button>
-          <label for="reset-code">Reset code</label><input id="reset-code" inputmode="numeric" maxlength="6">
-          <label for="reset-new-password">New password</label><input id="reset-new-password" type="password" autocomplete="new-password">
-          <button type="button" id="complete-reset" class="btn btn-primary btn-block">Reset password</button>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+<button type="submit" class="btn btn-primary btn-block">Sign in</button>
       </form>
 
       <p class="auth-switch2">Don't have a school on ConnectSukuu yet? <a href="/auth/signup.html">Create one</a></p>
@@ -258,29 +256,6 @@
       try{this.disabled=true;var d=await postJson('/api/auth/verify-login-otp',{challengeId:window.__csOtpChallengeId,code:byId('otp-code').value.trim()});finishSession(d);}
       catch(e){showError(e.message);}finally{this.disabled=false;}
     });
-    byId('forgot-password-link')?.addEventListener('click',function(e){e.preventDefault();byId('reset-step').hidden=false;byId('reset-identifier').value=byId('email').value.trim();});
-    byId('send-reset-code')?.addEventListener('click',async function(){
-      try{this.disabled=true;var d=await postJson('/api/auth/password-reset/request',{identifier:byId('reset-identifier').value.trim(),channel:byId('reset-channel').value});showError(d.message||'If eligible, a reset code has been sent.');}
-      catch(e){showError(e.message);}finally{this.disabled=false;}
-    });
-    byId('complete-reset')?.addEventListener('click',async function(){
-      try{this.disabled=true;var d=await postJson('/api/auth/password-reset/complete',{identifier:byId('reset-identifier').value.trim(),code:byId('reset-code').value.trim(),newPassword:byId('reset-new-password').value});showError(d.message||'Password reset.');byId('reset-step').hidden=true;}
-      catch(e){showError(e.message);}finally{this.disabled=false;}
-    });
-
-    var toggle = form.querySelector('.password-toggle');
-    var password = byId('password');
-
-    if (toggle && password) {
-      toggle.addEventListener('click', function () {
-        var visible = password.type === 'text';
-        password.type = visible ? 'password' : 'text';
-        toggle.setAttribute(
-          'aria-label',
-          visible ? 'Show password' : 'Hide password'
-        );
-      });
-    }
   }
 
   if (document.readyState === 'loading') {
