@@ -116,6 +116,8 @@ model User {
   lastName            String
   role                Role
   mustChangePassword  Boolean              @default(false)
+  otpExempt           Boolean              @default(false)
+  passwordChangedAt   DateTime?
   isActive            Boolean              @default(true)
   deactivatedAt       DateTime?
   createdAt           DateTime             @default(now())
@@ -141,6 +143,8 @@ model User {
   nurseAppointments         NurseAppointment[]   @relation("NurseAppointments")
   nurseHealthRecords        NurseHealthRecord[]  @relation("NurseHealthRecords")
   gateLogsRecorded          StudentGateLog[]     @relation("StudentGateLogRecorder")
+  authOtpChallenges         AuthOtpChallenge[]
+  passwordResetTokens       PasswordResetToken[]
 }
 
 model Student {
@@ -1372,4 +1376,52 @@ model SmsDeliveryLog {
   @@index([schoolId, createdAt])
   @@index([status, createdAt])
   @@index([eventType, createdAt])
+}
+
+
+model OtpPlatformSettings {
+  id          String   @id @default("global")
+  enabled     Boolean  @default(false)
+  emailEnabled Boolean @default(true)
+  smsEnabled  Boolean @default(false)
+  updatedAt   DateTime @updatedAt
+}
+
+model OtpSchoolSettings {
+  id          String   @id @default(cuid())
+  schoolId    String   @unique
+  enabled     Boolean  @default(true)
+  emailEnabled Boolean @default(true)
+  smsEnabled  Boolean @default(false)
+  updatedAt   DateTime @updatedAt
+}
+
+model AuthOtpChallenge {
+  id        String   @id @default(cuid())
+  userId    String
+  schoolId  String?
+  channel   String
+  purpose   String
+  codeHash  String
+  attempts  Int      @default(0)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, purpose, createdAt])
+  @@index([expiresAt])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  tokenHash String
+  channel   String
+  attempts  Int      @default(0)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, createdAt])
+  @@index([expiresAt])
 }

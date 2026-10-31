@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs');
 const prisma = require('../config/db');
 const { signToken } = require('../utils/jwt');
 const { thirtyDaysFromNow } = require('../utils/trial');
+const authSecurity = require('./auth-security.controller');
+const { sendWelcomeEmail } = require('../services/welcome-email.service');
 
 // Database connectivity/pool failures are temporary service errors, not
 // authentication failures. Returning 503 keeps clients from treating them
@@ -116,6 +118,9 @@ async function signupSchool(req, res) {
     
     const owner = school.users[0];
     
+    // Welcome email is best-effort: delivery failure must never undo a successful signup.
+    void sendWelcomeEmail(owner, school);
+
     const token = signToken({
       userId: owner.id,
       schoolId: school.id,
@@ -231,6 +236,21 @@ async function login(req, res) {
       if (!assignedBranch) return res.status(403).json({ error: 'Your assigned branch is inactive or unavailable. Contact the school Owner.' });
     }
     
+    const otpSettings = await prisma.otpPlatformSettings.upsert({ where: { id: 'global' }, create: { id: 'global' }, update: {} });
+    if (otpSettings.enabled && !user.otpExempt) {
+      const channel = String(req.body.otpChannel || 'EMAIL').toUpperCase();
+      const schoolOtp = user.schoolId ? await prisma.otpSchoolSettings.findUnique({ where: { schoolId: user.schoolId } }) : null;
+      const allowed = (channel === 'EMAIL' && otpSettings.emailEnabled && (!schoolOtp || (schoolOtp.enabled && schoolOtp.emailEnabled))) ||
+                      (channel === 'SMS' && otpSettings.smsEnabled && (!schoolOtp || (schoolOtp.enabled && schoolOtp.smsEnabled)));
+      if (!allowed) return res.status(403).json({ error: 'The selected OTP method is not enabled for this account.' });
+      try {
+        const challengeId = await authSecurity.beginLoginOtp(user, channel);
+        return res.json({ otpRequired: true, challengeId, channel, message: 'A verification code has been sent.' });
+      } catch (otpError) {
+        console.error('login OTP delivery error:', otpError.message);
+        return res.status(503).json({ error: 'Could not send your verification code. Check your contact details or contact support.' });
+      }
+    }
     const token = signToken({
       userId: user.id,
       schoolId: user.schoolId,
@@ -322,6 +342,7 @@ async function changePassword(req, res) {
       data: {
         passwordHash,
         mustChangePassword: false,
+        passwordChangedAt: new Date(),
       },
     });
     

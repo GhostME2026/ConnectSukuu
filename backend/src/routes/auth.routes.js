@@ -10,6 +10,7 @@ const {
 } = require('../controllers/auth.controller');
 const { getProfile, getProfilePhoto, saveProfilePhoto } = require('../controllers/profile.controller');
 const { requireAuth } = require('../middleware/auth');
+const security = require('../controllers/auth-security.controller');
 
 const extensionByMime = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
 const profileUpload = multer({
@@ -38,5 +39,8 @@ router.post('/profile/photo', requireAuth, (req, res, next) => {
   });
 }, saveProfilePhoto);
 router.post('/change-password', requireAuth, changePassword);
+router.post('/verify-login-otp', security.verifyLoginOtp);
+router.post('/password-reset/request', security.requestPasswordReset);
+router.post('/password-reset/complete', security.completePasswordReset);
 
 module.exports = router;

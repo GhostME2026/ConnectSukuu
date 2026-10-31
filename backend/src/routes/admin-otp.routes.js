@@ -1,0 +1,10 @@
+const router=require('express').Router();
+const {requireAuth}=require('../middleware/auth');
+const c=require('../controllers/admin-otp.controller');
+router.use(requireAuth,c.guard);
+router.get('/',c.getSettings);
+router.get('/users/lookup',c.lookupUser);
+router.put('/platform',c.updatePlatform);
+router.put('/schools/:schoolId',c.updateSchool);
+router.put('/users/:userId/exemption',c.updateUserExemption);
+module.exports=router;
