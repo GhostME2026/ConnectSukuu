@@ -108,3 +108,13 @@ body.tc-communications-page .tc-panel{min-width:0!important}
   .tc-item-icon{width:30px!important;height:30px!important}
   .tc-item-actions{grid-column:2!important;justify-content:flex-start!important}
 }
+
+/* 2026-10-31 Teacher mobile baseline: phone/tablet only (<=900px). Desktop is unchanged.
+   Pages that still carry the old in-page sidebar (e.g. Timetable) must not show it beside the teacher drawer. */
+@media(max-width:900px){
+  body .app>.sidebar,body .app>aside.sidebar,body aside.cs-stable-role-sidebar{display:none!important}
+  body .app{display:block!important;min-height:0!important}
+  body .app>.main,body .main.csk-teacher-main-final{margin-left:0!important;width:100%!important;max-width:100%!important;min-width:0!important;padding-left:0!important;padding-right:0!important}
+  body .main.csk-teacher-main-final>.csk-teacher-content-final>section.content{padding:4px 0 0!important}
+  .csk-teacher-sidebar-final:not(.tc-mobile-open){box-shadow:none!important}
+}

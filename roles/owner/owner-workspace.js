@@ -82,3 +82,6 @@ async function subscriptionPage(){const status=$('#subscription-status'),current
 const loaders={dashboard,branches:branchesPage,team:teamPage,branch:branchDetail,settings:settingsPage,announcements:announcementsPage,messages:messagesPage,notifications:notificationsPage,support:supportPage,subscription:subscriptionPage};document.addEventListener('DOMContentLoaded',async()=>{if(!setupShell())return;const page=document.body.dataset.page;try{if(loaders[page])await loaders[page]()}catch(e){toast(e.message,true);const s=$('#page-status');if(s)s.textContent=e.message}});
 window.ConnectSukuuOwner={api,toast,logout};
 })();
+
+/* Phone navigation: shared drawer + header baseline (mobile-only, 820px breakpoint). */
+(function(){try{if(document.querySelector('script[data-cs-mobile-shell]'))return;var l=document.createElement('link');l.rel='stylesheet';l.href='/assets/css/mobile-shell.css';document.head.appendChild(l);var s=document.createElement('script');s.src='/assets/js/mobile-shell.js';s.setAttribute('data-cs-mobile-shell','1');document.head.appendChild(s);}catch(e){}})();

@@ -24,7 +24,7 @@
     btn.className = 'csm-toggle';
     btn.setAttribute('aria-label', 'Open navigation');
     btn.setAttribute('aria-expanded', 'false');
-    btn.textContent = '\u2630';
+    btn.innerHTML = '<span></span><span></span><span></span>';
     var backdrop = document.createElement('div');
     backdrop.className = 'csm-backdrop';
     function lum(c) {
@@ -52,6 +52,16 @@
       all.forEach(function (a) { a.classList.toggle('csm-drawer', keep.indexOf(a) !== -1); });
       keep.forEach(fixContrast);
     }
+    var HEADERS = '.csk-ht-header-final,.cs-hoa-final-topbar,.cs-topbar,.app-topbar,header.topbar,.topbar,.ns-topbar,.sec-header';
+    function markHeader() {
+      var list = Array.prototype.slice.call(document.querySelectorAll(HEADERS)).filter(function (h) { return h.getClientRects().length > 0; });
+      var keep = list.filter(function (h) { return !list.some(function (o) { return o !== h && h.contains(o); }); }).slice(0, 1);
+      Array.prototype.forEach.call(document.querySelectorAll('.csm-header'), function (h) { if (keep.indexOf(h) === -1) h.classList.remove('csm-header'); });
+      keep.forEach(function (h) { h.classList.add('csm-header'); });
+    }
+    markHeader();
+    window.addEventListener('load', markHeader);
+    setTimeout(markHeader, 800);
     mark();
     window.addEventListener('load', mark);
     setTimeout(mark, 800);
@@ -61,7 +71,7 @@
       root.classList.toggle('csm-open', open);
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
-    btn.addEventListener('click', function () { mark(); set(true); });
+    btn.addEventListener('click', function () { mark(); markHeader(); set(true); });
     backdrop.addEventListener('click', function () { set(false); });
     document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest(SIDEBARS) && e.target.closest('a,button')) set(false); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
@@ -71,3 +81,5 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
+/* Load the money-fit helper (keeps huge currency figures inside their cards). */
+(function(){try{if(window.__csMoneyFit||document.querySelector('script[data-cs-money-fit]'))return;var s=document.createElement('script');s.src='/assets/js/money-fit.js';s.defer=true;s.setAttribute('data-cs-money-fit','1');document.head.appendChild(s);}catch(e){}})();

@@ -373,7 +373,7 @@ function initAppPage(activePage) {
   ];
   function stableMenu(){
     var user=null;
-    try{user=typeof requireAuthOrRedirect==='function'?requireAuthOrRedirect():null;}catch(e){return;}
+    try{/* Never redirect from here: app.js is also loaded on public pages (signup/signin). */if(!(window.AUTH&&AUTH.getToken&&AUTH.getToken()))return;user=AUTH.getUser();}catch(e){return;}
     if(!user||user.role!=='HEAD_TEACHER')return;
     var nav=document.querySelector('.app-sidebar nav,.sidebar nav,nav.nav,.app-nav');
     if(!nav)return;
