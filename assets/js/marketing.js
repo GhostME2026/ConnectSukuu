@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.classList.add('active');
       const mode = btn.dataset.mode;
       priceEls.forEach((el) => { el.textContent = el.dataset[mode] || el.dataset.monthly; });
+      document.querySelectorAll('.price-total').forEach((el) => { el.textContent = el.dataset[mode] || (mode === 'monthly' ? 'Monthly billing' : ''); });
     });
   });
 

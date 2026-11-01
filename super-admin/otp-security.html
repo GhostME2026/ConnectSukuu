@@ -11,7 +11,11 @@
 .pagination{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:15px;color:#71809a;font-size:12px}
 .pagination .pages{display:flex;gap:6px}.pagination button{border:1px solid #dce5f2;background:white;color:#29446f;border-radius:8px;padding:7px 11px;cursor:pointer}.pagination button:disabled{opacity:.4;cursor:not-allowed}
 @media(max-width:760px){.wrap{padding:16px 14px 40px}.sticky-head{margin:0 -14px 18px;padding:14px}.head{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr}.card.wide{grid-column:auto}.card{padding:18px}.school-top{align-items:flex-start;flex-direction:column}}
-</style></head><body><main class="wrap"><header class="sticky-head"><a class="back" href="admin.html">← Back to Super Admin</a><div class="head"><div><div class="eyebrow">Platform controls / account protection</div><h1>Security & email settings</h1><p>Manage staff sign-in verification, school-level OTP permissions, demo exemptions and welcome emails from one central control panel.</p></div><span class="pill">SUPER ADMIN ONLY</span></div></header><div id="alert" class="alert info">Loading settings…</div>
+</style>
+<link rel="stylesheet" href="/assets/css/mobile-shell.css" media="(max-width:820px)">
+<link rel="stylesheet" href="/assets/css/role-mobile-refinement.css" media="(max-width:820px)">
+<script src="/assets/js/mobile-shell.js" defer></script>
+</head><body><main class="wrap"><header class="sticky-head"><a class="back" href="admin.html">← Back to Super Admin</a><div class="head"><div><div class="eyebrow">Platform controls / account protection</div><h1>Security & email settings</h1><p>Manage staff sign-in verification, school-level OTP permissions, demo exemptions and welcome emails from one central control panel.</p></div><span class="pill">SUPER ADMIN ONLY</span></div></header><div id="alert" class="alert info">Loading settings…</div>
 <div class="notice">These controls affect staff accounts only. Student admission-number/PIN sign-in is unchanged. Password recovery remains available even when sign-in OTP is disabled.</div>
 <div class="grid">
 <section class="card"><div class="card-head"><div class="ico">🛡</div><div><h2>Global staff sign-in OTP</h2><p class="sub">The platform-wide master switch. School settings can further restrict these methods.</p></div></div>
