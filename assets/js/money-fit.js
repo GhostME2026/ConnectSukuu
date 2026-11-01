@@ -8,7 +8,8 @@
   function isMoney(el){
     if(el.children.length>0)return false;
     var t=el.textContent;if(!t||t.length>40)return false;
-    return RX.test(t);
+    if(RX.test(t))return true;
+    return t.trim().length<=24&&/^(STRONG|B|H1|H2|H3|H4|SPAN|DIV)$/.test(el.tagName)&&el.scrollWidth>el.clientWidth+1&&el.clientWidth>0;
   }
   function fit(el){
     if(!el.__csBase){el.__csBase=parseFloat(getComputedStyle(el).fontSize)||16;}

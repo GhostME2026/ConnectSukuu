@@ -45,7 +45,7 @@
     }
     function mark() {
       var all = Array.prototype.slice.call(document.querySelectorAll(SIDEBARS))
-        .filter(function (a) { return a.querySelectorAll('a[href]').length >= 3; });
+        .filter(function (a) { return a.querySelectorAll('a[href],.nav-item').length >= 3; });
       // When a page script rebuilds its sidebar, the old one is left hidden: keep only rendered ones.
       var shown = all.filter(function (a) { return a.getClientRects().length > 0; });
       var keep = shown.length ? shown : all.slice(0, 1);
@@ -83,3 +83,5 @@
 })();
 /* Load the money-fit helper (keeps huge currency figures inside their cards). */
 (function(){try{if(window.__csMoneyFit||document.querySelector('script[data-cs-money-fit]'))return;var s=document.createElement('script');s.src='/assets/js/money-fit.js';s.defer=true;s.setAttribute('data-cs-money-fit','1');document.head.appendChild(s);}catch(e){}})();
+/* Phone only: drop stray literal "\n" text left in a few pages' markup (desktop markup is untouched). */
+(function(){try{if(!window.matchMedia||!window.matchMedia('(max-width:820px)').matches)return;var go=function(){var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),n,d=[];while((n=w.nextNode())){var p=n.parentElement;if(!p||/^(SCRIPT|STYLE|NOSCRIPT|TEXTAREA|PRE|CODE)$/.test(p.tagName))continue;if(/^\s*(\\n\s*)+$/.test(n.textContent))d.push(n)}d.forEach(function(x){x.parentNode.removeChild(x)})};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();window.addEventListener('load',go)}catch(e){}})();
