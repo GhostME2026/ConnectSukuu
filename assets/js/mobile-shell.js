@@ -65,6 +65,12 @@
     mark();
     window.addEventListener('load', mark);
     setTimeout(mark, 800);
+    // Pages that reveal their shell after sign-in (super admin): re-detect drawer and header when the DOM changes.
+    if (window.MutationObserver) {
+      var t = null;
+      new MutationObserver(function () { clearTimeout(t); t = setTimeout(function () { mark(); markHeader(); }, 120); })
+        .observe(document.body, { attributes: true, attributeFilter: ['class', 'hidden', 'style'], childList: true, subtree: true });
+    }
     document.body.appendChild(backdrop);
     document.body.appendChild(btn);
     function set(open) {

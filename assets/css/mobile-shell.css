@@ -119,6 +119,7 @@ html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-header:not(#csm-x) :is(.c
   html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-header .crumb:not(#csm-x){display:none!important}
   html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-header #top-title:not(#csm-x){margin:0!important;font-size:16px!important;line-height:1.25!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
   html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-header .top-actions:not(#csm-x){margin-left:auto!important;gap:6px!important;flex:0 0 auto!important;display:flex!important;align-items:center!important}
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body #refresh-btn:not(#csm-x){display:none!important}
   html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-header #refresh-btn:not(#csm-x){width:38px!important;min-width:38px!important;height:38px!important;min-height:38px!important;padding:0!important;justify-content:center!important}
   html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-header #refresh-btn .desktop-label:not(#csm-x){display:none!important}
   html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-header .user-chip:not(#csm-x){padding:3px!important;gap:0!important;min-width:0!important}
@@ -144,7 +145,8 @@ html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-header:not(#csm-x) :is(.c
   html:not(.csm-off):not(.csm-b1):not(.csm-b2) body :is(.app-shell,.cs-shell,.shell,.layout).hidden:not(#csm-x){display:none!important}
   html:has(.app-shell.hidden) .csm-toggle:not(#csm-x),html:has(.app-shell.hidden) .csm-backdrop:not(#csm-x){display:none!important}
   html:not(.csm-off):not(.csm-b1):not(.csm-b2) body #login-view .login-hero:not(#csm-x){display:none!important}
-  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body #login-view.login-shell:not(#csm-x){display:grid!important;grid-template-columns:minmax(0,1fr)!important;min-height:100dvh!important;align-items:center!important;background:linear-gradient(160deg,#0b1530,#16306b)!important}
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body #login-view.login-shell.hidden:not(#csm-x){display:none!important}
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body #login-view.login-shell:not(.hidden):not(#csm-x){display:grid!important;grid-template-columns:minmax(0,1fr)!important;min-height:100dvh!important;align-items:center!important;background:linear-gradient(160deg,#0b1530,#16306b)!important}
   html:not(.csm-off):not(.csm-b1):not(.csm-b2) body #login-view .login-side:not(#csm-x){padding:16px!important;display:flex!important;align-items:center!important;justify-content:center!important;min-height:100dvh!important;background:transparent!important}
   html:not(.csm-off):not(.csm-b1):not(.csm-b2) body #login-view .login-card:not(#csm-x){width:100%!important;max-width:420px!important;margin:0 auto!important}
 }
