@@ -2,11 +2,14 @@ const express = require('express');
 const router = express.Router();
 const { requireAuth } = require('../middleware/auth');
 const {
+  getPublicPrices,
   initializePaystack,
   paystackWebhook,
   createStripeCheckout,
   stripeWebhook,
 } = require('../controllers/billing.controller');
+
+router.get('/prices', getPublicPrices);
 
 // These need login (the owner is paying) but NOT requireActiveSubscription —
 // that would lock a school out of the one page that lets it pay to get back in.

@@ -7,14 +7,17 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 // Prices in the smallest currency unit — pesewas for GHS, cents for USD.
 // One-time prices are a placeholder heuristic (~ roughly 18 months of the
 // monthly price) — swap in whatever number you actually decide on.
+// All provider amounts are stored in the provider's smallest currency unit:
+// Paystack GHS values are pesewas; Stripe USD values are cents.
+// Public pricing: Starter GHS 160/month equivalent yearly, Growth GHS 480/month equivalent yearly.
 const PLAN_PRICES = {
   starter: {
-    yearly:  { ghs: 21000, usd: 188 },   // GH₵2,100 / $16 per year (~15% off monthly)
-    onetime: { ghs: 3200, usd: 285 },   // GH₵3,200 / $285 once, forever
+    yearly:  { ghs: 192000, usd: 18800 }, // GHS 1,920 / USD 188 per year
+    onetime: { ghs: 320000, usd: 28500 }, // GHS 3,200 / USD 285 once
   },
   growth: {
-    yearly:  { ghs: 5760, usd: 510 },   // GH₵5,750 / $510 per year
-    onetime: { ghs: 7300, usd: 700 }, // GH₵7,300 / $700 once, forever
+    yearly:  { ghs: 576000, usd: 51000 }, // GHS 5,760 / USD 510 per year
+    onetime: { ghs: 730000, usd: 70000 }, // GHS 7,300 / USD 700 once
   },
 };
 
@@ -23,6 +26,21 @@ function getPrice(plan, billingCycle) {
   if (!plans) return null;
   const key = billingCycle === 'ONE_TIME' ? 'onetime' : billingCycle === 'YEARLY' ? 'yearly' : 'monthly';
   return plans[key];
+}
+
+// GET /api/billing/prices — public checkout totals in major currency units.
+function getPublicPrices(_req, res) {
+  const result = {};
+  for (const [plan, cycles] of Object.entries(PLAN_PRICES)) {
+    result[plan] = {};
+    for (const [cycle, price] of Object.entries(cycles)) {
+      result[plan][cycle === 'onetime' ? 'ONE_TIME' : 'YEARLY'] = {
+        GHS: price.ghs / 100,
+        USD: price.usd / 100,
+      };
+    }
+  }
+  return res.json(result);
 }
 
 // ---------- Paystack (Mobile Money + Ghanaian cards) ----------
@@ -181,4 +199,4 @@ async function stripeWebhook(req, res) {
   res.sendStatus(200);
 }
 
-module.exports = { initializePaystack, paystackWebhook, createStripeCheckout, stripeWebhook };
+module.exports = { getPublicPrices, initializePaystack, paystackWebhook, createStripeCheckout, stripeWebhook };
