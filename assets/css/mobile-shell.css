@@ -125,4 +125,26 @@ html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-header:not(#csm-x) :is(.c
   /* Phone: profile dialog title stays pinned at the top (marketing.css's generic section padding must not push it down) */
   html:not(.csm-off):not(.csm-b1):not(.csm-b2) body section.cs-role-profile-dialog:not(#csm-x){padding:0!important}
   html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .cs-role-profile-head:not(#csm-x){position:sticky!important;top:0!important;z-index:5!important;background:#fff!important}
+  /* Phone - owner branch management: one full-width card per branch */
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body #branch-cards:not(#csm-x){display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:12px!important;width:100%!important}
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body #branch-cards>.cs-branch-card:not(#csm-x){width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body #branch-cards .cs-branch-card :is(h3,h4,strong,p,span):not(#csm-x){word-break:normal!important;overflow-wrap:anywhere!important}
+  /* Phone - nurse drawer: show the ConnectSukuu name and section label, drop the decorative second sign-out icon */
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-drawer .ns-sidebar-bottom:not(#csm-x)::after,html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-drawer .ns-sidebar-bottom:not(#csm-x)::before{display:none!important;content:none!important}
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-drawer .ns-brand:not(#csm-x){justify-content:flex-start!important;gap:10px!important;padding:0 4px!important}
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-drawer .ns-brand>span:not(#csm-x){display:inline!important;visibility:visible!important;opacity:1!important}
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-drawer .ns-nav-label:not(#csm-x){display:block!important}
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-drawer .ns-sidebar-bottom:not(#csm-x){display:block!important}
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body .csm-drawer .ns-sidebar-bottom .ns-logout:not(#csm-x){display:flex!important}
+  /* Phone - head teacher students/team tables: natural width, every column readable, card scrolls sideways */
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body.cs-headteacher-final-shell :is(#students-table,.team-table):not(#csm-x):not(#csm-y){display:table!important;width:max-content!important;min-width:100%!important;max-width:none!important;table-layout:auto!important}
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body.cs-headteacher-final-shell :is(#students-table,.team-table) :is(th,td):not(#csm-x):not(#csm-y){white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;max-width:none!important}
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body.cs-headteacher-final-shell :is(#students-table,.team-table) :is(th,td):not(#csm-x):not(#csm-y):not(:first-child){min-width:96px!important}
+  /* Phone - super admin sign-in: only the sign-in screen shows until signed in (no header, hamburger or overview) */
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body :is(.app-shell,.cs-shell,.shell,.layout).hidden:not(#csm-x){display:none!important}
+  html:has(.app-shell.hidden) .csm-toggle:not(#csm-x),html:has(.app-shell.hidden) .csm-backdrop:not(#csm-x){display:none!important}
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body #login-view .login-hero:not(#csm-x){display:none!important}
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body #login-view.login-shell:not(#csm-x){display:grid!important;grid-template-columns:minmax(0,1fr)!important;min-height:100dvh!important;align-items:center!important;background:linear-gradient(160deg,#0b1530,#16306b)!important}
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body #login-view .login-side:not(#csm-x){padding:16px!important;display:flex!important;align-items:center!important;justify-content:center!important;min-height:100dvh!important;background:transparent!important}
+  html:not(.csm-off):not(.csm-b1):not(.csm-b2) body #login-view .login-card:not(#csm-x){width:100%!important;max-width:420px!important;margin:0 auto!important}
 }
