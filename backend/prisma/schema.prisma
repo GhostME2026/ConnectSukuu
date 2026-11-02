@@ -146,6 +146,8 @@ model User {
   authOtpChallenges         AuthOtpChallenge[]
   passwordResetTokens       PasswordResetToken[]
   trustedDevices            TrustedDevice[]
+  @@index([schoolId, isActive, branchId, role])
+  @@index([schoolId, isActive, role])
 }
 
 model Student {

@@ -18,7 +18,7 @@ router.get('/account',requireAuth,c.getAccount);
 router.post('/subscription/cancellation-requests',requireAuth,c.requestSubscriptionCancellation);
 router.use(requireAuth,requireActiveSubscription);
 router.get('/announcements',c.listAnnouncements);router.post('/announcements',c.createAnnouncement);
-router.get('/contacts',c.listContacts);router.get('/messages',c.listMessages);router.post('/messages',handleMessageUpload,c.sendMessage);router.get('/messages/:id/attachment',c.downloadMessageAttachment);router.patch('/messages/:id/read',c.markMessageRead);
+router.get('/contacts',c.listContacts);router.get('/messages',c.listMessages);router.post('/messages',handleMessageUpload,c.sendMessage);router.get('/messages/:id/attachment',c.downloadMessageAttachment);router.patch('/messages/read',c.markMessagesRead);router.patch('/messages/:id/read',c.markMessageRead);
 router.get('/notifications',c.listNotifications);router.patch('/notifications/:id/read',c.markNotificationRead);
 router.get('/support',c.listSupportTickets);router.post('/support',upload.single('attachment'),c.createSupportTicket);router.get('/support/:id/attachment',c.downloadSupportAttachment);
 module.exports=router;

@@ -103,35 +103,65 @@ async function listAnnouncements(req,res){
 }
 async function listContacts(req,res){
   if(!MESSAGE_ROLES.includes(req.user.role)) return fail(res,403,'Direct messaging is not enabled for this role.');
+  const startedAt=Date.now();
   try {
     const eligibleRoles=MESSAGE_RECIPIENT_ROLES.filter(role=>role!=='OWNER');
     const select={id:true,firstName:true,lastName:true,email:true,role:true,branchId:true,photoUrl:true};
-    const baseWhere={schoolId:req.user.schoolId,isActive:true,id:{not:req.user.id},role:{in:eligibleRoles}};
-    let users=[];
-    let owner=null;
+    const common={schoolId:req.user.schoolId,isActive:true,id:{not:req.user.id}};
+    let where;
     if(req.user.role==='OWNER'){
-      // Owners can reach eligible staff across their school; never list another Owner as a recipient.
-      users=await prisma.user.findMany({where:baseWhere,select,orderBy:[{role:'asc'},{firstName:'asc'}],take:500});
+      // Owners can reach eligible staff across their school; never list another Owner.
+      where={...common,role:{in:eligibleRoles}};
     } else {
       if(!req.user.branchId) return fail(res,403,'Assign your account to a branch before messaging.');
-      // Keep staff branch-scoped, but fetch the active Owner separately because Owners commonly
-      // have no branchId. This avoids accidentally excluding the Owner from the OR/branch filter.
-      const [staff,schoolOwner]=await Promise.all([
-        prisma.user.findMany({where:{...baseWhere,branchId:req.user.branchId},select,orderBy:[{role:'asc'},{firstName:'asc'}],take:500}),
-        prisma.user.findFirst({where:{schoolId:req.user.schoolId,isActive:true,role:'OWNER',id:{not:req.user.id}},select})
-      ]);
-      users=staff;
-      owner=schoolOwner;
+      // One indexed query replaces the previous staff query plus separate Owner lookup.
+      where={...common,OR:[
+        {branchId:req.user.branchId,role:{in:eligibleRoles}},
+        {role:'OWNER'}
+      ]};
     }
-    if(owner)users.push(owner);
-    users.sort((a,b)=>String(a.role||'').localeCompare(String(b.role||''))||String(a.firstName||'').localeCompare(String(b.firstName||''))||String(a.lastName||'').localeCompare(String(b.lastName||'')));
-    res.json(users);
+    const users=await prisma.user.findMany({
+      where,select,orderBy:[{role:'asc'},{firstName:'asc'},{lastName:'asc'}],take:500
+    });
+    const elapsed=Date.now()-startedAt;
+    res.set('Server-Timing',`contacts-db;dur=${elapsed}`);
+    if(elapsed>1000) console.warn(`[messaging-performance] listContacts took ${elapsed}ms for role=${req.user.role}`);
+    return res.json(users);
   } catch(e){console.error('listContacts:',e);res.status(500).json({error:'Unable to load message recipients.'});}
 }
 async function listMessages(req,res){
   if(!MESSAGE_ROLES.includes(req.user.role)) return fail(res,403,'Direct messaging is not enabled for this role.');
-  try { const rows=await prisma.directMessage.findMany({where:{schoolId:req.user.schoolId,OR:[{senderId:req.user.id},{recipientId:req.user.id}]},orderBy:{createdAt:'desc'},take:500}); const ids=[...new Set(rows.flatMap(m=>[m.senderId,m.recipientId]))]; const people=ids.length?await prisma.user.findMany({where:{schoolId:req.user.schoolId,id:{in:ids}},select:{id:true,firstName:true,lastName:true,email:true,role:true,photoUrl:true}}):[]; const byId=new Map(people.map(p=>[p.id,p])); res.json(rows.reverse().map(m=>({...m,sender:byId.get(m.senderId)||null,recipient:byId.get(m.recipientId)||null,attachmentPath:undefined}))); }
-  catch(e){console.error('listMessages:',e);res.status(500).json({error:'Unable to load messages.'});}
+  const startedAt=Date.now();
+  try {
+    const rows=await prisma.directMessage.findMany({
+      where:{schoolId:req.user.schoolId,OR:[{senderId:req.user.id},{recipientId:req.user.id}]},
+      orderBy:{createdAt:'desc'},take:500,
+      select:{id:true,senderId:true,recipientId:true,subject:true,content:true,attachmentName:true,readAt:true,createdAt:true}
+    });
+    const ids=[...new Set(rows.flatMap(m=>[m.senderId,m.recipientId]))];
+    const people=ids.length?await prisma.user.findMany({
+      where:{schoolId:req.user.schoolId,id:{in:ids}},
+      select:{id:true,firstName:true,lastName:true,email:true,role:true,photoUrl:true}
+    }):[];
+    const byId=new Map(people.map(p=>[p.id,p]));
+    const elapsed=Date.now()-startedAt;
+    res.set('Server-Timing',`messages-db;dur=${elapsed}`);
+    if(elapsed>1000) console.warn(`[messaging-performance] listMessages took ${elapsed}ms for role=${req.user.role} rows=${rows.length}`);
+    return res.json(rows.reverse().map(m=>({...m,sender:byId.get(m.senderId)||null,recipient:byId.get(m.recipientId)||null})));
+  } catch(e){console.error('listMessages:',e);res.status(500).json({error:'Unable to load messages.'});}
+}
+async function markMessagesRead(req,res){
+  if(!MESSAGE_ROLES.includes(req.user.role)) return fail(res,403,'Direct messaging is not enabled for this role.');
+  const ids=Array.isArray(req.body?.messageIds)?[...new Set(req.body.messageIds.filter(x=>typeof x==='string'&&x.trim()).map(x=>x.trim()))]:[];
+  if(!ids.length) return res.json({updated:0});
+  if(ids.length>500) return fail(res,400,'A maximum of 500 messages can be marked as read at once.');
+  try{
+    const result=await prisma.directMessage.updateMany({
+      where:{id:{in:ids},schoolId:req.user.schoolId,recipientId:req.user.id,readAt:null},
+      data:{readAt:new Date()}
+    });
+    return res.json({updated:result.count});
+  }catch(e){console.error('markMessagesRead:',e);return res.status(500).json({error:'Unable to mark messages as read.'});}
 }
 async function sendMessage(req,res){
   if(!MESSAGE_ROLES.includes(req.user.role)) return fail(res,403,'Direct messaging is not enabled for this role.');
@@ -246,4 +276,4 @@ async function requestSubscriptionCancellation(req,res){
   }catch(e){console.error('owner.requestSubscriptionCancellation:',e);return res.status(500).json({error:'Unable to submit the cancellation request.'});}
 }
 
-module.exports={getAccount,requestSubscriptionCancellation,createAnnouncement,listAnnouncements,listContacts,listMessages,sendMessage,downloadMessageAttachment,markMessageRead,listNotifications,markNotificationRead,createSupportTicket,listSupportTickets,downloadSupportAttachment};
+module.exports={getAccount,requestSubscriptionCancellation,createAnnouncement,listAnnouncements,listContacts,listMessages,sendMessage,downloadMessageAttachment,markMessageRead,markMessagesRead,listNotifications,markNotificationRead,createSupportTicket,listSupportTickets,downloadSupportAttachment};
