@@ -58,6 +58,7 @@
     const phoneLocal = (byId('signup-phone')?.value || '').trim();
     const payload = {
       schoolName: (byId('school-name')?.value || '').trim(),
+      studentRange: (byId('students-range')?.value || '').trim(),
       firstName: (byId('first-name')?.value || '').trim(),
       lastName: (byId('last-name')?.value || '').trim(),
       email: (byId('signup-email')?.value || '').trim(),
