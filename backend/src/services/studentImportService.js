@@ -1,4 +1,5 @@
 const prisma = require('../config/db');
+const { getPlanLimits } = require('../utils/plan-limits');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
@@ -103,6 +104,13 @@ async function importStudents({
 		throw new Error('No student records were supplied.');
 	}
 	
+	const [school, activeStudentCount] = await Promise.all([
+		prisma.school.findUnique({ where: { id: schoolId }, select: { plan: true } }),
+		prisma.student.count({ where: { schoolId, status: { not: 'INACTIVE' } } }),
+	]);
+	const planLimits = getPlanLimits(school?.plan);
+	let reservedStudentSlots = activeStudentCount;
+
 	const result = {
 		totalRows: rows.length,
 		successCount: 0,
@@ -137,6 +145,9 @@ async function importStudents({
 		let admissionNumber = null;
 		
 		try {
+			if (reservedStudentSlots >= planLimits.maxStudents) {
+				throw new Error(`${planLimits.label} supports up to ${planLimits.maxStudents.toLocaleString()} active students. This import cannot add more students under the current plan.`);
+			}
 			admissionNumber = String(
 				row.admissionNumber || ''
 			).trim();
@@ -471,6 +482,7 @@ async function importStudents({
 			});
 			
 			result.successCount++;
+			reservedStudentSlots++;
 			
 			const importedStudent = {
 				id: student.id,

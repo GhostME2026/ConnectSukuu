@@ -5,6 +5,7 @@ const { parse } = require('csv-parse/sync');
 const XLSX = require('xlsx');
 
 const prisma = require('../config/db');
+const { getPlanLimits } = require('../utils/plan-limits');
 
 const {
 	normalizeRow,
@@ -194,6 +195,21 @@ async function previewStudentImport(
 			}
 		}
 		
+		const [schoolPlan, activeStudentCount] = await Promise.all([
+			prisma.school.findUnique({ where: { id: req.user.schoolId }, select: { plan: true } }),
+			prisma.student.count({ where: { schoolId: req.user.schoolId, status: { not: 'INACTIVE' } } }),
+		]);
+		const planLimits = getPlanLimits(schoolPlan?.plan);
+		let remainingSlots = Math.max(0, planLimits.maxStudents - activeStudentCount);
+		for (const item of preview) {
+			if (!item.valid) continue;
+			if (remainingSlots > 0) remainingSlots--;
+			else {
+				item.valid = false;
+				item.errors.push(`${planLimits.label} supports up to ${planLimits.maxStudents.toLocaleString()} active students. This row exceeds the remaining plan capacity.`);
+			}
+		}
+
 		const validRows =
 		preview.filter(
 			(item) => item.valid

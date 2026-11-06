@@ -4,6 +4,7 @@ const { signToken } = require('../utils/jwt');
 const { thirtyDaysFromNow } = require('../utils/trial');
 const authSecurity = require('./auth-security.controller');
 const { sendWelcomeEmail } = require('../services/welcome-email.service');
+const { planFromStudentRange } = require('../utils/plan-limits');
 
 // Database connectivity/pool failures are temporary service errors, not
 // authentication failures. Returning 503 keeps clients from treating them
@@ -47,6 +48,7 @@ async function signupSchool(req, res) {
       email,
       phone,
       password,
+      studentRange,
     } = req.body;
     
     if (
@@ -87,11 +89,17 @@ async function signupSchool(req, res) {
       slug = `${slug}-${Math.floor(1000 + Math.random() * 9000)}`;
     }
     
+    const selectedPlan = studentRange ? planFromStudentRange(studentRange) : 'starter';
+    if (studentRange && !selectedPlan) {
+      return res.status(400).json({ error: 'Choose a valid approximate student range.' });
+    }
+
     const passwordHash = await bcrypt.hash(password, 10);
     
     const school = await prisma.school.create({
       data: {
         name: schoolName.trim(),
+        plan: selectedPlan || 'starter',
                                               slug,
                                               trialEndsAt: thirtyDaysFromNow(),
                                               

@@ -1,6 +1,7 @@
 const prisma = require('../config/db');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const { getPlanLimits } = require('../utils/plan-limits');
 const fs = require('fs');
 const path = require('path');
 
@@ -121,6 +122,14 @@ async function createStudent(req, res) {
     if (branchId && branchId !== effectiveBranchId) return res.status(403).json({ error: 'You can only enroll students into your assigned branch.' });
     const branch = await prisma.branch.findFirst({ where: { id: effectiveBranchId, schoolId: req.user.schoolId, status: 'ACTIVE' } });
     if (!branch) return res.status(403).json({ error: 'Your assigned branch is inactive or unavailable.' });
+    const [schoolPlan, activeStudentCount] = await Promise.all([
+      prisma.school.findUnique({ where: { id: req.user.schoolId }, select: { plan: true } }),
+      prisma.student.count({ where: { schoolId: req.user.schoolId, status: { not: 'INACTIVE' } } }),
+    ]);
+    const planLimits = getPlanLimits(schoolPlan?.plan);
+    if (activeStudentCount >= planLimits.maxStudents) {
+      return res.status(403).json({ error: `${planLimits.label} supports up to ${planLimits.maxStudents.toLocaleString()} active students. Contact ConnectSukuu to move to a higher-capacity plan.`, code: 'PLAN_STUDENT_LIMIT_REACHED', maxStudents: planLimits.maxStudents });
+    }
     
     /*
      * If enrollment information was supplied, validate everything

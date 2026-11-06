@@ -2,6 +2,7 @@ const prisma = require('../config/db');
 const crypto = require('crypto');
 
 const OWNER_ONLY = ['OWNER'];
+const { getPlanLimits } = require('../utils/plan-limits');
 const SCHOOL_TYPES = new Set(['CRECHE','KG','PRIMARY','SECONDARY','PRIMARY_SECONDARY','VOCATIONAL','UNIVERSITY','OTHER']);
 function clean(value) { return typeof value === 'string' ? value.trim() : ''; }
 function normalizeCode(value) { return clean(value).toUpperCase(); }
@@ -60,8 +61,15 @@ async function createBranch(req, res) {
   if (!SCHOOL_TYPES.has(schoolType)) return res.status(400).json({ error: 'Choose a valid school type.' });
   if (!Number.isInteger(estimatedStudentCount) || estimatedStudentCount < 0) return res.status(400).json({ error: 'Estimated student count must be a non-negative whole number.' });
   try {
-    const existingCount = await prisma.branch.count({ where: { schoolId: req.user.schoolId } });
-    const settings = await prisma.schoolSettings.findUnique({ where: { schoolId: req.user.schoolId } });
+    const [existingCount, school, settings] = await Promise.all([
+      prisma.branch.count({ where: { schoolId: req.user.schoolId } }),
+      prisma.school.findUnique({ where: { id: req.user.schoolId }, select: { plan: true } }),
+      prisma.schoolSettings.findUnique({ where: { schoolId: req.user.schoolId } }),
+    ]);
+    const planLimits = getPlanLimits(school?.plan);
+    if (existingCount >= planLimits.maxBranches) {
+      return res.status(403).json({ error: `${planLimits.label} supports ${planLimits.maxBranches === 1 ? 'one branch only' : `up to ${planLimits.maxBranches} branches`}. Contact ConnectSukuu to discuss a higher-capacity plan.`, code: 'PLAN_BRANCH_LIMIT_REACHED', maxBranches: planLimits.maxBranches });
+    }
     if (existingCount > 0 && !settings?.multiCampusEnabled) return res.status(403).json({ error: 'Multi-campus management is disabled. Enable it in School Settings before creating another branch.' });
     const exists = await prisma.branch.findFirst({ where: { schoolId: req.user.schoolId, name: { equals: name, mode: 'insensitive' } } });
     if (exists) return res.status(409).json({ error: 'A branch with this name already exists.' });

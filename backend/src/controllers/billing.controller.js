@@ -5,19 +5,23 @@ const { addPeriod } = require('../utils/trial');
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Prices in the smallest currency unit — pesewas for GHS, cents for USD.
-// One-time prices are a placeholder heuristic (~ roughly 18 months of the
-// monthly price) — swap in whatever number you actually decide on.
-// All provider amounts are stored in the provider's smallest currency unit:
-// Paystack GHS values are pesewas; Stripe USD values are cents.
-// Public pricing: Starter GHS 160/month equivalent yearly, Growth GHS 480/month equivalent yearly.
+// Paystack receives exact GHS amounts; Stripe receives fixed USD equivalents.
+// Standard and the revised Growth one-time USD prices use the Bank of Ghana
+// 5 Nov 2026 mid-rate reference of GHS 11.66 per USD; these are fixed catalogue
+// prices, not live FX conversions. Existing Starter and Growth yearly USD
+// catalogue prices are intentionally preserved.
 const PLAN_PRICES = {
   starter: {
     yearly:  { ghs: 192000, usd: 18800 }, // GHS 1,920 / USD 188 per year
     onetime: { ghs: 320000, usd: 28500 }, // GHS 3,200 / USD 285 once
   },
+  standard: {
+    yearly:  { ghs: 312000, usd: 26758 }, // GHS 3,120 / approx. USD 267.58 per year
+    onetime: { ghs: 630000, usd: 54031 }, // GHS 6,300 / approx. USD 540.31 once
+  },
   growth: {
-    yearly:  { ghs: 576000, usd: 51000 }, // GHS 5,760 / USD 510 per year
-    onetime: { ghs: 730000, usd: 70000 }, // GHS 7,300 / USD 700 once
+    yearly:  { ghs: 576000, usd: 51000 }, // GHS 5,760 / USD 510 per year (unchanged)
+    onetime: { ghs: 850000, usd: 72900 }, // GHS 8,500 / approx. USD 729 once
   },
 };
 
