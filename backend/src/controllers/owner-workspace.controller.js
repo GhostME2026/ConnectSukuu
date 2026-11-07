@@ -101,28 +101,35 @@ async function listAnnouncements(req,res){
     res.json(rows.filter(a=>req.user.role==='OWNER'||a.createdById===req.user.id||(!a.audienceAll&&a.audienceRoles.includes(req.user.role))||a.audienceAll||a.audienceRoles.includes(req.user.role)));
   } catch(e){console.error('listAnnouncements:',e);res.status(500).json({error:'Unable to load announcements.'});}
 }
+// Contacts change rarely: share one result per user for 30s and collapse concurrent identical requests.
+const CONTACTS_TTL_MS=30000;
+const contactsCache=new Map();
+const contactsInflight=new Map();
+async function loadContacts(user){
+  const key=[user.schoolId,user.role,user.branchId||'',user.id].join('|');
+  const hit=contactsCache.get(key);
+  if(hit&&hit.exp>Date.now()) return hit.users;
+  if(contactsInflight.has(key)) return contactsInflight.get(key);
+  const eligibleRoles=MESSAGE_RECIPIENT_ROLES.filter(role=>role!=='OWNER');
+  const select={id:true,firstName:true,lastName:true,email:true,role:true,branchId:true,photoUrl:true};
+  const common={schoolId:user.schoolId,isActive:true,id:{not:user.id}};
+  const where=user.role==='OWNER'
+    ?{...common,role:{in:eligibleRoles}}
+    :{...common,OR:[{branchId:user.branchId,role:{in:eligibleRoles}},{role:'OWNER'}]};
+  const p=prisma.user.findMany({where,select,orderBy:[{role:'asc'},{firstName:'asc'},{lastName:'asc'}],take:500}).then(users=>{
+    if(contactsCache.size>1000) contactsCache.clear();
+    contactsCache.set(key,{users,exp:Date.now()+CONTACTS_TTL_MS});
+    return users;
+  }).finally(()=>contactsInflight.delete(key));
+  contactsInflight.set(key,p);
+  return p;
+}
 async function listContacts(req,res){
   if(!MESSAGE_ROLES.includes(req.user.role)) return fail(res,403,'Direct messaging is not enabled for this role.');
   const startedAt=Date.now();
   try {
-    const eligibleRoles=MESSAGE_RECIPIENT_ROLES.filter(role=>role!=='OWNER');
-    const select={id:true,firstName:true,lastName:true,email:true,role:true,branchId:true,photoUrl:true};
-    const common={schoolId:req.user.schoolId,isActive:true,id:{not:req.user.id}};
-    let where;
-    if(req.user.role==='OWNER'){
-      // Owners can reach eligible staff across their school; never list another Owner.
-      where={...common,role:{in:eligibleRoles}};
-    } else {
-      if(!req.user.branchId) return fail(res,403,'Assign your account to a branch before messaging.');
-      // One indexed query replaces the previous staff query plus separate Owner lookup.
-      where={...common,OR:[
-        {branchId:req.user.branchId,role:{in:eligibleRoles}},
-        {role:'OWNER'}
-      ]};
-    }
-    const users=await prisma.user.findMany({
-      where,select,orderBy:[{role:'asc'},{firstName:'asc'},{lastName:'asc'}],take:500
-    });
+    if(req.user.role!=='OWNER'&&!req.user.branchId) return fail(res,403,'Assign your account to a branch before messaging.');
+    const users=await loadContacts(req.user);
     const elapsed=Date.now()-startedAt;
     res.set('Server-Timing',`contacts-db;dur=${elapsed}`);
     if(elapsed>1000) console.warn(`[messaging-performance] listContacts took ${elapsed}ms for role=${req.user.role}`);
